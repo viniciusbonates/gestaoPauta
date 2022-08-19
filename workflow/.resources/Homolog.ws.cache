@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_331" class="java.beans.XMLDecoder">
+ <object class="java.util.HashMap">
+  <void method="put">
+   <string>camposFormulario, documentoId = 2817</string>
+   <array class="java.lang.String" length="8">
+    <void index="0">
+     <string>checkbox1</string>
+    </void>
+    <void index="1">
+     <string>cmb_GerenteSolicitante</string>
+    </void>
+    <void index="2">
+     <string>cmb_NomeSolicita</string>
+    </void>
+    <void index="3">
+     <string>dt_dataInicio</string>
+    </void>
+    <void index="4">
+     <string>dt_DataSolicita</string>
+    </void>
+    <void index="5">
+     <string>hd_numSuperior</string>
+    </void>
+    <void index="6">
+     <string>txt_NumProcess</string>
+    </void>
+    <void index="7">
+     <string>zm_UnidadeSolicitante</string>
+    </void>
+   </array>
+  </void>
+  <void method="put">
+   <string>camposFormulario, documentoId = 2813</string>
+   <array class="java.lang.String" length="16">
+    <void index="0">
+     <string>cmb_GerenteSolicitante</string>
+    </void>
+    <void index="1">
+     <string>cmb_NomeSolicita</string>
+    </void>
+    <void index="2">
+     <string>dt_DataAprovacao</string>
+    </void>
+    <void index="3">
+     <string>dt_DataDeliberacao</string>
+    </void>
+    <void index="4">
+     <string>dt_DataSolicita</string>
+    </void>
+    <void index="5">
+     <string>hd_nome</string>
+    </void>
+    <void index="6">
+     <string>hd_numSuperior</string>
+    </void>
+    <void index="7">
+     <string>txt_Acessor</string>
+    </void>
+    <void index="8">
+     <string>txt_Descricao</string>
+    </void>
+    <void index="9">
+     <string>txt_Diretor</string>
+    </void>
+    <void index="10">
+     <string>txt_Diretoria</string>
+    </void>
+    <void index="11">
+     <string>txt_Justificativa</string>
+    </void>
+    <void index="12">
+     <string>txt_NumProcess</string>
+    </void>
+    <void index="13">
+     <string>txt_Unidade</string>
+    </void>
+    <void index="14">
+     <string>zm_DataReuniao</string>
+    </void>
+    <void index="15">
+     <string>zm_UnidadeSolicitante</string>
+    </void>
+   </array>
+  </void>
+ </object>
+</java>

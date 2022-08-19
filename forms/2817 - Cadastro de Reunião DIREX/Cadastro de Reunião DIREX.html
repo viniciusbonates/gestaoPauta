@@ -1,0 +1,514 @@
+<html>
+<head>
+	<link type="text/css" rel="stylesheet" href="/style-guide/css/fluig-style-guide.min.css"/>
+	<script type="text/javascript" src="/portal/resources/js/jquery/jquery.js"></script>
+	<script type="text/javascript" src="/portal/resources/js/jquery/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="/portal/resources/js/mustache/mustache-min.js"></script>
+	<script type="text/javascript" src="/style-guide/js/fluig-style-guide.min.js" charset="utf-8"></script>
+	<script type="text/javascript" src="/webdesk/vcXMLRPC.js"></script>
+	<script type="text/javascript" src="Custom.js"></script>
+
+	<style type="text/css">
+		.Obrigatorio{
+			color: red;
+		}	
+	</style>
+
+</head>
+<body>
+<div class="fluig-style-guide">
+<form name="form" role="form">
+
+		<input type="hidden" name="hd_numSuperior" id="hd_numSuperior">
+
+		<div class="panel panel-primary" id="CadastroReuniaoDIREX">
+		<div class="panel-heading">
+			<h1>
+				<b>Gestão de Reunião DIREX</b>
+			</h1>
+		</div>
+		</div>
+
+		<div class="panel panel-primary" id="DadosSolicitante">
+		<div class="panel-heading">
+			<h3 class="panel-title">
+				<b>Dados do Solicitante</b>
+			</h3>
+		</div>
+
+		<div class="panel-body">
+		<div class="form-group row">
+		<div class="col-md-4">
+			<label for="cmb_NomeSolicita">Assessor(a):</label>
+			<select name="cmb_NomeSolicita" id="cmb_NomeSolicita" dataset="colleague" datasetkey="colleagueId" datasetvalue="colleagueName" 
+			class="form-control" readonly></select>
+		</div>
+		<div class="col-md-4">
+			<label for="dt_DataSolicita">Data e horário:</label>
+			<input type="text" class="form-control" name="dt_DataSolicita" id="dt_DataSolicita" readonly>
+		</div>
+		</div>
+		<div class="form-group row">
+		<div class="col-md-4">
+			<label for="cmb_GerenteSolicitante">Diretor(a):</label>
+			<input type="text" class="form-control" name="cmb_GerenteSolicitante" id="cmb_GerenteSolicitante" readonly>
+		</div>
+		<div class="col-md-4">
+			<label class="zm_UnidadeSolicitante">Diretoria:</label>
+			<input type="text" class="form-control" name="zm_UnidadeSolicitante" id="zm_UnidadeSolicitante" readonly>
+		</div>
+		<div class="col-md-4" id="Numero_Process_Atual">
+			<label for="txt_NumProcess">N° Processo / Reunião:</label>
+			<input type="text" class="form-control" name="txt_NumProcess" id="txt_NumProcess" readonly>
+		</div>
+		</div>
+		</div>
+		</div>
+
+
+		<div class="panel panel-primary" id="DadosCadastro">
+		<div class="panel-heading">
+			<h3 class="panel-title">
+				<b>Dados para Cadastro de Nova Reunião</b>
+			</h3>
+		</div>
+		<div class="panel-body">
+<!--	<div class="form-group  table-responsive" >
+			<table class="table"> 
+			<tbody>
+				<tr>
+					<td>
+						<button type="button" class="addRateio" onclick="addData();">Inserir Data</button>
+					</td>
+				</tr>       
+				<tr>
+					<td>
+						<table id="dadosData" tablename="dadosData" class="table table-hover" noaddbutton="true" nodeletebutton="true">
+						<thead>
+							<tr>
+							<td></td>
+							
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									<span class="fluig-style-guide fs-display-block fs-md-space">
+									<i type="button" class="fluigicon fluigicon-trash fluigicon-md delRateio"  id="deleta_rateio" name="deleta_rateio" 
+									onclick="Javascript:fnCustomDelete(this);" style="cursor:pointer"></i> 
+								</span>
+								</td>
+								<td>	
+									<div class="col-md-6">
+									<div class="form-group">
+										<label for="dt_dataInicio">Data da Reunião<span class="Obrigatorio"><strong>*</strong></span>:</label>
+										<input type="date" class="form-control" name="dt_dataInicio" id="dt_dataInicio">														
+									</div>
+									</div>
+									<div class="col-md-6">
+									<div class="form-group">
+										<label for="Condicao">Selecionar em caso especifico.</label>
+										<br>
+										<input type="checkbox" name="checkbox1" id="checkbox1">
+										<label for="checkbox1"><h9 style="color:red">Reunião DIREX Extraordinária</h9></label>
+									</div>
+									</div>										
+								</td> 
+							</tr>
+						</tbody>
+						</table>
+					</td>
+				</tr>
+			</tbody>
+			</table>
+			</div>-->
+			<div class="col-md-1">
+			<div class="pull-left">
+			<div class="form-group">
+				<label for="dt_dataInicio">Data da Reunião<span class="Obrigatorio"><strong>*</strong></span>:</label>
+				<input type="date" class="form-control" name="dt_dataInicio" id="dt_dataInicio">														
+			</div>
+			</div>
+			</div>
+			<div class="col-md-2">
+			<div class="pull-left">
+			<div class="form-group">
+				<label for="dt_datalimit">Data Limite para Inserção<span class="Obrigatorio"><strong>*</strong></span>:</label>
+				<input type="date" class="form-control" name="dt_datalimit" id="dt_datalimit">														
+			</div>
+			</div>
+			</div>
+			<div class="col-md-6">
+			<div class="custom-checkbox custom-checkbox-danger custom-checkbox-lg">
+				<p class="text-warning"><b>Selecionar essa opção em casos especificos.</b></p>
+				<input type="checkbox" name="checkbox1" id="checkbox1">
+				<label for="checkbox1">Reunião DIREX Extraordinária</label>
+			</div>
+			</div>
+		</div>	
+		</div>
+		
+		<div class="panel panel-primary" id="PainelControle">
+		<div class="panel-heading">
+			<h3 class="panel-title">
+				<b>Painel de Controle</b>
+			</h3>
+		</div>
+		<div class="panel-body">
+		<!--<div class="col-md-12">
+		<table style="width: 100%;" id="PanelControl" class="table table-bordered">
+			<thead>
+				<tr>
+					<th>N° Solicitação</th>
+					<th>Data Solicitação</th>
+					<th>Nome Solicitante</th>
+					<th>Unidade</th>
+					<th>Assunto</th>
+					<th>Justificativa</th>
+				</tr>
+			</thead>
+			<tbody>
+				
+			</tbody>
+		</table>			
+		</div>-->
+		<div class="col-md-12">
+			<div id="target"></div>
+		</div>
+		</div>
+		</div>
+
+
+</form>
+</div>
+<script>
+	
+objMain = {
+	/**
+	 * 	1 = Preencher toda a tabela
+	 * 	2 = Inserir coluna
+	 * 
+	*/
+	objCollection: DatasetFactory.getDataset('Pauta DIREX', null,null,null).values,
+	arrColumnsRender:  ['txt_NumProcess', 'dt_DataSolicita', 'cmb_NomeSolicita', 'zm_UnidadeSolicitante', 'txt_titulo', 'txt_Justificativa'],
+	attRefer: 'cmb_NomeSolicita',
+	hder: [
+				{'title': 'N° Solicitação'},
+				{'title': 'Data Solicitação'},
+				{'title': 'Nome Solicitante'},
+				{'title': 'Unidade'},
+				{'title': 'Assunto'},
+				{'title': 'Justificativa'}
+			],
+	operation: '1',
+	condValidation: [],
+	fnc: [],
+}
+var testDatatable = {
+	myTable: 		null,
+    tableData: 		null,
+    dataInit: 		null,
+	datafilt: 		null,
+	arrColumns: 	'',
+	attRefer: 		'',
+	hder: 			'',
+	objCollection: 	'',
+	condValidation:	'',
+	fnc: 			'',
+	obj: 			'',
+	paramsInit: function (objMain){
+		this.arrColumns =  		objMain.arrColumnsRender
+		this.attRefer = 		objMain.attRefer
+		this.hder = 			objMain.hder
+		this.objCollection = 	objMain.objCollection
+		this.condValidation		= objMain.condValidation
+		this.fnc = 				objMain.fnc
+		this.obj = 				objMain
+		this.loadTable()
+	},
+	definePage: function (objData, dirr, itensCollection, press) {
+		/**
+		 * Press = Determina se a função definepage já foi executada e o Objeto já está formatado.
+		*/
+		objData.arrItens = [];
+		cols = this.arrColumns;		
+		determineLenght = 5;
+		attIten = this.attRefer;
+		itens = itensCollection
+		fnc = this.fnc
+		condValidation = this.condValidation
+		objAll = this.obj
+		if(dirr == 1){
+			i = objData.indIten 
+			objData.pageAtual++
+		}else if(dirr == 0){
+			i = objData.indIten - itens.length 
+			objData.pageAtual--
+		}
+		function objS(rslt, ref){
+			obj = {
+				rslt: rslt,
+				ref: ref 
+			}
+			return obj
+		}
+		var objsFunc = [];
+		var count = 0;
+		for(i = i; objData.arrItens.length <= itens.length; i++){
+			item = itens[i]
+			lgnt = objData.arrItens.length
+			if(item != undefined && item[attIten] != null && item[attIten] != ''){ 
+				//if(condValidation.length == 0 || condValidation != ''){
+					//for(cv = 0; cv < condValidation.length; cv++){
+						//let nameVal 		= condValidation[cv].fncName
+						//let aVal 			= objAll[nameVal]()
+						//let refVal 		= condValidation[cv].fncParam	
+						//if(aVal != true || aVal == undefined){
+							if(fnc != '' && press != 1){
+								for(t = 0; t < fnc.length; t++){
+									let name 		= fnc[t].fncName
+									var a 			= objAll[name]()
+									var ref 		= fnc[t].fncParam
+									objsFunc[t] = new objS(a, ref)
+								}
+							}
+							var obj_din = ''
+							let inic  	= '{'
+							let final 	= '}'
+							let virg 	= ','
+							obj_din = obj_din + inic
+							for(j = 0; j < cols.length; j++){
+								ckn = j + 1
+								valueIt = ''
+								nameCol = cols[j]
+								if(fnc != ''){
+									ckin = false;
+									for(k = 0; k < objsFunc.length; k++){
+										funNow = objsFunc[k]
+										if(nameCol == funNow.ref){
+											valueIt = funNow.rslt
+											ckin = true
+											//console.log(valueIt)
+											break 
+										}
+									}
+									if(!ckin){ valueIt = item[cols[j]] }
+								}else{
+									valueIt = item[nameCol]
+									if(typeof valueIt == 'string'){
+										valueIt = valueIt.replace(/\r/g, '')
+										valueIt = valueIt.replace(/\n/g, ' ')
+									}
+								}
+								obj_din = obj_din +'"'+cols[j]+'":"'+valueIt+'"'
+								if(ckn == cols.length){ obj_din = obj_din + final; }
+								else{ obj_din = obj_din + virg }
+							}
+							if(lgnt == 0) { 
+								if(objData.arrItens.length != determineLenght){ objData.arrItens[0] = JSON.parse(obj_din);objData.indIten = i + 1 }
+								if(objData.markItensAll == 0) { objData.arrItensAll[0] = JSON.parse(obj_din); }
+							}else { 
+								count++
+	
+								if(objData.arrItens.length != determineLenght){ objData.arrItens[lgnt] = JSON.parse(obj_din);objData.indIten = i + 1 }
+								if(objData.markItensAll == 0) { objData.arrItensAll[count] = JSON.parse(obj_din); }
+							}
+						//}
+					//}
+				//}
+			}else if(item == undefined)	{
+				if(objData.arrItens.length != determineLenght){ 
+					if(itens.length != objData.indIten){
+						objData.indIten = i + 1
+					}else{ objData.indIten = i  }
+				 }
+				if(objData.markItensAll == 0){ objData.markItensAll = 1 }
+				break;
+			}
+		}
+		datafilt = objData.arrItensAll
+		console.log(objData)
+	},
+	loadTable: function() {
+        var that = this;
+		var thisObj = this;
+		var arrColumnsIn = this.arrColumns
+		var itensCollection = this.objCollection
+		var searchMark = 0
+		//Retira as datas com valor nullo	
+		var objData = {
+			arrItens: [],		// Array com os itens que serão apresentados na pagina atual 
+			arrItensAll: [], 	// Array produto final após a limpesa conforme condicionais determinadas
+			markItensAll: 0, 	// markItensAll == 1 - determina o fim da montagem do Array 'arrItensAll'
+			pageAtual: -1,		// numero da pagina começando com valor '0'
+			indIten: 0 			// Valor igual ao ultimo Index do 'this.objCollection' do item que foi validado e incluso no array 'arrItens' 
+		};
+		that.definePage(objData, 1, itensCollection);
+        that.myTable = FLUIGC.datatable('#target', {
+            dataRequest: objData.arrItens,
+            renderContent:  this.arrColumns,
+            header: this.hder,
+			tableStyle: 'table table-bordered table-dark table-hover',
+			classSelected: 'success',
+			navButtons: {
+				enabled: true
+            },
+            search: {
+                enabled: true,
+                onlyEnterkey: true,
+                onSearch: function(res) {
+                    if (!res) {
+                        that.myTable.reload(dataInit);
+						objData = {
+							arrItens: [],
+							arrItensAll: [],
+							markItensAll: 0,
+							pageAtual: -1,
+							indIten: 0 
+						};
+						itensCollection = that.objCollection
+						searchMark = 0
+						//console.log(itensCollection)
+						that.definePage(objData, 1, itensCollection);
+						that.opsNav(1, dataInit, objData, 2);
+						that.backward(that.myTable, itensCollection, objData, searchMark, thisObj);	//param that.myTable & thisObj
+						that.forward(that.myTable, itensCollection, objData, searchMark, thisObj);	//param that.myTable & thisObj
+					}
+					var dataAll = datafilt
+                    var search = dataAll.filter(function(el) {
+						let resp = 0;
+						for(i = 0; i < arrColumnsIn.length; i++){			
+							if(el[arrColumnsIn[i]] != null){
+								if(el[arrColumnsIn[i]].toUpperCase().indexOf(res.toUpperCase()) >= 0){
+								resp = el[arrColumnsIn[i]].toUpperCase().indexOf(res.toUpperCase()) >= 0;	
+								}
+							}
+						}
+                        return resp;
+                    });
+                    if (search && search.length && res != '') {
+                        that.myTable.reload(search);
+						objData = {
+							arrItens: [],
+							arrItensAll: [],
+							markItensAll: 0,
+							pageAtual: -1,
+							indIten: 0
+						};
+						itensCollection = search
+						searchMark = 1
+						that.opsNav(1, search, objData, 1);
+						that.backward(that.myTable, itensCollection, objData, searchMark, thisObj);	//param that.myTable & thisObj
+						that.forward(that.myTable, itensCollection, objData, searchMark, thisObj);	//param that.myTable & thisObj
+                    } else if (res != '') {
+                        FLUIGC.toast({
+                            title: 'Searching: ',
+                            message: 'No results',
+                            type: 'success'
+                        });
+                    }
+                }
+            },
+        }, function(err, data) {
+            if(data) {
+                dataInit = data;
+            }
+            else if (err) {
+                FLUIGC.toast({
+                    message: err,
+                    type: 'danger'
+                });
+			}
+		});
+		
+		that.onselectrow(); //param that.myTable
+		that.opsNav(1, dataInit, objData, 2);
+		that.backward(that.myTable, itensCollection, objData, searchMark, thisObj);	//param that.myTable & thisObj
+		that.forward(that.myTable, itensCollection, objData, searchMark, thisObj);	//param that.myTable & thisObj
+	},
+	opsNav: function (dirr, itens, obj, press){
+		btnNav = {
+			btnPrev: 0,
+			btnNext: 0
+		}
+		btnBck = document.getElementsByTagName('button')
+		for(j = 0; j < btnBck.length; j++){		
+			btnNow = btnBck[j];
+			if(btnNow.attributes['data-nav-prev']){
+				btnNav.btnPrev = btnNow;
+			}else if(btnNow.attributes['data-nav-next']){
+				btnNav.btnNext = btnNow;
+			}
+		}
+		if(press == null || press == undefined){
+			this.definePage(obj, dirr, itens); 
+			this.myTable.reload(obj.arrItens);
+			console.log(obj);
+		}else if(press == 1){ 
+			this.definePage(obj, dirr, itens, press); 
+			this.myTable.reload(obj.arrItens);
+			console.log(obj);
+		}
+		if(obj.pageAtual != 0){
+			btnNav.btnPrev.disabled = false
+		}
+		if(obj.indIten == itens.length || obj.arrItensAll.length == itens.length){
+			btnNav.btnNext.disabled = true
+		}
+	},
+	onselectrow: function (myTable, objFunc) { 
+		if(myTable != undefined){
+			/**
+			 * objFunc = {
+			 * 		fnc: [],
+			 * 		
+			 * 		a: function () {...},
+			 * 		etc..
+			 * }
+			*/
+			myTable.on('fluig.datatable.onselectrow', function(data) {
+				var funNow = 0;
+				if(objFunc != '' && objFunc != null && objFunc != undefined){
+					for(t = 0; t < objFunc.fnc.length; t++){
+						let name 		= objFunc.fnc[t]
+						let funNow 		= objFunc[name]()
+					}
+				}
+				var rowSltd = myTable.getRow(data.selectedIndex, true)[0]
+				var dataReuniao = rowSltd.childNodes[0].innerText	
+				document.getElementById('dataSelected').value = dataReuniao
+			});
+		}
+	},
+	backward: function (myTable, itensCollection, objData, searchMark, Obj) { 
+		//console.log(myTable)
+		myTable.on('fluig.datatable.backward', function() {
+			let dirr = 0
+			if(searchMark == 1){
+				console.log(dirr)
+				Obj.opsNav(dirr, itensCollection, objData, searchMark)
+			}else{
+				console.log(dirr)
+				Obj.opsNav(dirr, itensCollection, objData)
+			}
+		});
+	},
+	forward: function (myTable, itensCollection, objData, searchMark, Obj) { 
+		//console.log(myTable)
+		myTable.on('fluig.datatable.forward', function() {
+			let dirr = 1
+			if(searchMark == 1){
+				console.log(dirr)
+				Obj.opsNav(dirr, itensCollection, objData, searchMark)
+			}else{
+				console.log(dirr)
+				Obj.opsNav(dirr, itensCollection, objData)
+			}
+		});
+	}
+
+
+};testDatatable.paramsInit(objMain);
+</script>
+</body>
+</html>
