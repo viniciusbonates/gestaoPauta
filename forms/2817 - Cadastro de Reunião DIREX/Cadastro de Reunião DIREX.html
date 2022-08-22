@@ -204,7 +204,32 @@ objMain = {
 			],
 	operation: '1',
 	condValidation: [],
-	fnc: [],
+	fnc: [
+			{'fncName': 'a', 'fncParam': 'cmb_NomeSolicita'},
+			{'fncName': 'b', 'fncParam': 'txt_Justificativa'}
+		],
+	a: function (){
+		/**
+		 * itens 	= this.objCollection
+		 * item 	= itens[i]
+		 * 
+		 * item: referente a um item contido no objCollection
+		*/
+		let colleagueId = item['cmb_NomeSolicita'];
+		var c1 = DatasetFactory.createConstraint("colleaguePK.colleagueId", colleagueId, colleagueId, ConstraintType.MUST);
+		constraint = new Array(c1)
+		dataset = DatasetFactory.getDataset('colleague', null, constraint, null).values	
+		let colleagueName = dataset[0]['colleagueName']
+		return colleagueName
+	},
+	b: function (){
+		valueIt = item['txt_Justificativa']
+		if(typeof valueIt == 'string'){
+			valueIt = valueIt.replace(/\r/g, '')
+			valueIt = valueIt.replace(/\n/g, ' ')
+		}
+		return valueIt
+	}
 }
 var testDatatable = {
 	myTable: 		null,
@@ -218,6 +243,11 @@ var testDatatable = {
 	condValidation:	'',
 	fnc: 			'',
 	obj: 			'',
+	objFunc:		{
+		fnc:[
+			{'fncName': '', 'metodhParam': ''}
+		] 
+	},
 	paramsInit: function (objMain){
 		this.arrColumns =  		objMain.arrColumnsRender
 		this.attRefer = 		objMain.attRefer
@@ -295,12 +325,6 @@ var testDatatable = {
 										}
 									}
 									if(!ckin){ valueIt = item[cols[j]] }
-								}else{
-									valueIt = item[nameCol]
-									if(typeof valueIt == 'string'){
-										valueIt = valueIt.replace(/\r/g, '')
-										valueIt = valueIt.replace(/\n/g, ' ')
-									}
 								}
 								obj_din = obj_din +'"'+cols[j]+'":"'+valueIt+'"'
 								if(ckn == cols.length){ obj_din = obj_din + final; }
@@ -360,7 +384,9 @@ var testDatatable = {
                 onlyEnterkey: true,
                 onSearch: function(res) {
                     if (!res) {
-                        that.myTable.reload(dataInit);
+                        //that.myTable.reload(dataInit);
+						that.reload(that.myTable, dataInit, that.objFunc);
+						console.log(that.objFunc)
 						objData = {
 							arrItens: [],
 							arrItensAll: [],
@@ -389,7 +415,9 @@ var testDatatable = {
                         return resp;
                     });
                     if (search && search.length && res != '') {
-                        that.myTable.reload(search);
+                        //that.myTable.reload(search);
+						console.log(that.objFunc)
+						that.reload(that.myTable, search, that.objFunc);
 						objData = {
 							arrItens: [],
 							arrItensAll: [],
@@ -422,11 +450,38 @@ var testDatatable = {
                 });
 			}
 		});
-		
-		that.onselectrow(); //param that.myTable
+
 		that.opsNav(1, dataInit, objData, 2);
 		that.backward(that.myTable, itensCollection, objData, searchMark, thisObj);	//param that.myTable & thisObj
 		that.forward(that.myTable, itensCollection, objData, searchMark, thisObj);	//param that.myTable & thisObj
+	},
+	setFunc: function (objFnc) {
+		if(objFnc != '' && objFnc != null && objFnc != undefined){
+			for(t = 0; t < objFnc.fnc.length; t++){
+				let params 		= objFnc.fnc[t]
+				let name 		= objFnc.fnc[t].fncName
+				this.objFunc.fnc[this.objFunc.fnc.length] = params
+				this.objFunc[name] = objFnc[name]
+			}
+			console.log(this.objFunc)
+		}
+	},
+	reload: function(myTable, data, objFunc){
+		if(myTable != undefined){
+			var a = myTable.reload(data);
+			console.log(a)
+			var funNow = 0;
+			if(objFunc != '' && objFunc != null && objFunc != undefined){
+				for(t = 0; t < objFunc.fnc.length; t++){
+					if(objFunc.fnc[t].metodhParam == 'reload'){
+						
+						let name 		= objFunc.fnc[t].fncName
+						let funNow 		= objFunc[name]()
+						console.log(funNow)
+					}
+				}
+			}
+		}
 	},
 	opsNav: function (dirr, itens, obj, press){
 		btnNav = {
