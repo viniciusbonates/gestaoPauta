@@ -1,3 +1,28 @@
+function openItem(){
+    //https://myweb.am.sebrae.com.br/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID=24878&app_ecm_workflowview_taskUserId=00000514
+    //http://10.4.4.52:8080/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID=24719
+    var url = "http://10.4.4.52:8080/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID="
+    var arrColumnsRender = ['N° Solicitação', 'Data Solicitação', 'Nome Solicitante', 'Unidade', 'Assunto', 'Justificativa']
+    var indexLink = []
+    var divIn = document.getElementsByClassName('row fs-no-margin')
+    var divAll = divIn[0].parentElement.parentElement       //DIV com o componente dataTable
+    var tableBody   = divAll.getElementsByTagName('tbody')[0]    
+    var nomeCol     = divAll.getElementsByTagName('thead')[0].rows[0].cells
+    var rows = tableBody.rows                              //Linhas da pagina atual da dataTable
+    for(i = 0; i < rows.length; i++){
+        let row = rows[i]
+        let cells = row.cells
+        indexLink[i] = cells[0]
+        if(cells[0].innerText != ''){
+            let textLink = cells[0].innerText
+            let inHTML = "<a href=\""+ url + textLink +"\""+ "class=\"cad-link\""+"target=\"_blank\""+"style=\"color:blue\">"+"<i class=\"flaticon flaticon-link icon-md\"></i>"+
+            textLink+"</a>"
+            cells[0].innerHTML = inHTML
+        }
+    }
+}
+window.addEventListener('load', openItem)
+
 function Custom(){
     console.log(DatasetFactory.getDataset("Pauta DIREX", null, null, null))
 	var dataset = DatasetFactory.getDataset("Pauta DIREX", null, null, null)
