@@ -22,21 +22,23 @@ function dataTableConfig(){
     /*** End Input Object Configuration ***/
 
     var configButton = {
+        id: 'btn1',
         innerText: 'Aprovar Inserção de Item',
         setIcon: 'flaticon flaticon-document-check icon-md', 
         col: 'col-md-4'
     }
 
-    this.itensCreates   = [configButton];                                                           //Determina os itens criados e a ordem de posição conforme ordem de posição do array                                                
+    this.itensConfigs   = [configButton];                                                           //Determina os itens criados e a ordem de posição conforme ordem de posição do array                                                
 
 
     this.initMyInterval     = true;
     this.setChangeEvent		= true;
-    this.tableReference     = window.testDatatable
+    this.tableReference     = window.testDatatable;
+    this.itensBuilt         = []
     this.setConfigExecution();  
 }
 dataTableConfig.prototype.initialize = function () {
-    this.orderLineSuper(this.configField, this.itensCreates);
+    this.orderLineSuper(this.configField, this.itensConfigs);
     changeEvent = this.setChangeEvent;
     if(changeEvent){
         this.changeEventInput();
@@ -75,6 +77,7 @@ dataTableConfig.prototype.constructInputValueSelected = function (configField){
     objDivInnerCol.appendChild(objDivClassValidate);
     objDivCol.appendChild(objDivInnerCol);
 
+    this.itensBuilt.push(objDivCol)
     return objDivCol;
 }
 dataTableConfig.prototype.constructButton = function (configButton){
@@ -87,13 +90,13 @@ dataTableConfig.prototype.constructButton = function (configButton){
         iV.setAttribute('class', configButton.setIcon);
         iV.setAttribute('aria-hidden', 'true');
     var divV = document.createElement('div');
+        divV.setAttribute('id', configButton.id);
         divV.setAttribute('class', configButton.col);
 
-        console.log(configButton)
-    
         buttonV.appendChild(iV);
         divV.appendChild(buttonV)
     
+    this.itensBuilt.push(divV)   
     return divV;
 }
 dataTableConfig.prototype.determineObjConfig = function (configField, config){
@@ -146,13 +149,15 @@ dataTableConfig.prototype.determineObjConfig = function (configField, config){
         return config
     }
 }      
-dataTableConfig.prototype.orderLineSuper = function (objConfig, itensCreates) {
+dataTableConfig.prototype.orderLineSuper = function (objConfig, itensConfigs) {
     var componentTable = document.getElementById('target'); 
     console.log(componentTable)
     var divIn   = document.getElementsByClassName('row fs-no-margin')
     var divAll  = divIn[0].parentElement.parentElement
     var inpasd  = this.constructInputValueSelected(objConfig) /**  <-------------------------this.configField in  dataTableConfig*/
-    var bt      = this.constructButton(itensCreates[0])
+    var bt      = this.constructButton(itensConfigs[0])
+
+    console.log(this.itensBuilt)
     if(divAll.id == 'target'){
         let tempr = divIn[0].children[0]
         tempr.className = 'col-md-5'
@@ -167,7 +172,7 @@ dataTableConfig.prototype.orderLineSuper = function (objConfig, itensCreates) {
 }
 dataTableConfig.prototype.changeEventInput = function () {
     objFunc = {
-        fnc: ['formatDinamic'],
+        fnc: ['formatDinamic', 'enabledButton'],
         formatDinamic: function () {
             console.log(dataTablemi.initMyInterval)
             var configFormat = {
@@ -196,11 +201,6 @@ dataTableConfig.prototype.changeEventInput = function () {
                 var labelInp    = divFeedBack.children[0]
                 var iconInp     = divFeedBack.children[2]
                 var pInp        = divFeedBack.children[3]
-
-                console.log(divCol)
-                console.log(divInCol)
-                console.log(divFeedBack)
-                console.log(labelInp)
         
                 divCol.className        = configFormat.col
                 divInCol.className      = configFormat.colInnerDistri
@@ -209,6 +209,16 @@ dataTableConfig.prototype.changeEventInput = function () {
                 labelInp.innerText      = configFormat.setLabel.innerText
                 iconInp.className       = configFormat.setIcone.value
                 pInp.innerText          = configFormat.setHelpBlock.innerText
+            }
+        },
+        enabledButton: function (){
+            console.log(dataTablemi.itensBuilt)
+            var itens = dataTablemi.itensBuilt
+            for(i = 0; i < itens.length; i++){
+                let iten = itens[i]
+                if(iten.id == 'btn1'){  
+                    iten.getElementsByTagName('button')[0].disabled = false
+                }
             }
         }
     }
