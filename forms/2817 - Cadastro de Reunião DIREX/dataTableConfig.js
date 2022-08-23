@@ -34,7 +34,7 @@ function dataTableConfig(){
     this.initMyInterval     = true;
     this.setChangeEvent		= true;
     this.tableReference     = window.testDatatable;
-    this.itensBuilt         = []
+    this.itensBuilt         = [];
     this.setConfigExecution();  
 }
 dataTableConfig.prototype.initialize = function () {
@@ -150,8 +150,6 @@ dataTableConfig.prototype.determineObjConfig = function (configField, config){
     }
 }      
 dataTableConfig.prototype.orderLineSuper = function (objConfig, itensConfigs) {
-    var componentTable = document.getElementById('target'); 
-    console.log(componentTable)
     var divIn   = document.getElementsByClassName('row fs-no-margin')
     var divAll  = divIn[0].parentElement.parentElement
     var inpasd  = this.constructInputValueSelected(objConfig) /**  <-------------------------this.configField in  dataTableConfig*/
@@ -212,7 +210,9 @@ dataTableConfig.prototype.changeEventInput = function () {
             }
         },
         enabledButton: function (){
-            console.log(dataTablemi.itensBuilt)
+            console.log(dataTablemi.itensBuilt) 
+            console.log(dataTablemi.TableFluig())
+            dataTablemi.TableFluig().getCol('Aprov.Assessoria')
             var itens = dataTablemi.itensBuilt
             for(i = 0; i < itens.length; i++){
                 let iten = itens[i]
@@ -264,6 +264,43 @@ dataTableConfig.prototype.changeEventTable = function () {
         }
     }
     this.tableReference.setFunc(objFunc);
+}
+dataTableConfig.prototype.TableFluig = function () {
+    TableFluig = {}
+    var table       = document.getElementById('target');
+    var head        = table.getElementsByTagName('thead')[0].rows[0].cells;
+    var tbody       = table.getElementsByTagName('tbody')[0];  
+    var rows        = tbody.rows;  
+    var headNames = []
+    for(i = 0; i < head.length; i++){
+        headNames[i] = head[i].innerText;
+    }
+
+    TableFluig = {
+        table:  table,
+        head:   head,
+        tbody:  tbody,
+        rows:   rows,
+        getCol: function (columName){
+            var col = []
+            var pos = 0
+            for(i = 0; i < headNames.length; i++){
+                if(headNames[i] == columName){
+                    pos = i;
+                    console.log(pos)
+                }
+            }
+            for(j = 0; j < this.rows.length; j++){
+                var cells = this.rows[j].cells;
+                cell = cells[pos]
+                col[j] = cell 
+            }
+            console.log(col)
+            return col
+        }
+    };
+
+    return TableFluig
 }
 
 function dataTableinit() { dataTablemi = new dataTableConfig(); }
