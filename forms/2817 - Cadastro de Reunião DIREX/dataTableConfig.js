@@ -3,8 +3,8 @@ function dataTableConfig(){
         this.configField = {                                                                      // Caso configField não seja configurado. As opçãoes Default serão apresentadas.
             inputId:          'dataSelected',                                                     // Nome do campo que será utilizado para receber o valor selecionado na dataTable.
             validationStyle:  'has-warning has-feedback',                                         // Estilo de apresentação do campo. Style-guide: 'has-success has-feedback', 'has-error has-feedback'.
-            col:              'col-md-2',                                                         // Configuração de GRID style-guide. 
-            colInnerDistri:   'pull-left',                                                       // Determina a posição do campo dentro da COL. Default: 'pull-right'.
+            col:              'col-md-1',                                                         // Configuração de GRID style-guide. 
+            colInnerDistri:   'pull-left',                                                        // Determina a posição do campo dentro da COL. Default: 'pull-right'.
             setLabel: {                                                                           // Caso não configurado não será apresentado.
                 enabled:      false,                                                              // Default: false. true: Apresnta Label | false: Não apresenta.
                 value:        'dataSelected',
@@ -16,10 +16,19 @@ function dataTableConfig(){
             },
             setHelpBlock: {                                                                       // Caso não configurado será apresentado o valor padrão: true, 'Valor Selecionado.'.
                 enabled:      true,                                                               // Default: true. true: Apresnta HelpBlock | false: Não apresenta. 
-                innerText:    'Selecione um Item.'                                               // Determina o texto de Auxilio. Default 'Valor Selecionado.'.
+                innerText:    'Selecione um Item.'                                                // Determina o texto de Auxilio. Default 'Valor Selecionado.'.
             }
         }
     /*** End Input Object Configuration ***/
+
+    var configButton = {
+        innerText: 'Aprovar Inserção de Item',
+        setIcon: 'flaticon flaticon-document-check icon-md', 
+        col: 'col-md-4'
+    }
+
+    this.itensCreates   = [configButton];                                                           //Determina os itens criados e a ordem de posição conforme ordem de posição do array                                                
+
 
     this.initMyInterval     = true;
     this.setChangeEvent		= true;
@@ -27,7 +36,7 @@ function dataTableConfig(){
     this.setConfigExecution();  
 }
 dataTableConfig.prototype.initialize = function () {
-    this.orderLineSuper(this.configField);
+    this.orderLineSuper(this.configField, this.itensCreates);
     changeEvent = this.setChangeEvent;
     if(changeEvent){
         this.changeEventInput();
@@ -67,6 +76,25 @@ dataTableConfig.prototype.constructInputValueSelected = function (configField){
     objDivCol.appendChild(objDivInnerCol);
 
     return objDivCol;
+}
+dataTableConfig.prototype.constructButton = function (configButton){
+    var buttonV = document.createElement('button');
+        buttonV.setAttribute('type', 'button');
+        buttonV.setAttribute('class','btn btn-primary');
+        buttonV.setAttribute('disabled','disabled');
+        buttonV.innerText = configButton.innerText;
+    var iV = document.createElement('i');
+        iV.setAttribute('class', configButton.setIcon);
+        iV.setAttribute('aria-hidden', 'true');
+    var divV = document.createElement('div');
+        divV.setAttribute('class', configButton.col);
+
+        console.log(configButton)
+    
+        buttonV.appendChild(iV);
+        divV.appendChild(buttonV)
+    
+    return divV;
 }
 dataTableConfig.prototype.determineObjConfig = function (configField, config){
     var configDefaut = {
@@ -118,16 +146,20 @@ dataTableConfig.prototype.determineObjConfig = function (configField, config){
         return config
     }
 }      
-dataTableConfig.prototype.orderLineSuper = function (objConfig) {
-    var divIn = document.getElementsByClassName('row fs-no-margin')
-    var divAll = divIn[0].parentElement.parentElement
-    var inpasd = this.constructInputValueSelected(objConfig) /**  <-------------------------this.configField in  dataTableConfig*/
+dataTableConfig.prototype.orderLineSuper = function (objConfig, itensCreates) {
+    var componentTable = document.getElementById('target'); 
+    console.log(componentTable)
+    var divIn   = document.getElementsByClassName('row fs-no-margin')
+    var divAll  = divIn[0].parentElement.parentElement
+    var inpasd  = this.constructInputValueSelected(objConfig) /**  <-------------------------this.configField in  dataTableConfig*/
+    var bt      = this.constructButton(itensCreates[0])
     if(divAll.id == 'target'){
         let tempr = divIn[0].children[0]
         tempr.className = 'col-md-5'
         tempr.children[0].className = ''
         divIn[0].removeChild(divIn[0].children[0])
         divIn[0].appendChild(inpasd)
+        divIn[0].appendChild(bt)
         divIn[0].appendChild(tempr)
 
         clearInterval(this.initMyInterval) /**  <-------------------------this.myInterval in  dataTableConfig*/
@@ -137,10 +169,11 @@ dataTableConfig.prototype.changeEventInput = function () {
     objFunc = {
         fnc: ['formatDinamic'],
         formatDinamic: function () {
+            console.log(dataTablemi.initMyInterval)
             var configFormat = {
                 inputId: 'dataSelected',
                 validationStyle: 'has-success has-feedback',
-                col: 'col-md-2',
+                col: 'col-md-1',
                 colInnerDistri: 'pull-left',
                 setLabel: {
                     enabled: false,
@@ -163,6 +196,11 @@ dataTableConfig.prototype.changeEventInput = function () {
                 var labelInp    = divFeedBack.children[0]
                 var iconInp     = divFeedBack.children[2]
                 var pInp        = divFeedBack.children[3]
+
+                console.log(divCol)
+                console.log(divInCol)
+                console.log(divFeedBack)
+                console.log(labelInp)
         
                 divCol.className        = configFormat.col
                 divInCol.className      = configFormat.colInnerDistri
@@ -217,45 +255,7 @@ dataTableConfig.prototype.changeEventTable = function () {
     }
     this.tableReference.setFunc(objFunc);
 }
-/*
-function openItem(){
-    //http://10.4.4.52:8080/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID=24719
-    var url = "http://10.4.4.52:8080/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID="
-    var arrColumnsRender = ['N° Solicitação', 'Data Solicitação', 'Nome Solicitante', 'Unidade', 'Assunto', 'Justificativa']
-    var indexLink = []
-    var divIn = document.getElementsByClassName('row fs-no-margin')
-    var divAll = divIn[0].parentElement.parentElement       //DIV com o componente dataTable
-    var tableBody   = divAll.getElementsByTagName('tbody')[0]    
-    var nomeCol     = divAll.getElementsByTagName('thead')[0].rows[0].cells
-    var rows = tableBody.rows   //Linhas da pagina atual da dataTable
-    var textLink = 0                           
-    for(i = 0; i < rows.length; i++){
-        let row = rows[i]
-        let cells = row.cells
-        indexLink[i] = cells[0]
-        if(cells[0].innerText != ''){
-            textLink = cells[0].innerText
-            let inHTML = "<a href=\""+ url + textLink +"\""+ "class=\"cad-link\""+"target=\"_blank\""+"style=\"color:blue\">"+"<i class=\"flaticon flaticon-link icon-md\"></i>"+
-            textLink+"</a>"
-            cells[0].innerHTML = inHTML
-            
-        }
-    }
 
-
-    var aV = document.createElement('a');
-        aV.setAttribute('href', url + textLink);
-        aV.setAttribute('class', 'cad-link');
-        aV.setAttribute('target', '_blank');
-        aV.setAttribute('style', 'color:blue');
-    var iV = document.createElement('i');
-        iV.setAttribute('class', 'flaticon flaticon-link icon-md');
-
-        aV.appendChild(iV)
-    
-}
-window.addEventListener('load', openItem)
-*/
 function dataTableinit() { dataTablemi = new dataTableConfig(); }
 window.addEventListener('load', dataTableinit)
 
