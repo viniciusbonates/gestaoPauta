@@ -1,4 +1,4 @@
-function openItem(){
+/*function openItem(){
     //https://myweb.am.sebrae.com.br/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID=24878&app_ecm_workflowview_taskUserId=00000514
     //http://10.4.4.52:8080/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID=24719
 
@@ -23,7 +23,7 @@ function openItem(){
         }
 }
 window.addEventListener('load', openItem)
-
+*/
 function Custom(){
     console.log(DatasetFactory.getDataset("Pauta DIREX", null, null, null))
 	var dataset = DatasetFactory.getDataset("Pauta DIREX", null, null, null)
