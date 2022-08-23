@@ -24,18 +24,19 @@
 }
 window.addEventListener('load', openItem)
 */
+/*
 function Custom(){
     console.log(DatasetFactory.getDataset("Pauta DIREX", null, null, null))
 	var dataset = DatasetFactory.getDataset("Pauta DIREX", null, null, null)
 	var data = dataset.values[0]
 	
-/*	var myJSON 	= JSON.stringify(data);
+	var myJSON 	= JSON.stringify(data);
 	var dv		= myJSON.split(',')
 	for(j = 0; j < dv.len){
 
 	}
 	var dv1		= dv.split(':')
-*/
+
 	var tabela = document.getElementById('PanelControl').children[1]
 
 	for(i = 0; i < dataset.values.length; i++){
@@ -54,6 +55,7 @@ function Custom(){
 	//console.log(dv1)
 }
 window.addEventListener('load', Custom)
+*/
 
 function unidade(){
     var ds_mat = DatasetFactory.getDataset("colleague",null,null,null);
@@ -67,8 +69,8 @@ function unidade(){
             var und = ds_mat.values[i]['groupId'];
             for(var j=0;j<ds_und.values.length;j++){
                 if(und == ds_und.values[j]['AntigaSigla']){
-                    console.log(ds_und.values[j]['Sigla'])
-					console.log(ds_und.values[j])
+                    //console.log(ds_und.values[j]['Sigla'])
+					//console.log(ds_und.values[j])
                     document.getElementById("cmb_GerenteSolicitante").value = ds_und.values[j]['NomeGerente']
                     document.getElementById("zm_UnidadeSolicitante").value = ds_und.values[j]['NomeUnidade']
                     document.getElementById("hd_numSuperior").value = ds_und.values[j]['Matricula']

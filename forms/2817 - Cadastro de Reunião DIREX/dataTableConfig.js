@@ -155,8 +155,6 @@ dataTableConfig.prototype.orderLineSuper = function (objConfig, itensConfigs) {
     var divAll  = divIn[0].parentElement.parentElement
     var inpasd  = this.constructInputValueSelected(objConfig) /**  <-------------------------this.configField in  dataTableConfig*/
     var bt      = this.constructButton(itensConfigs[0])
-
-    console.log(this.itensBuilt)
     if(divAll.id == 'target'){
         let tempr = divIn[0].children[0]
         tempr.className = 'col-md-5'
@@ -170,10 +168,9 @@ dataTableConfig.prototype.orderLineSuper = function (objConfig, itensConfigs) {
     }
 }
 dataTableConfig.prototype.changeEventInput = function () {
-    objFunc = {
+    let objFunc = {
         fnc: ['formatDinamic', 'enabledButton'],
         formatDinamic: function () {
-            console.log(dataTablemi.initMyInterval)
             var configFormat = {
                 inputId: 'dataSelected',
                 validationStyle: 'has-success has-feedback',
@@ -211,9 +208,6 @@ dataTableConfig.prototype.changeEventInput = function () {
             }
         },
         enabledButton: function (){
-            console.log(dataTablemi.itensBuilt) 
-            console.log(dataTablemi.TableFluig())
-            dataTablemi.TableFluig().getCol('Aprov.Assessoria')
             var itens = dataTablemi.itensBuilt
             for(i = 0; i < itens.length; i++){
                 let iten = itens[i]
@@ -229,7 +223,7 @@ dataTableConfig.prototype.changeEventInput = function () {
                                    /****** Metodos com Necessidade de Tratamento******** */
 
 dataTableConfig.prototype.changeEventTable = function () {
-    objFunc = {
+    let objFunc = {
         fnc: [
                 {'fncName': 'openItem', 'metodhParam': 'reload'}
         ],
@@ -267,9 +261,11 @@ dataTableConfig.prototype.changeEventTable = function () {
     this.tableReference.setFunc(objFunc);
 }
 dataTableConfig.prototype.loadEventTable = function () {
-    objFunc = {
+    var TableFluig = this.TableFluig()
+    let objFuncload = {
         fnc: [
-                {'fncName': 'openItem', 'metodhParam': 'load'}
+                {'fncName': 'openItem', 'metodhParam': 'load'},
+                {'fncName': 'statusAsr', 'metodhParam': 'load'}
         ],
         openItem: function () {
             var url = "http://10.4.4.52:8080/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID="
@@ -291,13 +287,18 @@ dataTableConfig.prototype.loadEventTable = function () {
                     cells[0].innerHTML = inHTML
                 }
             }
+        },
+        statusAsr: function () {
+            console.log(TableFluig) 
+            let col = TableFluig.getCol('Aprov.Assessoria')
+            console.log(col)
         }
-    };
-    if(objFunc != '' && objFunc != null && objFunc != undefined){
-        for(i = 0; i < objFunc.fnc.length; i++){
-            if(objFunc.fnc[i].metodhParam == 'load'){
-                let name 		= objFunc.fnc[i].fncName
-                let funNow 		= objFunc[name]()
+    }
+    if(objFuncload != '' && objFuncload != null && objFuncload != undefined){
+        for(let i = 0; i < objFuncload.fnc.length; i++){
+            if(objFuncload.fnc[i].metodhParam == 'load'){
+                let name 		= objFuncload.fnc[i].fncName
+                objFuncload[name]()
             }
         }
     }
@@ -332,7 +333,6 @@ dataTableConfig.prototype.TableFluig = function () {
                 cell = cells[pos]
                 col[j] = cell 
             }
-            console.log(col)
             return col
         }
     };
