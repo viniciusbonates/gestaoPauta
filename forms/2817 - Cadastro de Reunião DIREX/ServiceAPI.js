@@ -4,13 +4,18 @@ function resMethods(){
 }
 function orderMethods(){
     this.Nsolicitacao        = 24920; 
-    this.host                = "http://10.4.4.52:8080";   
+    this.host                = window.origin //"http://10.4.4.52:8080";   
     resMethods();
 }
-orderMethods.prototype.movePOST = function () {
-    var Nsolicitacao        = this.Nsolicitacao; 
+orderMethods.prototype.movePOST = function (NumSolicitacao) {
+    var Nsolicitacao        = NumSolicitacao; 
+    var host                = this.host; 
+    if(NumSolicitacao == undefined || NumSolicitacao == ''){
+        Nsolicitacao        = this.Nsolicitacao; 
+        return console.log('Necessário selecionar um Item')
+    }
     var host                = this.host;     
-    this.requestsGET(this.Nsolicitacao, this.host);
+    this.requestsGET(Nsolicitacao, this.host);
     var interval = setInterval(pst, 100)
     function pst(){
         var request = window.res 
@@ -45,5 +50,5 @@ orderMethods.prototype.requestsGET = function (NumSolicit, host) {
         window.res = response;
     })
 }
-function orderMethodsInit() { orderMethodsMi = new orderMethods(); }
-window.addEventListener('load', orderMethodsInit)
+//function orderMethodsInit() { orderMethodsMi = new orderMethods(); }
+//window.addEventListener('load', orderMethodsInit)

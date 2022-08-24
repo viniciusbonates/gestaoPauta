@@ -1,22 +1,22 @@
 function dataTableConfig(){
     /*** Configure Input Object Options ***/
-        this.configField = {                                                                      // Caso configField não seja configurado. As opçãoes Default serão apresentadas.
-            inputId:          'dataSelected',                                                     // Nome do campo que será utilizado para receber o valor selecionado na dataTable.
-            validationStyle:  'has-warning has-feedback',                                         // Estilo de apresentação do campo. Style-guide: 'has-success has-feedback', 'has-error has-feedback'.
-            col:              'col-md-1',                                                         // Configuração de GRID style-guide. 
-            colInnerDistri:   'pull-left',                                                        // Determina a posição do campo dentro da COL. Default: 'pull-right'.
-            setLabel: {                                                                           // Caso não configurado não será apresentado.
-                enabled:      false,                                                              // Default: false. true: Apresnta Label | false: Não apresenta.
+    this.configField = {                                                                            // Caso configField não seja configurado. As opçãoes Default serão apresentadas.
+            inputId:          'dataSelected',                                                       // Nome do campo que será utilizado para receber o valor selecionado na dataTable.
+            validationStyle:  'has-warning has-feedback',                                           // Estilo de apresentação do campo. Style-guide: 'has-success has-feedback', 'has-error has-feedback'.
+            col:              'col-md-1',                                                           // Configuração de GRID style-guide. 
+            colInnerDistri:   'pull-left',                                                          // Determina a posição do campo dentro da COL. Default: 'pull-right'.
+            setLabel: {                                                                             // Caso não configurado não será apresentado.
+                enabled:      false,                                                                // Default: false. true: Apresnta Label | false: Não apresenta.
                 value:        'dataSelected',
                 innerText:    'Input with success'
             },                                                                              
-            setIcone: {                                                                           // Caso não configurado será apresentado o valor padrão: true, 'flaticon flaticon-check-circle icon-sm form-control-feedback'.
-                enabled:      true,                                                               // Default: true. true: Apresnta Icone | false: Não apresenta. 
-                value:        'flaticon flaticon-alert icon-sm form-control-feedback'             // Caso não configurado será apresentado o valor padrão 'flaticon flaticon-check-circle icon-sm form-control-feedback'.
+            setIcone: {                                                                             // Caso não configurado será apresentado o valor padrão: true, 'flaticon flaticon-check-circle icon-sm form-control-feedback'.
+                enabled:      true,                                                                 // Default: true. true: Apresnta Icone | false: Não apresenta. 
+                value:        'flaticon flaticon-alert icon-sm form-control-feedback'               // Caso não configurado será apresentado o valor padrão 'flaticon flaticon-check-circle icon-sm form-control-feedback'.
             },
-            setHelpBlock: {                                                                       // Caso não configurado será apresentado o valor padrão: true, 'Valor Selecionado.'.
-                enabled:      true,                                                               // Default: true. true: Apresnta HelpBlock | false: Não apresenta. 
-                innerText:    'Selecione um Item.'                                                // Determina o texto de Auxilio. Default 'Valor Selecionado.'.
+            setHelpBlock: {                                                                         // Caso não configurado será apresentado o valor padrão: true, 'Valor Selecionado.'.
+                enabled:      true,                                                                 // Default: true. true: Apresnta HelpBlock | false: Não apresenta. 
+                innerText:    'Selecione um Item.'                                                  // Determina o texto de Auxilio. Default 'Valor Selecionado.'.
             }
         }
     /*** End Input Object Configuration ***/
@@ -28,13 +28,15 @@ function dataTableConfig(){
         col: 'col-md-4'
     }
 
-    this.itensConfigs   = [configButton];                                                           //Determina os itens criados e a ordem de posição conforme ordem de posição do array                                                
+    this.itensConfigs       = [configButton];                                                       //Determina os itens criados e a ordem de posição conforme ordem de posição do array                                                
 
-
+    this.APImethods         = new orderMethods();                                                   // se carregado pelo arquivo ServiceAPI: APImethods= window.orderMethodsMi. Construtor iniciado aqui.
     this.initMyInterval     = true;
     this.setChangeEvent		= true;
     this.tableReference     = window.testDatatable;
-    this.itensBuilt         = [];
+    this.itensBuilt         = {
+        name: []
+    };
     this.setConfigExecution();  
 }
 dataTableConfig.prototype.initialize = function () {
@@ -44,6 +46,7 @@ dataTableConfig.prototype.initialize = function () {
         this.changeEventInput();
         this.changeEventTable();
         this.loadEventTable();
+        this.itensBuiltFunc();
     }
 }
 dataTableConfig.prototype.setConfigExecution = function () {
@@ -78,7 +81,8 @@ dataTableConfig.prototype.constructInputValueSelected = function (configField){
     objDivInnerCol.appendChild(objDivClassValidate);
     objDivCol.appendChild(objDivInnerCol);
 
-    this.itensBuilt.push(objDivCol)
+    //this.itensBuilt.push(objDivCol)
+    this.setitensBuilt(objDivCol, 'inputSelected')
     return objDivCol;
 }
 dataTableConfig.prototype.constructButton = function (configButton){
@@ -97,7 +101,8 @@ dataTableConfig.prototype.constructButton = function (configButton){
         buttonV.appendChild(iV);
         divV.appendChild(buttonV)
     
-    this.itensBuilt.push(divV)   
+    //this.itensBuilt.push(divV);
+    this.setitensBuilt(divV, 'btn1');   
     return divV;
 }
 dataTableConfig.prototype.constructIcon = function (configIcon){
@@ -318,6 +323,37 @@ dataTableConfig.prototype.loadEventTable = function () {
             }
         }
     }
+}
+dataTableConfig.prototype.itensBuiltFunc = function () {
+    let itens = this.itensBuilt;
+    var btn = 0;
+    for(let i = 0; i < itens.length; i++){
+        iten = itens[i]
+        if(iten.id == 'btn1'){  
+            console.log(iten.getElementsByTagName('button')[0])
+            btn = iten.getElementsByTagName('button')[0];
+        }
+    }
+    if(btn != 0){
+        console.log(btn)
+        btn.onclick = function () { 
+            let it = dataTablemi.itensBuilt;
+            for(let i = 0; i < it.length; i++){
+                iten = it[i]
+                if(iten.id != 'btn1'){
+                    console.log(iten.getElementsByTagName('input'))
+                    inpValue = iten.getElementsByTagName('input')[0].value;
+                    console.log(inpValue)
+                }
+            }
+            dataTablemi.APImethods.movePOST(inpValue); 
+        }
+    }
+}
+dataTableConfig.prototype.setitensBuilt = function (item, name) {
+    this.itensBuilt.name.push(name);
+    this.itensBuilt[name] = item;
+    return console.log(this.itensBuilt)
 }
 dataTableConfig.prototype.TableFluig = function () {
     TableFluig = {}
