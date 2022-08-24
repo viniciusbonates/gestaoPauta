@@ -81,8 +81,7 @@ dataTableConfig.prototype.constructInputValueSelected = function (configField){
     objDivInnerCol.appendChild(objDivClassValidate);
     objDivCol.appendChild(objDivInnerCol);
 
-    //this.itensBuilt.push(objDivCol)
-    this.setitensBuilt(objDivCol, 'inputSelected')
+    this.setitensBuilt(objDivCol, 'dataSelected')
     return objDivCol;
 }
 dataTableConfig.prototype.constructButton = function (configButton){
@@ -101,7 +100,6 @@ dataTableConfig.prototype.constructButton = function (configButton){
         buttonV.appendChild(iV);
         divV.appendChild(buttonV)
     
-    //this.itensBuilt.push(divV);
     this.setitensBuilt(divV, 'btn1');   
     return divV;
 }
@@ -114,8 +112,7 @@ dataTableConfig.prototype.constructIcon = function (configIcon){
             iV.setAttribute('aria-hidden', 'true');
             return iV
         }
-    }
-    //this.itensBuilt.push(iV)   
+    }  
     return icon;
 }
 dataTableConfig.prototype.determineObjConfig = function (configField, config){
@@ -226,13 +223,8 @@ dataTableConfig.prototype.changeEventInput = function () {
             }
         },
         enabledButton: function (){
-            var itens = dataTablemi.itensBuilt
-            for(i = 0; i < itens.length; i++){
-                let iten = itens[i]
-                if(iten.id == 'btn1'){  
-                    iten.getElementsByTagName('button')[0].disabled = false
-                }
-            }
+            var iten = dataTablemi.itensBuilt['btn1']
+            iten.getElementsByTagName('button')[0].disabled = false
         }
     }
     this.tableReference.onselectrow(this.tableReference.myTable, objFunc);
@@ -326,27 +318,27 @@ dataTableConfig.prototype.loadEventTable = function () {
 }
 dataTableConfig.prototype.itensBuiltFunc = function () {
     let itens = this.itensBuilt;
-    var btn = 0;
-    for(let i = 0; i < itens.length; i++){
-        iten = itens[i]
-        if(iten.id == 'btn1'){  
-            console.log(iten.getElementsByTagName('button')[0])
-            btn = iten.getElementsByTagName('button')[0];
+    let itenBuitFunc = {
+        fnc: [
+                {'fncName': 'moveItem'}
+        ],
+        moveItem: function () {
+            btn = itens['btn1'];
+            if(btn != undefined){
+                btn.onclick = function () { 
+                    let nameIten = 'dataSelected'
+                    let it = dataTablemi.itensBuilt[nameIten];
+                    inp = it.getElementsByTagName('input')[0];
+                    inpValue = inp.value;
+                    dataTablemi.APImethods.movePOST(inpValue);
+                }
+            }        
         }
     }
-    if(btn != 0){
-        console.log(btn)
-        btn.onclick = function () { 
-            let it = dataTablemi.itensBuilt;
-            for(let i = 0; i < it.length; i++){
-                iten = it[i]
-                if(iten.id != 'btn1'){
-                    console.log(iten.getElementsByTagName('input'))
-                    inpValue = iten.getElementsByTagName('input')[0].value;
-                    console.log(inpValue)
-                }
-            }
-            dataTablemi.APImethods.movePOST(inpValue); 
+    if(itenBuitFunc != '' && itenBuitFunc != null && itenBuitFunc != undefined){
+        for(let i = 0; i < itenBuitFunc.fnc.length; i++){
+            let name 		= itenBuitFunc.fnc[i].fncName;
+            itenBuitFunc[name]();
         }
     }
 }
