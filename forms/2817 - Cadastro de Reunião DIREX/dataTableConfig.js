@@ -100,6 +100,19 @@ dataTableConfig.prototype.constructButton = function (configButton){
     this.itensBuilt.push(divV)   
     return divV;
 }
+dataTableConfig.prototype.constructIcon = function (configIcon){
+    icon = {}
+    icon = {
+        construct: function (configIcon) {
+            var iV = document.createElement('i');
+            iV.setAttribute('class', configIcon);
+            iV.setAttribute('aria-hidden', 'true');
+            return iV
+        }
+    }
+    //this.itensBuilt.push(iV)   
+    return icon;
+}
 dataTableConfig.prototype.determineObjConfig = function (configField, config){
     var configDefaut = {
         inputId: 'dataSelected',
@@ -261,7 +274,8 @@ dataTableConfig.prototype.changeEventTable = function () {
     this.tableReference.setFunc(objFunc);
 }
 dataTableConfig.prototype.loadEventTable = function () {
-    var TableFluig = this.TableFluig()
+    var TableFluig          = this.TableFluig();
+    var constructIcon       = this.constructIcon(); 
     let objFuncload = {
         fnc: [
                 {'fncName': 'openItem', 'metodhParam': 'load'},
@@ -289,9 +303,11 @@ dataTableConfig.prototype.loadEventTable = function () {
             }
         },
         statusAsr: function () {
-            console.log(TableFluig) 
-            let col = TableFluig.getCol('Aprov.Assessoria')
-            console.log(col)
+            let col = TableFluig.getCol('Aprov.Assessoria');
+            for(let i = 0; i < col.length; i++){
+                let icon = constructIcon.construct('fluigicon fluigicon-file-bell-empty icon-md');
+                col[i].appendChild(icon)
+            }   
         }
     }
     if(objFuncload != '' && objFuncload != null && objFuncload != undefined){

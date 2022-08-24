@@ -464,13 +464,13 @@ var testDatatable = {
 				this.objFunc.fnc[this.objFunc.fnc.length] = params
 				this.objFunc[name] = objFnc[name]
 			}
-			console.log(this.objFunc)
+			//console.log(this.objFunc)
 		}
 	},
 	reload: function(myTable, data, objFunc){
 		if(myTable != undefined){
 			var a = myTable.reload(data);
-			console.log(a)
+			//console.log(a)
 			var funNow = 0;
 			if(objFunc != '' && objFunc != null && objFunc != undefined){
 				for(t = 0; t < objFunc.fnc.length; t++){
@@ -478,7 +478,7 @@ var testDatatable = {
 						
 						let name 		= objFunc.fnc[t].fncName
 						let funNow 		= objFunc[name]()
-						console.log(funNow)
+						//console.log(funNow)
 					}
 				}
 			}
