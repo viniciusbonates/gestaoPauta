@@ -336,37 +336,45 @@ dataTableConfig.prototype.itensBuiltFunc = function () {
                     inpValue = inp.value;       
                     dataTablemi.APImethods.movePOST(inpValue);
                     var interv = setInterval(defineStatus, 200);
-                    function defineStatus () {
-                        let winres          = window.res;
-                        dataTablemi.resAPI  = winres;
-                        let res             = dataTablemi.resAPI;
-                        if(res != undefined && res != '' && res != {}){
-                            let stateActive     = res.items[res.items.length - 1].active
-                            let stateNow        = res.items[res.items.length - 1].state.sequence
-                            let stateInstanced  = res.items[res.items.length - 1].processInstanceId
-                            let colItem = 0;
-                            for(let i = 0; i < colValue.length; i++){
-                                if(inpValue == colValue[i].innerText){
-                                    colItem = colItens[i]
+                    function defineStatus () { 
+                        console.log(window.res)
+                        console.log(typeof window.res)
+                        if(window.res.indexOf('Error') == -1){
+                            dataTablemi.resAPI  = window.res['res'];
+                            console.log(window.res)
+                            let order           = window.res['order'];
+                            let res             = dataTablemi.resAPI;
+                            if(order == 2){
+                                if(res != undefined && res != '' && res != {}){
+                                    let stateActive     = res.items[res.items.length - 1].active
+                                    let stateNow        = res.items[res.items.length - 1].state.sequence
+                                    let stateInstanced  = res.items[res.items.length - 1].processInstanceId
+                                    let colItem = 0;
+                                    for(let i = 0; i < colValue.length; i++){
+                                        if(inpValue == colValue[i].innerText){
+                                            colItem = colItens[i]
+                                        }
+                                    } 
+                                    if(stateActive == true && stateInstanced == inpValue){
+                                        if(stateNow == 9){ 
+                                            colItem.removeChild(colItem.children[0]); 
+                                            let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-checked icon-md');
+                                            colItem.appendChild(icon)
+                                            dataTablemi.resAPI = {}
+                                            clearInterval(interv)
+                                        }
+                                        else if(stateNow == 5){
+                                            colItem.removeChild(colItem.children[0])
+                                            let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-file-bell-empty icon-md');
+                                            colItem.appendChild(icon)
+                                            dataTablemi.resAPI = {}
+                                            clearInterval(interv)
+                                        }else{ clearInterval(interv) } 
+                                    }else{ clearInterval(interv) } 
                                 }
-                            } 
-                            if(stateActive == true && stateInstanced == inpValue){
-                                if(stateNow == 9){ 
-                                    colItem.removeChild(colItem.children[0]); 
-                                    let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-checked icon-md');
-                                    colItem.appendChild(icon)
-                                    dataTablemi.resAPI = {}
-                                    clearInterval(interv)
-                                }
-                                else if(stateNow == 5){
-                                    colItem.removeChild(colItem.children[0])
-                                    let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-file-bell-empty icon-md');
-                                    colItem.appendChild(icon)
-                                    dataTablemi.resAPI = {}
-                                    clearInterval(interv)
-                                }else{ clearInterval(interv) } 
-                            }else{ clearInterval(interv) } 
-                        }
+                            }
+                            clearInterval(interv)
+                        }else{ clearInterval(interv) }
                     }
                     //dataTablemi.APImethods.requestsGET(inpValue, host)
                 }
