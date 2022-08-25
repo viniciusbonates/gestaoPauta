@@ -36,7 +36,12 @@ orderMethods.prototype.movePOST = function (NumSolicitacao) {
                     }
                     }),
                 async: false
-            }).done(function (response) { console.log(response); })
+            }).done(function (response) { 
+                console.log(response); 
+                let n = orderMethodsMi.Nsolicitacao;
+                let host = orderMethodsMi.host;
+                orderMethodsMi.requestsGET(n, host);
+            })
             clearInterval(interval)
         }
     }
@@ -48,7 +53,8 @@ orderMethods.prototype.requestsGET = function (NumSolicit, host) {
         contentType: "application/json"
     }).done(function (response) { 
         window.res = response;
+        console.log(window.res)
     })
 }
-//function orderMethodsInit() { orderMethodsMi = new orderMethods(); }
-//window.addEventListener('load', orderMethodsInit)
+function orderMethodsInit() { orderMethodsMi = new orderMethods(); }
+window.addEventListener('load', orderMethodsInit)

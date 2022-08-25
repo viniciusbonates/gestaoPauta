@@ -31,6 +31,7 @@ function dataTableConfig(){
     this.itensConfigs       = [configButton];                                                       //Determina os itens criados e a ordem de posição conforme ordem de posição do array                                                
 
     this.APImethods         = new orderMethods();                                                   // se carregado pelo arquivo ServiceAPI: APImethods= window.orderMethodsMi. Construtor iniciado aqui.
+    this.resAPI             = window.res
     this.initMyInterval     = true;
     this.setChangeEvent		= true;
     this.tableReference     = window.testDatatable;
@@ -326,14 +327,51 @@ dataTableConfig.prototype.itensBuiltFunc = function () {
             btn = itens['btn1'];
             if(btn != undefined){
                 btn.onclick = function () { 
+                    let host    = dataTablemi.APImethods.host; 
+                    let colItens = dataTablemi.TableFluig().getCol('Aprov.Assessoria');
+                    let colValue = dataTablemi.TableFluig().getCol('N° Solicitação');
                     let nameIten = 'dataSelected'
                     let it = dataTablemi.itensBuilt[nameIten];
                     inp = it.getElementsByTagName('input')[0];
-                    inpValue = inp.value;
+                    inpValue = inp.value;       
                     dataTablemi.APImethods.movePOST(inpValue);
+                    var interv = setInterval(defineStatus, 200);
+                    function defineStatus () {
+                        let winres          = window.res;
+                        dataTablemi.resAPI  = winres;
+                        let res             = dataTablemi.resAPI;
+                        if(res != undefined && res != '' && res != {}){
+                            let stateActive     = res.items[res.items.length - 1].active
+                            let stateNow        = res.items[res.items.length - 1].state.sequence
+                            let stateInstanced  = res.items[res.items.length - 1].processInstanceId
+                            let colItem = 0;
+                            for(let i = 0; i < colValue.length; i++){
+                                if(inpValue == colValue[i].innerText){
+                                    colItem = colItens[i]
+                                }
+                            } 
+                            if(stateActive == true && stateInstanced == inpValue){
+                                if(stateNow == 9){ 
+                                    colItem.removeChild(colItem.children[0]); 
+                                    let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-checked icon-md');
+                                    colItem.appendChild(icon)
+                                    dataTablemi.resAPI = {}
+                                    clearInterval(interv)
+                                }
+                                else if(stateNow == 5){
+                                    colItem.removeChild(colItem.children[0])
+                                    let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-file-bell-empty icon-md');
+                                    colItem.appendChild(icon)
+                                    dataTablemi.resAPI = {}
+                                    clearInterval(interv)
+                                }else{ clearInterval(interv) } 
+                            }else{ clearInterval(interv) } 
+                        }
+                    }
+                    //dataTablemi.APImethods.requestsGET(inpValue, host)
                 }
             }        
-        }
+        },
     }
     if(itenBuitFunc != '' && itenBuitFunc != null && itenBuitFunc != undefined){
         for(let i = 0; i < itenBuitFunc.fnc.length; i++){
