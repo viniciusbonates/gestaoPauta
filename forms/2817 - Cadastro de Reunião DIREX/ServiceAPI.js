@@ -28,8 +28,15 @@ orderMethods.prototype.movePOST = function (NumSolicitacao) {
             if(resp != undefined){
                 var movementSequence    = request.response.items.length;
                 var targetState         = request.response.items[request.response.items.length - 1].state.sequence;
-                if(targetState == 9){ targetState = 5 }
-                else if(targetState == 5){ targetState = 9 }
+                var aprvAssr            = 0;
+                if(targetState == 9){ 
+                    targetState = 5 
+                    aprvAssr    = 0
+                }
+                else if(targetState == 5){ 
+                    targetState = 9; 
+                    aprvAssr    = 1
+                }
                 $.ajax({
                     method: "POST",
                     url: host+"/process-management/api/v2/requests/"+Nsolicitacao+"/move",
@@ -38,7 +45,7 @@ orderMethods.prototype.movePOST = function (NumSolicitacao) {
                         "movementSequence":     movementSequence,   //7
                         "targetState":          targetState,        //9
                         "formFields": {
-                            "txt_titulo": "TESTE  AAA"
+                            "hdn_aprvAssr": aprvAssr
                         }
                         }),
                     async: false,
