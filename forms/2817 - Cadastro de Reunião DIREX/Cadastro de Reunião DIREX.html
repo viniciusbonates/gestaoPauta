@@ -211,9 +211,11 @@ objMain = {
 	validation: function () {
 		let dataItm 	= item['dt_DataSolicita']
 		let dataNow 	= new Date()
-		let mesNow		= dataNow.getMonth();
-		dataItm = dataItm.split('-')
-		if(dataItm[0] != anoNow){ return true }
+		let anoNow		= dataNow.getFullYear();
+		dataItm = dataItm.split(' ')[0];
+		dataItm = dataItm.split('/')
+		console.log(dataItm)
+		if(dataItm[2] != anoNow){ return true }
 		else{ return false }; 
 	},
 	fnc: [
@@ -304,10 +306,12 @@ var testDatatable = {
 			if(item != undefined && item[attIten] != null && item[attIten] != ''){ 
 				/*********************** Validação ***********************************/
 				if(condValidation.length == 0 || condValidation != ''){
+					console.log(condValidation)				
 					for(cv = 0; cv < condValidation.length; cv++){
 						let nameVal 		= condValidation[cv].fncName
 						let aVal 			= objAll[nameVal]()
-						let refVal 			= condValidation[cv].fncParam	
+						let refVal 			= condValidation[cv].fncParam
+						console.log(aVal)	
 						if(aVal != true || aVal == undefined){
 				/*********************** Validação ***********************************/
 							if(fnc != '' && press != 1){
