@@ -205,7 +205,17 @@ objMain = {
 				{'title': 'Aprov.Assessoria'}
 			],
 	operation: '1',
-	condValidation: [],
+	condValidation: [
+			{'fncName': 'validation', 'fncParam': 'dt_DataSolicita'}
+		],
+	validation: function () {
+		let dataItm 	= item['dt_DataSolicita']
+		let dataNow 	= new Date()
+		let mesNow		= dataNow.getMonth();
+		dataItm = dataItm.split('-')
+		if(dataItm[0] != anoNow){ return true }
+		else{ return false }; 
+	},
 	fnc: [
 			{'fncName': 'a', 'fncParam': 'cmb_NomeSolicita'},
 			{'fncName': 'b', 'fncParam': 'txt_Justificativa'}
@@ -292,12 +302,14 @@ var testDatatable = {
 			item = itens[i]
 			lgnt = objData.arrItens.length
 			if(item != undefined && item[attIten] != null && item[attIten] != ''){ 
-				//if(condValidation.length == 0 || condValidation != ''){
-					//for(cv = 0; cv < condValidation.length; cv++){
-						//let nameVal 		= condValidation[cv].fncName
-						//let aVal 			= objAll[nameVal]()
-						//let refVal 		= condValidation[cv].fncParam	
-						//if(aVal != true || aVal == undefined){
+				/*********************** Validação ***********************************/
+				if(condValidation.length == 0 || condValidation != ''){
+					for(cv = 0; cv < condValidation.length; cv++){
+						let nameVal 		= condValidation[cv].fncName
+						let aVal 			= objAll[nameVal]()
+						let refVal 			= condValidation[cv].fncParam	
+						if(aVal != true || aVal == undefined){
+				/*********************** Validação ***********************************/
 							if(fnc != '' && press != 1){
 								for(t = 0; t < fnc.length; t++){
 									let name 		= fnc[t].fncName
@@ -341,9 +353,9 @@ var testDatatable = {
 								if(objData.arrItens.length != determineLenght){ objData.arrItens[lgnt] = JSON.parse(obj_din);objData.indIten = i + 1 }
 								if(objData.markItensAll == 0) { objData.arrItensAll[count] = JSON.parse(obj_din); }
 							}
-						//}
-					//}
-				//}
+						}
+					}
+				}
 			}else if(item == undefined)	{
 				if(objData.arrItens.length != determineLenght){ 
 					if(itens.length != objData.indIten){
