@@ -28,7 +28,7 @@ function dataTableConfig(){
         col: 'col-md-4'
     }
 
-    this.itensConfigs       = [configButton];                                                       //Determina os itens criados e a ordem de posição conforme ordem de posição do array                                                
+    this.itensConfigs       = [configButton];                                                       // Determina os itens criados e a ordem de posição conforme ordem de posição do array                                                
 
     this.APImethods         = new orderMethods();                                                   // se carregado pelo arquivo ServiceAPI: APImethods= window.orderMethodsMi. Construtor iniciado aqui.
     this.resAPI             = window.res
@@ -337,14 +337,14 @@ dataTableConfig.prototype.itensBuiltFunc = function () {
                     dataTablemi.APImethods.movePOST(inpValue);
                     var interv = setInterval(defineStatus, 200);
                     function defineStatus () { 
+                        dataTablemi.resAPI  = window.res['response'];
                         console.log(window.res)
-                        console.log(typeof window.res)
-                        if(window.res.indexOf('Error') == -1){
-                            dataTablemi.resAPI  = window.res['res'];
-                            console.log(window.res)
-                            let order           = window.res['order'];
-                            let res             = dataTablemi.resAPI;
-                            if(order == 2){
+                        let order           = window.res['order'];
+                        let res             = dataTablemi.resAPI;
+                        if(order == 2 && res != {}){
+                            let err = window.res['err']
+                            console.log(window.res['err'])
+                            if(err != undefined && err.indexOf('Error') == -1){
                                 if(res != undefined && res != '' && res != {}){
                                     let stateActive     = res.items[res.items.length - 1].active
                                     let stateNow        = res.items[res.items.length - 1].state.sequence
@@ -372,9 +372,8 @@ dataTableConfig.prototype.itensBuiltFunc = function () {
                                         }else{ clearInterval(interv) } 
                                     }else{ clearInterval(interv) } 
                                 }
-                            }
-                            clearInterval(interv)
-                        }else{ clearInterval(interv) }
+                            }else { clearInterval(interv) }
+                        }else if(order == 0){ clearInterval(interv) }
                     }
                     //dataTablemi.APImethods.requestsGET(inpValue, host)
                 }

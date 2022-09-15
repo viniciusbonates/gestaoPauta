@@ -12,17 +12,22 @@ orderMethods.prototype.movePOST = function (NumSolicitacao) {
     var host                = this.host; 
     if(NumSolicitacao == undefined || NumSolicitacao == ''){
         Nsolicitacao        = this.Nsolicitacao; 
+        window.res['order'] = 0; 
         return console.log('Necessário selecionar um Item')
     }
     var host                = this.host;     
     this.requestsGET(Nsolicitacao, this.host);
     var interval = setInterval(pst, 100)
+    console.log(Nsolicitacao)
     function pst(){
         try{
             var request = window.res 
-            if(request.items.length != undefined){
-                var movementSequence    = request.items.length;
-                var targetState         = request.items[request.items.length - 1].state.sequence;
+            console.log(request)
+            let resp    = request.response
+            console.log(resp)
+            if(resp != undefined){
+                var movementSequence    = request.response.items.length;
+                var targetState         = request.response.items[request.response.items.length - 1].state.sequence;
                 if(targetState == 9){ targetState = 5 }
                 else if(targetState == 5){ targetState = 9 }
                 $.ajax({
@@ -36,17 +41,21 @@ orderMethods.prototype.movePOST = function (NumSolicitacao) {
                             "txt_titulo": "TESTE  AAA"
                         }
                         }),
-                    async: false
+                    async: false,
+                    error: function(x, e) {
+                        console.log(x)
+                        console.log(e)
+                    }
                 }).done(function (response) { 
                     console.log(response); 
                     let n = orderMethodsMi.Nsolicitacao;
                     let host = orderMethodsMi.host;
+                    window.res['check'] = true
                     orderMethodsMi.requestsGET(n, host);
-                    window.res['order'] = 2
                 })
                 clearInterval(interval)
             }
-        }catch(err){window.res =  err.name; console.log(err.name); clearInterval(interval) }
+        }catch(err){window.res['err'] =  err.name; clearInterval(interval);console.log(err) }
     }
 }
 orderMethods.prototype.requestsGET = function (NumSolicit, host) {
@@ -55,9 +64,18 @@ orderMethods.prototype.requestsGET = function (NumSolicit, host) {
         url: host+"/process-management/api/v2/requests/"+NumSolicit+"/activities?page=1&pageSize=1000",
         contentType: "application/json"
     }).done(function (response) { 
-        window.res['res']     = response;
-        window.res['order']   = 1; 
+        window.res['response']       = response;
+        if(window.res['check'] != undefined){
+            if(window.res['check'] == true){
+                window.res['order']     = 2;
+                window.res['check']     = false;
+            }else if(window.res['check'] == false){
+                window.res['order']     = 1;
+            }
+        }
+        window.res['err']       = '';
         console.log(window.res)
+        console.log('**************')
     })
 }
 function orderMethodsInit() { orderMethodsMi = new orderMethods(); }
