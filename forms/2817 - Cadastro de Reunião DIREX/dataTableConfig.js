@@ -234,13 +234,16 @@ dataTableConfig.prototype.changeEventInput = function () {
                                    /****** Metodos com Necessidade de Tratamento******** */
 
 dataTableConfig.prototype.changeEventTable = function () {
+    var TableFluig          = this.TableFluig();
+    var constructIcon       = this.constructIcon(); 
     let objFunc = {
         fnc: [
-                {'fncName': 'openItem', 'metodhParam': 'reload'}
+                {'fncName': 'openItem', 'metodhParam': 'reload'},
+                {'fncName': 'statusAsr', 'metodhParam': 'reload'}
         ],
         openItem: function () {
-            var secInterval = setInterval(push, 20)
-            function push(){    
+            var secIntervalOpenItem = setInterval(pushOpenItem, 20)
+            function pushOpenItem(){    
                 var url = "http://10.4.4.52:8080/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID="
                 var arrColumnsRender = ['N° Solicitação', 'Data Solicitação', 'Nome Solicitante', 'Unidade', 'Assunto', 'Justificativa']
                 var indexLink = []
@@ -265,7 +268,34 @@ dataTableConfig.prototype.changeEventTable = function () {
                         console.log(inHTML)
                     }
                 }
-                clearInterval(secInterval)
+                clearInterval(secIntervalOpenItem)
+            }
+        },
+        statusAsr: function () {
+            var secIntervalStatusAsr = setInterval(pushStatusAsr, 20);
+            function pushStatusAsr(){
+                let col         = TableFluig.getCol('Aprov.Assessoria');
+                let colNumSol   = TableFluig.getCol('Solicitação');
+                for(let i = 0; i < col.length; i++){
+                    let numSlct     = colNumSol[i].children[0].innerText;
+                    let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", numSlct, numSlct, ConstraintType.MUST); 
+                    let itenPauta      = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
+                    if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
+                        console.log(itenPauta)
+                        let assrAp = itenPauta['hdn_aprvAssr'];
+                        if(assrAp == 1){
+                            let iconChecked     = constructIcon.construct('fluigicon fluigicon-checked icon-md');
+                            col[i].appendChild(iconChecked)
+                        }else if(assrAp == 0){
+                            let iconEmpty       = constructIcon.construct('fluigicon fluigicon-file-bell-empty icon-md');
+                            col[i].appendChild(iconEmpty)
+                        }
+                    }else{
+                        let iconEmpty       = constructIcon.construct('fluigicon fluigicon-file-bell-empty icon-md');
+                        col[i].appendChild(iconEmpty)
+                    }
+                } 
+                clearInterval(secIntervalStatusAsr)  
             }
         }
     }
@@ -301,10 +331,27 @@ dataTableConfig.prototype.loadEventTable = function () {
             }
         },
         statusAsr: function () {
-            let col = TableFluig.getCol('Aprov.Assessoria');
+            let col         = TableFluig.getCol('Aprov.Assessoria');
+            let colNumSol   = TableFluig.getCol('Solicitação');
+            console.log(colNumSol[3].children[0].innerText)
             for(let i = 0; i < col.length; i++){
-                let icon = constructIcon.construct('fluigicon fluigicon-file-bell-empty icon-md');
-                col[i].appendChild(icon)
+                let numSlct     = colNumSol[i].children[0].innerText;
+                let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", numSlct, numSlct, ConstraintType.MUST); 
+                let itenPauta      = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
+                if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
+                    console.log(itenPauta)
+                    let assrAp = itenPauta['hdn_aprvAssr'];
+                    if(assrAp == 1){
+                        let iconChecked     = constructIcon.construct('fluigicon fluigicon-checked icon-md');
+                        col[i].appendChild(iconChecked)
+                    }else if(assrAp == 0){
+                        let iconEmpty       = constructIcon.construct('fluigicon fluigicon-file-bell-empty icon-md');
+                        col[i].appendChild(iconEmpty)
+                    }
+                }else{
+                    let iconEmpty       = constructIcon.construct('fluigicon fluigicon-file-bell-empty icon-md');
+                    col[i].appendChild(iconEmpty)
+                }
             }   
         }
     }
