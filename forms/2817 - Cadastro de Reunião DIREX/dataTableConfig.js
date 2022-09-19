@@ -385,14 +385,14 @@ dataTableConfig.prototype.itensBuiltFunc = function () {
                     var interv = setInterval(defineStatus, 200);
                     function defineStatus () { 
                         dataTablemi.resAPI  = window.res['response'];
-                        console.log(window.res)
                         let order           = window.res['order'];
                         let res             = dataTablemi.resAPI;
                         if(order == 2 && res != {}){
-                            let err = window.res['err']
-                            console.log(window.res['err'])
+                            let err                 = window.res['err'];
+                            window.res['check']     = false;
                             if(err != undefined && err.indexOf('Error') == -1){
                                 if(res != undefined && res != '' && res != {}){
+                                    console.log(res)
                                     let stateActive     = res.items[res.items.length - 1].active
                                     let stateNow        = res.items[res.items.length - 1].state.sequence
                                     let stateInstanced  = res.items[res.items.length - 1].processInstanceId
@@ -422,7 +422,6 @@ dataTableConfig.prototype.itensBuiltFunc = function () {
                             }else { clearInterval(interv) }
                         }else if(order == 0){ clearInterval(interv) }
                     }
-                    //dataTablemi.APImethods.requestsGET(inpValue, host)
                 }
             }        
         },

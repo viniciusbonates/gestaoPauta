@@ -1,30 +1,34 @@
+//***********************************************************************************************************************************/
+/**
+ *  res = {} mehtod 'Order'
+ *      -> 0 == NumSolicitacao empty
+ *      -> 1 == 1º passagem por requestGET
+ *      -> 2 == 2° ultima passagem por requestGET
+ * 
+ * 
+ */			 
+//***********************************************************************************************************************************/
 function resMethods(){
     res = {}
     return res
 }
 function orderMethods(){
-    this.Nsolicitacao        = 24920; 
+    this.Nsolicitacao        = '';//24920 
     this.host                = window.origin //"http://10.4.4.52:8080";   
     resMethods();
 }
 orderMethods.prototype.movePOST = function (NumSolicitacao) {
-    var Nsolicitacao        = NumSolicitacao; 
-    var host                = this.host; 
-    if(NumSolicitacao == undefined || NumSolicitacao == ''){
-        Nsolicitacao        = this.Nsolicitacao; 
-        window.res['order'] = 0; 
-        return console.log('Necessário selecionar um Item')
-    }
-    var host                = this.host;     
+    var Nsolicitacao            = NumSolicitacao; 
+    this.Nsolicitacao           = NumSolicitacao;
+    orderMethodsMi.Nsolicitacao = NumSolicitacao
+    var host                    = this.host;  
     this.requestsGET(Nsolicitacao, this.host);
     var interval = setInterval(pst, 100)
     console.log(Nsolicitacao)
     function pst(){
         try{
             var request = window.res 
-            console.log(request)
             let resp    = request.response
-            console.log(resp)
             if(resp != undefined){
                 var movementSequence    = request.response.items.length;
                 var targetState         = request.response.items[request.response.items.length - 1].state.sequence;
@@ -58,7 +62,11 @@ orderMethods.prototype.movePOST = function (NumSolicitacao) {
                     let n = orderMethodsMi.Nsolicitacao;
                     let host = orderMethodsMi.host;
                     window.res['check'] = true
-                    orderMethodsMi.requestsGET(n, host);
+                    if(n != ''){
+                        orderMethodsMi.requestsGET(n, host)
+                    }else{
+                        window.res['order']     = 0;
+                    }
                 })
                 clearInterval(interval)
             }
@@ -75,14 +83,11 @@ orderMethods.prototype.requestsGET = function (NumSolicit, host) {
         if(window.res['check'] != undefined){
             if(window.res['check'] == true){
                 window.res['order']     = 2;
-                window.res['check']     = false;
             }else if(window.res['check'] == false){
                 window.res['order']     = 1;
             }
         }
         window.res['err']       = '';
-        console.log(window.res)
-        console.log('**************')
     })
 }
 function orderMethodsInit() { orderMethodsMi = new orderMethods(); }
