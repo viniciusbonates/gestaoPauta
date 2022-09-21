@@ -56,10 +56,10 @@ function dataTableConfig(){
         ]
     }
 
-    this.itensConfigs       = [configDropdowns];//configButton                                      // Determina os itens criados e a ordem de posição conforme ordem de posição do array  
+    this.itensConfigs       = [configDropdowns, configButton];//configButton                                      // Determina os itens criados e a ordem de posição conforme ordem de posição do array  
     
     /** */
-    this.orderSuper         = ["dataSelected", "btnDrpDwn1", "datatable-area-search"];              //Determina a ordem dos elementos no linha superior. Deve ser determinado da esquerda para direita indicando os elementos por 'id'. Ex: ['btn1', 'btnDrpDwn1', ...]
+    this.orderSuper         = ["dataSelected", "btnDrpDwn1", "btn1", "datatable-area-search"];              //Determina a ordem dos elementos no linha superior. Deve ser determinado da esquerda para direita indicando os elementos por 'id'. Ex: ['btn1', 'btnDrpDwn1', ...]
 
     this.APImethods         = new orderMethods();                                                   // se carregado pelo arquivo ServiceAPI: APImethods= window.orderMethodsMi. Construtor iniciado aqui.
     this.resAPI             = window.res
@@ -282,6 +282,7 @@ dataTableConfig.prototype.orderLineSuper = function (objConfig, itensConfigs, or
     }
 }
 dataTableConfig.prototype.changeEventInput = function () {
+    let itens = this.itensBuilt;
     let objFunc = {
         fnc: ['formatDinamic', 'enabledButton'],
         formatDinamic: function () {
@@ -322,7 +323,7 @@ dataTableConfig.prototype.changeEventInput = function () {
             }
         },
         enabledButton: function (){
-            var iten = dataTablemi.itensBuilt['btn1']
+            var iten = itens['btn1']
             iten.getElementsByTagName('button')[0].disabled = false
         }
     }
@@ -334,6 +335,7 @@ dataTableConfig.prototype.changeEventInput = function () {
 dataTableConfig.prototype.changeEventTable = function () {
     var TableFluig          = this.TableFluig();
     var constructIcon       = this.constructIcon(); 
+    let itens = this.itensBuilt;
     let objFunc = {
         fnc: [
                 {'fncName': 'openItem', 'metodhParam': 'reload'},
@@ -382,13 +384,15 @@ dataTableConfig.prototype.changeEventTable = function () {
                     if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
                         console.log(itenPauta)
                         let assrAp = itenPauta['hdn_aprvAssr'];
-                        if(assrAp == 1){
+                        
+                        if(assrAp == 15){
                             let iconChecked     = constructIcon.construct('fluigicon fluigicon-checked icon-md');
                             col[i].appendChild(iconChecked)
-                        }else if(assrAp == 0){
+                        }else if(assrAp == 11){
                             let iconEmpty       = constructIcon.construct('fluigicon fluigicon-file-bell-empty icon-md');
                             col[i].appendChild(iconEmpty)
                         }
+
                     }else{
                         let iconEmpty       = constructIcon.construct('fluigicon fluigicon-file-bell-empty icon-md');
                         col[i].appendChild(iconEmpty)
@@ -398,7 +402,7 @@ dataTableConfig.prototype.changeEventTable = function () {
             }
         },
         enabledButton: function (){
-            var iten = dataTablemi.itensBuilt['btn1']
+            var iten = itens['btn1']
             iten.getElementsByTagName('button')[0].disabled = true
         }
     }
@@ -442,15 +446,17 @@ dataTableConfig.prototype.loadEventTable = function () {
                 let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", numSlct, numSlct, ConstraintType.MUST); 
                 let itenPauta      = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
                 if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
-                    console.log(itenPauta)
+                    //console.log(itenPauta)
                     let assrAp = itenPauta['hdn_aprvAssr'];
-                    if(assrAp == 1){
+
+                    if(assrAp == 15){
                         let iconChecked     = constructIcon.construct('fluigicon fluigicon-checked icon-md');
                         col[i].appendChild(iconChecked)
-                    }else if(assrAp == 0){
+                    }else if(assrAp == 11){
                         let iconEmpty       = constructIcon.construct('fluigicon fluigicon-file-bell-empty icon-md');
                         col[i].appendChild(iconEmpty)
                     }
+
                 }else{
                     let iconEmpty       = constructIcon.construct('fluigicon fluigicon-file-bell-empty icon-md');
                     col[i].appendChild(iconEmpty)
@@ -539,7 +545,7 @@ dataTableConfig.prototype.itensBuiltFunc = function () {
 dataTableConfig.prototype.setitensBuilt = function (item, name) {
     this.itensBuilt.name.push(name);
     this.itensBuilt[name] = item;
-    return console.log(this.itensBuilt)
+    return this.itensBuilt
 }
 dataTableConfig.prototype.TableFluig = function () {
     TableFluig = {}
@@ -563,7 +569,6 @@ dataTableConfig.prototype.TableFluig = function () {
             for(i = 0; i < headNames.length; i++){
                 if(headNames[i] == columName){
                     pos = i;
-                    console.log(pos)
                 }
             }
             for(j = 0; j < this.rows.length; j++){
