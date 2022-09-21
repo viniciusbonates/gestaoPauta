@@ -22,13 +22,44 @@ function dataTableConfig(){
     /*** End Input Object Configuration ***/
 
     var configButton = {
+        type: 'button',
         id: 'btn1',
         innerText: 'Aprovar Inserção de Item',
         setIcon: 'flaticon flaticon-document-check icon-md', 
-        col: 'col-md-4'
+        col: 'col-md-2'
+    }
+    var configDropdowns = {
+        type: 'dropdown',
+        id: 'btnDrpDwn1',
+        innerText: 'Ações Assessoria ',
+        col: 'col-md-4',
+        ul: [
+            {
+                id: 'AprovarAssr',
+                innerText: 'Aprovar Inserção de Item'    
+            },
+            {
+                id: 'ReverterAssr',
+                innerText: 'Reverter Aprovação de Item'    
+            },
+            {
+                id: 'AjusteAssr',
+                innerText: 'Solicitar Ajuste'    
+            },
+            {
+                class: 'divider'    
+            },
+            {
+                id: 'ExcluirAssr',
+                innerText: 'Excluir Item'    
+            }
+        ]
     }
 
-    this.itensConfigs       = [configButton];                                                       // Determina os itens criados e a ordem de posição conforme ordem de posição do array                                                
+    this.itensConfigs       = [configDropdowns];//configButton                                      // Determina os itens criados e a ordem de posição conforme ordem de posição do array  
+    
+    /** */
+    this.orderSuper         = ["dataSelected", "btnDrpDwn1", "datatable-area-search"];              //Determina a ordem dos elementos no linha superior. Deve ser determinado da esquerda para direita indicando os elementos por 'id'. Ex: ['btn1', 'btnDrpDwn1', ...]
 
     this.APImethods         = new orderMethods();                                                   // se carregado pelo arquivo ServiceAPI: APImethods= window.orderMethodsMi. Construtor iniciado aqui.
     this.resAPI             = window.res
@@ -41,7 +72,7 @@ function dataTableConfig(){
     this.setConfigExecution();  
 }
 dataTableConfig.prototype.initialize = function () {
-    this.orderLineSuper(this.configField, this.itensConfigs);
+    this.orderLineSuper(this.configField, this.itensConfigs, this.orderSuper);
     changeEvent = this.setChangeEvent;
     if(changeEvent){
         this.changeEventInput();
@@ -58,6 +89,7 @@ dataTableConfig.prototype.constructInputValueSelected = function (configField){
     var config = {}
         config = this.determineObjConfig(configField, config);
     var dataSelected = document.getElementById(config.inputId);
+        dataSelected.setAttribute('style', 'color: black')
     var objDivCol = document.createElement('div');
         objDivCol.setAttribute('class', config.col);
     var objDivInnerCol = document.createElement('div');
@@ -103,6 +135,47 @@ dataTableConfig.prototype.constructButton = function (configButton){
     
     this.setitensBuilt(divV, 'btn1');   
     return divV;
+}
+dataTableConfig.prototype.constructButtonDropDown = function (configButtonDrpDwn){
+    var divColV = document.createElement('div');
+        divColV.setAttribute('class', configButtonDrpDwn.col);
+    var divV = document.createElement('div');
+        divV.setAttribute('id', configButtonDrpDwn.id);
+        divV.setAttribute('class', 'btn-group');
+    var buttonV = document.createElement('button');
+        buttonV.setAttribute('type', 'button');
+        buttonV.setAttribute('class','btn btn-primary dropdown-toggle');
+        //buttonV.setAttribute('disabled','disabled');
+        buttonV.setAttribute('data-toggle','dropdown');
+        buttonV.innerText = configButtonDrpDwn.innerText;
+    var spanV = document.createElement('span');
+        spanV.setAttribute('class', 'caret');    
+    var ulV = document.createElement('ul');
+        ulV.setAttribute('class', 'dropdown-menu');
+        ulV.setAttribute('role', 'menu');
+    for(let i = 0; i < configButtonDrpDwn.ul.length; i++){
+        if(configButtonDrpDwn.ul[i].class == 'divider'){
+            var liV = document.createElement('li');
+            liV.setAttribute('class', configButtonDrpDwn.ul[i].class);
+            ulV.appendChild(liV);
+        }else{
+            var liV = document.createElement('li');
+                liV.setAttribute('id', configButtonDrpDwn.ul[i].id);
+            var aV = document.createElement('a');
+                aV.setAttribute('href', '#');
+                aV.innerText = configButtonDrpDwn.ul[i].innerText;
+            liV.appendChild(aV);
+            ulV.appendChild(liV);
+        }
+    }
+
+    buttonV.appendChild(spanV);
+    divV.appendChild(buttonV);
+    divV.appendChild(ulV);
+    divColV.appendChild(divV);
+    
+    this.setitensBuilt(divV, configButtonDrpDwn.id);   
+    return divColV;
 }
 dataTableConfig.prototype.constructIcon = function (configIcon){
     icon = {}
@@ -166,19 +239,44 @@ dataTableConfig.prototype.determineObjConfig = function (configField, config){
         return config
     }
 }      
-dataTableConfig.prototype.orderLineSuper = function (objConfig, itensConfigs) {
-    var divIn   = document.getElementsByClassName('row fs-no-margin')
-    var divAll  = divIn[0].parentElement.parentElement
-    var inpasd  = this.constructInputValueSelected(objConfig) /**  <-------------------------this.configField in  dataTableConfig*/
-    var bt      = this.constructButton(itensConfigs[0])
+dataTableConfig.prototype.orderLineSuper = function (objConfig, itensConfigs, orderSuper) {
+    /**
+     *  Determina a ordem dos elementos na linha superior do dataTable.
+     */
+    var divIn   = document.getElementsByClassName('row fs-no-margin');          // div onde estarão contidos os elementos.
+    var divAll  = divIn[0].parentElement.parentElement;                         // div contendo todo o componete. Linha superior, linha inferior e dataTable.
+    var elementsBuilt = {id: []};                                               // Array que recebe os elementos HTML já criados.
     if(divAll.id == 'target'){
-        let tempr = divIn[0].children[0]
-        tempr.className = 'col-md-5'
-        tempr.children[0].className = ''
-        divIn[0].removeChild(divIn[0].children[0])
-        divIn[0].appendChild(inpasd)
-        divIn[0].appendChild(bt)
-        divIn[0].appendChild(tempr)
+        if(itensConfigs.length != 0){
+            for(let i = 0; i < itensConfigs.length; i++){
+                let ElemItem = itensConfigs[i];
+                if(ElemItem.type == 'button'){  
+                    elementsBuilt.id.push(ElemItem.id); 
+                    elementsBuilt[ElemItem.id] = this.constructButton(ElemItem); 
+                }else if(ElemItem.type == 'dropdown'){ 
+                    elementsBuilt.id.push(ElemItem.id);  
+                    elementsBuilt[ElemItem.id] = this.constructButtonDropDown(ElemItem); 
+                };
+            }
+        }
+        var inpDefaut  = this.constructInputValueSelected(objConfig) /**  <-------------------------this.configField in  dataTableConfig*/  
+        
+        let rowSuper                    = divIn[0];
+        let tempr                       = divIn[0].children[0];                 // Obtem o elem 'barra de pesquisa'. Obs: Esse elemnto é criado juntamente com a dataTable.
+        tempr.className                 = 'col-md-5';
+        tempr.children[0].className     = '';
+        rowSuper.removeChild(rowSuper.children[0]);                             // Limpa toda a linha para reordenar.
+
+        elementsBuilt.id.push('dataSelected');
+        elementsBuilt['dataSelected'] = inpDefaut;
+        elementsBuilt.id.push('datatable-area-search');
+        elementsBuilt['datatable-area-search'] = tempr;                         // datatable-area-search
+
+        for(let j = 0; j < orderSuper.length; j++){
+            let elemNow = orderSuper[j];
+            let elemBuilt = elementsBuilt[elemNow];
+            rowSuper.appendChild(elemBuilt);
+        }
 
         clearInterval(this.initMyInterval) /**  <-------------------------this.myInterval in  dataTableConfig*/
     }
@@ -239,7 +337,8 @@ dataTableConfig.prototype.changeEventTable = function () {
     let objFunc = {
         fnc: [
                 {'fncName': 'openItem', 'metodhParam': 'reload'},
-                {'fncName': 'statusAsr', 'metodhParam': 'reload'}
+                {'fncName': 'statusAsr', 'metodhParam': 'reload'},
+                {'fncName': 'enabledButton', 'metodhParam': 'reload'}    
         ],
         openItem: function () {
             var secIntervalOpenItem = setInterval(pushOpenItem, 20)
@@ -297,6 +396,10 @@ dataTableConfig.prototype.changeEventTable = function () {
                 } 
                 clearInterval(secIntervalStatusAsr)  
             }
+        },
+        enabledButton: function (){
+            var iten = dataTablemi.itensBuilt['btn1']
+            iten.getElementsByTagName('button')[0].disabled = true
         }
     }
     this.tableReference.setFunc(objFunc);
