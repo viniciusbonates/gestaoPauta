@@ -47,8 +47,9 @@ function dataTableConfig(){
             },
             {
                 id: 'ReverterAssr',
-                innerText: 'Reverter Aprovação de Item',
-                value: '11'    
+                innerText: 'Puxar Item para Analise',
+                value: '11',
+                icon: 'fluigicon fluigicon-file-bell-empty icon-sm'    
             },
             {
                 id: 'AjusteAssr',
@@ -66,10 +67,10 @@ function dataTableConfig(){
         ]
     }
 
-    this.itensConfigs       = [configDropdowns, configButton];//configButton                                // Determina os itens criados e a ordem de posição conforme ordem de posição do array  
+    this.itensConfigs       = [configDropdowns];//configButton                                // Determina os itens criados e a ordem de posição conforme ordem de posição do array  
     
     /** */
-    this.orderSuper         = ["dataSelected", "btnDrpDwn1", "btn1", "datatable-area-search"];              // Determina a ordem dos elementos no linha superior. Deve ser determinado da esquerda para direita indicando os elementos por 'id'. Ex: ['btn1', 'btnDrpDwn1', ...]
+    this.orderSuper         = ["dataSelected", "btnDrpDwn1", "datatable-area-search"];//"btn1"              // Determina a ordem dos elementos no linha superior. Deve ser determinado da esquerda para direita indicando os elementos por 'id'. Ex: ['btn1', 'btnDrpDwn1', ...]
 
     this.APImethods         = new orderMethods();                                                           // se carregado pelo arquivo ServiceAPI: APImethods= window.orderMethodsMi. Construtor iniciado aqui.
     this.resAPI             = window.res
@@ -170,12 +171,19 @@ dataTableConfig.prototype.constructButtonDropDown = function (configButtonDrpDwn
             ulV.appendChild(liV);
         }else{
             var liV = document.createElement('li');
+                liV.setAttribute('style', 'cursor: pointer');
                 liV.setAttribute('id', configButtonDrpDwn.ul[i].id);
                 liV.setAttribute('value', configButtonDrpDwn.ul[i].value);
             var aV = document.createElement('a');
-            //    aV.setAttribute('href', '#');
-                aV.innerText = configButtonDrpDwn.ul[i].innerText;
-            liV.appendChild(aV);
+                if(configButtonDrpDwn.ul[i].icon != undefined){
+                    var iconV = this.constructIcon().construct(configButtonDrpDwn.ul[i].icon);
+                    aV.appendChild(iconV);
+                    aV.innerHTML = aV.innerHTML + '|' + configButtonDrpDwn.ul[i].innerText;
+                    liV.appendChild(aV);
+                }else{
+                    aV.innerText = configButtonDrpDwn.ul[i].innerText;
+                    liV.appendChild(aV);
+                }
             ulV.appendChild(liV);
         }
     }
@@ -295,7 +303,7 @@ dataTableConfig.prototype.orderLineSuper = function (objConfig, itensConfigs, or
 dataTableConfig.prototype.changeEventInput = function () {
     let itens = this.itensBuilt;
     let objFunc = {
-        fnc: ['formatDinamic', 'enabledButton'],
+        fnc: ['formatDinamic'],// 'enabledButton'
         formatDinamic: function () {
             var configFormat = {
                 inputId: 'dataSelected',
@@ -350,8 +358,7 @@ dataTableConfig.prototype.changeEventTable = function () {
     let objFunc = {
         fnc: [
                 {'fncName': 'openItem', 'metodhParam': 'reload'},
-                {'fncName': 'statusAsr', 'metodhParam': 'reload'},
-                {'fncName': 'enabledButton', 'metodhParam': 'reload'}    
+                {'fncName': 'statusAsr', 'metodhParam': 'reload'}//,{'fncName': 'enabledButton', 'metodhParam': 'reload'}    
         ],
         openItem: function () {
             var secIntervalOpenItem = setInterval(pushOpenItem, 20)
@@ -402,6 +409,12 @@ dataTableConfig.prototype.changeEventTable = function () {
                         }else if(assrAp == 11){
                             let iconEmpty       = constructIcon.construct('fluigicon fluigicon-file-bell-empty icon-md');
                             col[i].appendChild(iconEmpty)
+                        }else if(assrAp == 16){
+                            let iconEmpty       = constructIcon.construct('flaticon flaticon-file-delete icon-md');
+                            col[i].appendChild(iconEmpty)    
+                        }else if(assrAp == 9){
+                            let iconEmpty       = constructIcon.construct('fluigicon fluigicon-fileedit icon-md');
+                            col[i].appendChild(iconEmpty)    
                         }
 
                     }else{
@@ -466,6 +479,12 @@ dataTableConfig.prototype.loadEventTable = function () {
                     }else if(assrAp == 11){
                         let iconEmpty       = constructIcon.construct('fluigicon fluigicon-file-bell-empty icon-md');
                         col[i].appendChild(iconEmpty)
+                    }else if(assrAp == 16){
+                        let iconEmpty       = constructIcon.construct('flaticon flaticon-file-delete icon-md');
+                        col[i].appendChild(iconEmpty)    
+                    }else if(assrAp == 9){
+                        let iconEmpty       = constructIcon.construct('fluigicon fluigicon-fileedit icon-md');
+                        col[i].appendChild(iconEmpty)    
                     }
 
                 }else{
@@ -547,7 +566,22 @@ dataTableConfig.prototype.itensBuiltFunc = function () {
                                                 colItem.appendChild(icon)
                                                 dataTablemi.resAPI = {}
                                                 clearInterval(interv)
-                                            }else{ clearInterval(interv) } 
+                                            }
+                                            else if(stateNow == 16){
+                                                colItem.removeChild(colItem.children[0])
+                                                let icon = dataTablemi.constructIcon().construct('flaticon flaticon-file-delete icon-md');
+                                                colItem.appendChild(icon)
+                                                dataTablemi.resAPI = {}
+                                                clearInterval(interv)
+                                            }
+                                            else if(stateNow == 9){
+                                                colItem.removeChild(colItem.children[0])
+                                                let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-fileedit icon-md');
+                                                colItem.appendChild(icon)
+                                                dataTablemi.resAPI = {}
+                                                clearInterval(interv)
+                                            }
+                                            else{ clearInterval(interv) } 
                                         }else{ clearInterval(interv) } 
                                     }
                                 }else { clearInterval(interv) }
