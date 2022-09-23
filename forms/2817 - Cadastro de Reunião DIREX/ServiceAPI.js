@@ -17,10 +17,13 @@ function orderMethods(){
     this.host                = window.origin //"http://10.4.4.52:8080";   
     resMethods();
 }
-orderMethods.prototype.movePOST = function (NumSolicitacao) {
+orderMethods.prototype.movePOST = function (NumSolicitacao, acao) {
     var Nsolicitacao            = NumSolicitacao; 
     this.Nsolicitacao           = NumSolicitacao;
-    orderMethodsMi.Nsolicitacao = NumSolicitacao
+    orderMethodsMi.Nsolicitacao = NumSolicitacao;
+
+    var acao = acao
+
     var host                    = this.host;  
     this.requestsGET(Nsolicitacao, this.host);
     var interval = setInterval(pst, 100)
@@ -33,14 +36,28 @@ orderMethods.prototype.movePOST = function (NumSolicitacao) {
                 var movementSequence    = request.response.items.length;
                 var targetState         = request.response.items[request.response.items.length - 1].state.sequence;
                 var aprvAssr            = 0;
-                if(targetState == 9){ 
-                    targetState = 5 
-                    aprvAssr    = 0
-                }
-                else if(targetState == 5){ 
-                    targetState = 9; 
-                    aprvAssr    = 1
-                }
+                //if(targetState == 11){ 
+                    targetState = acao 
+                    aprvAssr    = acao
+
+                    console.log(targetState)
+                    console.log(aprvAssr)
+                //}
+                //else if(targetState == 5){ 
+                    //targetState = 9; 
+                    //aprvAssr    = 1
+                //}
+
+                /**
+                 *  targetState:    11  = Analise Assr
+                 *                  9   = Ajuste
+                 *                  15  = Incluir
+                 *                  16  = Excluir
+                */
+
+
+
+
                 $.ajax({
                     method: "POST",
                     url: host+"/process-management/api/v2/requests/"+Nsolicitacao+"/move",

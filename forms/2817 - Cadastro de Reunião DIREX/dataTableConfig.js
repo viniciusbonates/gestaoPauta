@@ -28,6 +28,12 @@ function dataTableConfig(){
         setIcon: 'flaticon flaticon-document-check icon-md', 
         col: 'col-md-2'
     }
+     /**
+     *  targetState:    11  = Analise Assr
+     *                  9   = Ajuste
+     *                  15  = Incluir
+     *                  16  = Excluir
+    */
     var configDropdowns = {
         type: 'dropdown',
         id: 'btnDrpDwn1',
@@ -36,32 +42,36 @@ function dataTableConfig(){
         ul: [
             {
                 id: 'AprovarAssr',
-                innerText: 'Aprovar Inserção de Item'    
+                innerText: 'Aprovar Inserção de Item',
+                value: '15'    
             },
             {
                 id: 'ReverterAssr',
-                innerText: 'Reverter Aprovação de Item'    
+                innerText: 'Reverter Aprovação de Item',
+                value: '11'    
             },
             {
                 id: 'AjusteAssr',
-                innerText: 'Solicitar Ajuste'    
+                innerText: 'Solicitar Ajuste',
+                value: '9'    
             },
             {
                 class: 'divider'    
             },
             {
                 id: 'ExcluirAssr',
-                innerText: 'Excluir Item'    
+                innerText: 'Excluir Item',
+                value: '16'    
             }
         ]
     }
 
-    this.itensConfigs       = [configDropdowns, configButton];//configButton                                      // Determina os itens criados e a ordem de posição conforme ordem de posição do array  
+    this.itensConfigs       = [configDropdowns, configButton];//configButton                                // Determina os itens criados e a ordem de posição conforme ordem de posição do array  
     
     /** */
-    this.orderSuper         = ["dataSelected", "btnDrpDwn1", "btn1", "datatable-area-search"];              //Determina a ordem dos elementos no linha superior. Deve ser determinado da esquerda para direita indicando os elementos por 'id'. Ex: ['btn1', 'btnDrpDwn1', ...]
+    this.orderSuper         = ["dataSelected", "btnDrpDwn1", "btn1", "datatable-area-search"];              // Determina a ordem dos elementos no linha superior. Deve ser determinado da esquerda para direita indicando os elementos por 'id'. Ex: ['btn1', 'btnDrpDwn1', ...]
 
-    this.APImethods         = new orderMethods();                                                   // se carregado pelo arquivo ServiceAPI: APImethods= window.orderMethodsMi. Construtor iniciado aqui.
+    this.APImethods         = new orderMethods();                                                           // se carregado pelo arquivo ServiceAPI: APImethods= window.orderMethodsMi. Construtor iniciado aqui.
     this.resAPI             = window.res
     this.initMyInterval     = true;
     this.setChangeEvent		= true;
@@ -161,8 +171,9 @@ dataTableConfig.prototype.constructButtonDropDown = function (configButtonDrpDwn
         }else{
             var liV = document.createElement('li');
                 liV.setAttribute('id', configButtonDrpDwn.ul[i].id);
+                liV.setAttribute('value', configButtonDrpDwn.ul[i].value);
             var aV = document.createElement('a');
-                aV.setAttribute('href', '#');
+            //    aV.setAttribute('href', '#');
                 aV.innerText = configButtonDrpDwn.ul[i].innerText;
             liV.appendChild(aV);
             ulV.appendChild(liV);
@@ -480,59 +491,72 @@ dataTableConfig.prototype.itensBuiltFunc = function () {
                 {'fncName': 'moveItem'}
         ],
         moveItem: function () {
-            btn = itens['btn1'];
-            if(btn != undefined){
-                btn.onclick = function () { 
-                    let host    = dataTablemi.APImethods.host; 
-                    let colItens = dataTablemi.TableFluig().getCol('Aprov.Assessoria');
-                    let colValue = dataTablemi.TableFluig().getCol('N° Solicitação');
-                    let nameIten = 'dataSelected'
-                    let it = dataTablemi.itensBuilt[nameIten];
-                    inp = it.getElementsByTagName('input')[0];
-                    inpValue = inp.value;       
-                    dataTablemi.APImethods.movePOST(inpValue);
-                    var interv = setInterval(defineStatus, 200);
-                    function defineStatus () { 
-                        dataTablemi.resAPI  = window.res['response'];
-                        let order           = window.res['order'];
-                        let res             = dataTablemi.resAPI;
-                        if(order == 2 && res != {}){
-                            let err                 = window.res['err'];
-                            window.res['check']     = false;
-                            if(err != undefined && err.indexOf('Error') == -1){
-                                if(res != undefined && res != '' && res != {}){
-                                    console.log(res)
-                                    let stateActive     = res.items[res.items.length - 1].active
-                                    let stateNow        = res.items[res.items.length - 1].state.sequence
-                                    let stateInstanced  = res.items[res.items.length - 1].processInstanceId
-                                    let colItem = 0;
-                                    for(let i = 0; i < colValue.length; i++){
-                                        if(inpValue == colValue[i].innerText){
-                                            colItem = colItens[i]
-                                        }
-                                    } 
-                                    if(stateActive == true && stateInstanced == inpValue){
-                                        if(stateNow == 9){ 
-                                            colItem.removeChild(colItem.children[0]); 
-                                            let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-checked icon-md');
-                                            colItem.appendChild(icon)
-                                            dataTablemi.resAPI = {}
-                                            clearInterval(interv)
-                                        }
-                                        else if(stateNow == 5){
-                                            colItem.removeChild(colItem.children[0])
-                                            let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-file-bell-empty icon-md');
-                                            colItem.appendChild(icon)
-                                            dataTablemi.resAPI = {}
-                                            clearInterval(interv)
+            drpDwn  = itens['btnDrpDwn1'];
+            let lis = drpDwn.getElementsByTagName('li')
+            for(let i = 0; i < lis.length; i++){
+                let liNow = lis[i];
+                if(liNow.id){
+                    console.log(liNow)
+                    liNow.onclick = function () {
+                        let nameIten = 'dataSelected'
+                        let it = dataTablemi.itensBuilt[nameIten];
+                        inp = it.getElementsByTagName('input')[0];
+                        inpValue = inp.value;  
+    
+                        let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", inpValue, inpValue, ConstraintType.MUST); 
+                        let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
+                        let statusAssr      = itenPauta['hdn_aprvAssr'];
+
+                        if(this.value != statusAssr){
+                            console.log(itenPauta)    
+                            dataTablemi.APImethods.movePOST(inpValue, this.value); /******** */
+                            var interv = setInterval(defineStatus, 200);
+                        }
+                        function defineStatus () { 
+                            let colItens = dataTablemi.TableFluig().getCol('Aprov.Assessoria');
+                            let colValue = dataTablemi.TableFluig().getCol('N° Solicitação');
+                            dataTablemi.resAPI  = window.res['response'];
+                            let order           = window.res['order'];
+                            let res             = dataTablemi.resAPI;
+                            if(order == 2 && res != {}){
+                                let err                 = window.res['err'];
+                                window.res['check']     = false;
+                                if(err != undefined && err.indexOf('Error') == -1){
+                                    if(res != undefined && res != '' && res != {}){
+                                        console.log(res)
+                                        let stateActive     = res.items[res.items.length - 1].active
+                                        let stateNow        = res.items[res.items.length - 1].state.sequence
+                                        let stateInstanced  = res.items[res.items.length - 1].processInstanceId
+                                        let colItem = 0;
+                                        for(let i = 0; i < colValue.length; i++){
+                                            if(inpValue == colValue[i].innerText){
+                                                colItem = colItens[i]
+                                            }
+                                        } 
+                                        if(stateActive == true && stateInstanced == inpValue){
+                                            if(stateNow == 15){ 
+                                                colItem.removeChild(colItem.children[0]); 
+                                                let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-checked icon-md');
+                                                colItem.appendChild(icon)
+                                                dataTablemi.resAPI = {}
+                                                clearInterval(interv)
+                                            }
+                                            else if(stateNow == 11){
+                                                colItem.removeChild(colItem.children[0])
+                                                let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-file-bell-empty icon-md');
+                                                colItem.appendChild(icon)
+                                                dataTablemi.resAPI = {}
+                                                clearInterval(interv)
+                                            }else{ clearInterval(interv) } 
                                         }else{ clearInterval(interv) } 
-                                    }else{ clearInterval(interv) } 
-                                }
-                            }else { clearInterval(interv) }
-                        }else if(order == 0){ clearInterval(interv) }
+                                    }
+                                }else { clearInterval(interv) }
+                            }else if(order == 0){ clearInterval(interv) }
+                        }
+                       
                     }
                 }
-            }        
+            }
         },
     }
     if(itenBuitFunc != '' && itenBuitFunc != null && itenBuitFunc != undefined){
