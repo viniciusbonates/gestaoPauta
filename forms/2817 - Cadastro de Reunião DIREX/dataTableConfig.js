@@ -43,7 +43,8 @@ function dataTableConfig(){
             {
                 id: 'AprovarAssr',
                 innerText: 'Aprovar Inserção de Item',
-                value: '15'    
+                value: '15',
+                icon: 'fluigicon fluigicon-checked icon-sm'        
             },
             {
                 id: 'ReverterAssr',
@@ -54,7 +55,8 @@ function dataTableConfig(){
             {
                 id: 'AjusteAssr',
                 innerText: 'Solicitar Ajuste',
-                value: '9'    
+                value: '9',
+                icon: 'fluigicon fluigicon-fileedit icon-sm'        
             },
             {
                 class: 'divider'    
@@ -62,7 +64,8 @@ function dataTableConfig(){
             {
                 id: 'ExcluirAssr',
                 innerText: 'Excluir Item',
-                value: '16'    
+                value: '16',
+                icon: 'flaticon flaticon-file-delete icon-sm'        
             }
         ]
     }
