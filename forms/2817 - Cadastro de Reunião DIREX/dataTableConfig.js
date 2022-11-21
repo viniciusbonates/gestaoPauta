@@ -408,16 +408,28 @@ dataTableConfig.prototype.changeEventTable = function () {
                         
                         if(assrAp == 15){
                             let iconChecked     = constructIcon.construct('fluigicon fluigicon-checked icon-md');
-                            col[i].appendChild(iconChecked)
+                            col[i].appendChild(iconChecked);
+                            let icn = col[i].innerHTML;                                     //Descrição
+                            icn = icn +' <b>Aprovado</b>';
+                            col[i].innerHTML = icn;
                         }else if(assrAp == 11){
                             let iconEmpty       = constructIcon.construct('fluigicon fluigicon-file-bell-empty icon-md');
-                            col[i].appendChild(iconEmpty)
+                            col[i].appendChild(iconEmpty);
+                            let icn = col[i].innerHTML;                                     //Descrição
+                            icn = icn +' <b>Análise</b>';
+                            col[i].innerHTML = icn;
                         }else if(assrAp == 16){
                             let iconEmpty       = constructIcon.construct('flaticon flaticon-file-delete icon-md');
-                            col[i].appendChild(iconEmpty)    
+                            col[i].appendChild(iconEmpty);
+                            let icn = col[i].innerHTML;                                     //Descrição
+                            icn = icn +' <b>Excluído</b>';
+                            col[i].innerHTML = icn;    
                         }else if(assrAp == 9){
                             let iconEmpty       = constructIcon.construct('fluigicon fluigicon-fileedit icon-md');
-                            col[i].appendChild(iconEmpty)    
+                            col[i].appendChild(iconEmpty);
+                            let icn = col[i].innerHTML;                                     //Descrição
+                            icn = icn +' <b>Ajuste</b>';
+                            col[i].innerHTML = icn;    
                         }
 
                     }else{
@@ -478,21 +490,36 @@ dataTableConfig.prototype.loadEventTable = function () {
 
                     if(assrAp == 15){
                         let iconChecked     = constructIcon.construct('fluigicon fluigicon-checked icon-md');
-                        col[i].appendChild(iconChecked)
+                        col[i].appendChild(iconChecked);
+                        let icn = col[i].innerHTML;                                     //Descrição
+                        icn = icn +' <b>Aprovado</b>';
+                        col[i].innerHTML = icn;
                     }else if(assrAp == 11){
                         let iconEmpty       = constructIcon.construct('fluigicon fluigicon-file-bell-empty icon-md');
-                        col[i].appendChild(iconEmpty)
+                        col[i].appendChild(iconEmpty);
+                        let icn = col[i].innerHTML;                                     //Descrição
+                        icn = icn +' <b>Análise</b>';
+                        col[i].innerHTML = icn;
                     }else if(assrAp == 16){
                         let iconEmpty       = constructIcon.construct('flaticon flaticon-file-delete icon-md');
-                        col[i].appendChild(iconEmpty)    
+                        col[i].appendChild(iconEmpty);
+                        let icn = col[i].innerHTML;                                     //Descrição
+                        icn = icn +' <b>Excluído</b>';
+                        col[i].innerHTML = icn;
                     }else if(assrAp == 9){
                         let iconEmpty       = constructIcon.construct('fluigicon fluigicon-fileedit icon-md');
-                        col[i].appendChild(iconEmpty)    
+                        col[i].appendChild(iconEmpty);    
+                        let icn = col[i].innerHTML;                                     //Descrição
+                        icn = icn +' <b>Ajuste</b>';
+                        col[i].innerHTML = icn;
                     }
 
                 }else{
                     let iconEmpty       = constructIcon.construct('fluigicon fluigicon-file-bell-empty icon-md');
-                    col[i].appendChild(iconEmpty)
+                    col[i].appendChild(iconEmpty);
+                    let icn = col[i].innerHTML;                                     //Descrição
+                    icn = icn +' <b>Análise</b>';
+                    col[i].innerHTML = icn;
                 }
             }   
         }
@@ -557,30 +584,46 @@ dataTableConfig.prototype.itensBuiltFunc = function () {
                                         } 
                                         if(stateActive == true && stateInstanced == inpValue){
                                             if(stateNow == 15){ 
-                                                colItem.removeChild(colItem.children[0]); 
+                                                //colItem.removeChild(colItem.children[0]); 
+                                                colItem.innerHTML = ''
                                                 let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-checked icon-md');
-                                                colItem.appendChild(icon)
+                                                colItem.appendChild(icon);
+                                                let icn             = colItem.innerHTML;                                     //Descrição
+                                                icn                 = icn +' <b>Aprovado</b>';
+                                                colItem.innerHTML    = icn;
                                                 dataTablemi.resAPI = {}
                                                 clearInterval(interv)
                                             }
                                             else if(stateNow == 11){
-                                                colItem.removeChild(colItem.children[0])
+                                                //colItem.removeChild(colItem.children[0])
+                                                colItem.innerHTML = ''
                                                 let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-file-bell-empty icon-md');
-                                                colItem.appendChild(icon)
+                                                colItem.appendChild(icon);
+                                                let icn             = colItem.innerHTML;                                     //Descrição
+                                                icn                 = icn +' <b>Análise</b>';
+                                                colItem.innerHTML    = icn;
                                                 dataTablemi.resAPI = {}
                                                 clearInterval(interv)
                                             }
                                             else if(stateNow == 16){
-                                                colItem.removeChild(colItem.children[0])
+                                                //colItem.removeChild(colItem.children[0])
+                                                colItem.innerHTML = ''
                                                 let icon = dataTablemi.constructIcon().construct('flaticon flaticon-file-delete icon-md');
-                                                colItem.appendChild(icon)
+                                                colItem.appendChild(icon);
+                                                let icn             = colItem.innerHTML;                                     //Descrição
+                                                icn                 = icn +' <b>Excluído</b>';
+                                                colItem.innerHTML    = icn;
                                                 dataTablemi.resAPI = {}
                                                 clearInterval(interv)
                                             }
                                             else if(stateNow == 9){
-                                                colItem.removeChild(colItem.children[0])
+                                                //colItem.removeChild(colItem.children[0])
+                                                colItem.innerHTML = ''
                                                 let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-fileedit icon-md');
-                                                colItem.appendChild(icon)
+                                                colItem.appendChild(icon);
+                                                let icn             = colItem.innerHTML;                                     //Descrição
+                                                icn                 = icn +' <b>Ajuste</b>';
+                                                colItem.innerHTML    = icn;
                                                 dataTablemi.resAPI = {}
                                                 clearInterval(interv)
                                             }
@@ -602,6 +645,42 @@ dataTableConfig.prototype.itensBuiltFunc = function () {
             itenBuitFunc[name]();
         }
     }
+}
+dataTableConfig.prototype.onselectrow = function () {
+    let itens = this.itensBuilt;
+    drpDwn  = itens['btnDrpDwn1'];
+    let lis = drpDwn.getElementsByTagName('li');
+    let dataSelected = document.getElementById('dataSelected').value;
+
+    let States      = [11, 9, 15, 16]
+    let refEnabled  = [
+        [11],
+        [9, 15, 16],
+        [9, 15, 16],
+        [9, 15, 16]
+    ] 
+    
+  
+    console.log(lis)
+    /**
+     *  targetState:    11  = Analise Assr
+     *                  9   = Ajuste
+     *                  15  = Incluir
+     *                  16  = Excluir
+     */
+   
+   for(let i = 0; i < lis.length; i++){
+        let liNow = lis[i];
+        if(liNow.id){
+            for(let l = 0; l < States; l++){
+                if(States[l] == dataSelected){
+
+                }
+            }
+        }
+    }
+    this.tableReference.onselectrow(this.tableReference.myTable, objFunc);
+
 }
 dataTableConfig.prototype.setitensBuilt = function (item, name) {
     this.itensBuilt.name.push(name);
