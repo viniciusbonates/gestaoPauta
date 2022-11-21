@@ -542,6 +542,9 @@ var testDatatable = {
 			 * }
 			*/
 			myTable.on('fluig.datatable.onselectrow', function(data) {
+				var rowSltd = myTable.getRow(data.selectedIndex, true)[0]
+				var dataReuniao = rowSltd.childNodes[0].innerText	
+				document.getElementById('dataSelected').value = dataReuniao
 				var funNow = 0;
 				if(objFunc != '' && objFunc != null && objFunc != undefined){
 					for(t = 0; t < objFunc.fnc.length; t++){
@@ -549,9 +552,6 @@ var testDatatable = {
 						let funNow 		= objFunc[name]()
 					}
 				}
-				var rowSltd = myTable.getRow(data.selectedIndex, true)[0]
-				var dataReuniao = rowSltd.childNodes[0].innerText	
-				document.getElementById('dataSelected').value = dataReuniao
 			});
 		}
 	},
