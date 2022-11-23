@@ -1,15 +1,14 @@
 //***********************************************************************************************************************************/
-/**
+/*
  *  res = {} mehtod 'Order'
  *      -> 0 == NumSolicitacao empty
  *      -> 1 == 1º passagem por requestGET
  *      -> 2 == 2° ultima passagem por requestGET
- * 
- * 
  */			 
 //***********************************************************************************************************************************/
 function resMethods(){
     res = {}
+    window.res['arrIndx'] = [];
     return res
 }
 function orderMethods(){
@@ -25,23 +24,26 @@ orderMethods.prototype.movePOST = function (NumSolicitacao, acao) {
     var acao = acao
 
     var host                    = this.host;  
+    console.log(window.res['check']);
+    console.log(window.res['order']);
+    console.log(window.res['responseIs']);
     this.requestsGET(Nsolicitacao, this.host);
     var interval = setInterval(pst, 100)
-    console.log(Nsolicitacao)
+   // console.log(Nsolicitacao)
     function pst(){
         try{
             var request = window.res 
-            let resp    = request.response
-            if(resp != undefined){
-                var movementSequence    = request.response.items.length;
-                var targetState         = request.response.items[request.response.items.length - 1].state.sequence;
+            let resp    = request.responseIs
+            if(resp != undefined && resp != ""){
+                var movementSequence    = request.responseIs.items.length;
+                var targetState         = request.responseIs.items[request.responseIs.items.length - 1].state.sequence;
                 var aprvAssr            = 0;
                 //if(targetState == 11){ 
                     targetState = acao 
                     aprvAssr    = acao
 
-                    console.log(targetState)
-                    console.log(aprvAssr)
+                    //console.log(targetState)
+                    //console.log(aprvAssr)
                 //}
                 //else if(targetState == 5){ 
                     //targetState = 9; 
@@ -78,7 +80,10 @@ orderMethods.prototype.movePOST = function (NumSolicitacao, acao) {
                     console.log(response); 
                     let n = orderMethodsMi.Nsolicitacao;
                     let host = orderMethodsMi.host;
-                    window.res['check'] = true
+                    window.res['check'] = true;
+                    console.log(window.res['check']);
+                    console.log(window.res['order']);
+                    console.log(window.res['responseIs']);
                     if(n != ''){
                         orderMethodsMi.requestsGET(n, host)
                     }else{
@@ -94,18 +99,35 @@ orderMethods.prototype.requestsGET = function (NumSolicit, host) {
     $.ajax({
         method: "GET",
         url: host+"/process-management/api/v2/requests/"+NumSolicit+"/activities?page=1&pageSize=1000",
-        contentType: "application/json"
+        contentType: "application/json",
+        async: true
     }).done(function (response) { 
-        window.res['response']       = response;
+        console.log(response)
+        console.log(window.res['order']);
+        window.res['responseIs']       = response;
         if(window.res['check'] != undefined){
             if(window.res['check'] == true){
                 window.res['order']     = 2;
+                console.log(window.res['check']);
+                    console.log(window.res['order']);
+                    console.log(window.res['responseIs']);
+                console.log('**********************************************')
             }else if(window.res['check'] == false){
                 window.res['order']     = 1;
             }
         }
         window.res['err']       = '';
     })
+}
+orderMethods.prototype.indexFunctionsX = function () {
+    console.log('**********************************')
+    window.res['numIndx'] = 2;
+    //window.res['arrIndx'] = [];
+    if(window.res['arrIndx'].length == window.res['numIndx'] ){
+        window.res['order']         = 1;
+        window.res['arrIndx']       = [];
+        window.res['responseIs']    = ''
+    } 
 }
 function orderMethodsInit() { orderMethodsMi = new orderMethods(); }
 window.addEventListener('load', orderMethodsInit)

@@ -92,7 +92,7 @@ dataTableConfig.prototype.initialize = function () {
         this.changeEventInput();
         this.changeEventTable();
         this.loadEventTable();
-        this.itensBuiltFunc();
+        this.itensBuiltFunctions();
     }
 }
 dataTableConfig.prototype.setConfigExecution = function () {
@@ -304,9 +304,9 @@ dataTableConfig.prototype.orderLineSuper = function (objConfig, itensConfigs, or
     }
 }
 dataTableConfig.prototype.changeEventInput = function () {
-    let itens = this.itensBuilt;
+    let itens       = this.itensBuilt;
     let objFunc = {
-        fnc: ['formatDinamic'],// 'enabledButton'
+        fnc: ['formatDinamic', 'desableOptions'],// 'enabledButton'
         formatDinamic: function () {
             var configFormat = {
                 inputId: 'dataSelected',
@@ -342,6 +342,41 @@ dataTableConfig.prototype.changeEventInput = function () {
                 labelInp.innerText      = configFormat.setLabel.innerText
                 iconInp.className       = configFormat.setIcone.value
                 pInp.innerText          = configFormat.setHelpBlock.innerText
+            }
+        },
+        desableOptions: function () {
+            drpDwn  = itens['btnDrpDwn1'];
+            let lis = drpDwn.getElementsByTagName('li');
+            let dataSelected = document.getElementById('dataSelected').value;
+            console.log(dataSelected)
+            let States      = [11, 9, 15, 16]
+            let refEnabled  = [
+                [11],
+                [9, 15, 16],
+                [9, 15, 16],
+                [9, 15, 16]
+            ] 
+            let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", dataSelected, dataSelected, ConstraintType.MUST); 
+            let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
+            if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
+                let assrAp = itenPauta['hdn_aprvAssr'];
+                for(let k = 0; k < lis.length; k++){ 
+                    if(lis[k].hasAttribute("hidden")){
+                        lis[k].removeAttribute("hidden");
+                    }
+                }
+                for(let i = 0; i < States.length; i++){
+                    if(States[i] == assrAp){
+                        let itns = refEnabled[i];
+                        for(let l = 0; l < lis.length; l++){
+                            for(let j = 0; j < itns.length; j++){
+                                if(itns[j] == lis[l].value){
+                                    lis[l].hidden = 'true';
+                                }
+                            }
+                        }
+                    }
+                }  
             }
         },
         enabledButton: function (){
@@ -401,7 +436,7 @@ dataTableConfig.prototype.changeEventTable = function () {
                 for(let i = 0; i < col.length; i++){
                     let numSlct     = colNumSol[i].children[0].innerText;
                     let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", numSlct, numSlct, ConstraintType.MUST); 
-                    let itenPauta      = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
+                    let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
                     if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
                         console.log(itenPauta)
                         let assrAp = itenPauta['hdn_aprvAssr'];
@@ -533,11 +568,13 @@ dataTableConfig.prototype.loadEventTable = function () {
         }
     }
 }
-dataTableConfig.prototype.itensBuiltFunc = function () {
+dataTableConfig.prototype.itensBuiltFunctions = function () {
     let itens = this.itensBuilt;
+    let TableFluig  = this.TableFluig();
     let itenBuitFunc = {
         fnc: [
-                {'fncName': 'moveItem'}
+                {'fncName': 'moveItem'},
+                {'fncName': 'desableOptions'}
         ],
         moveItem: function () {
             drpDwn  = itens['btnDrpDwn1'];
@@ -546,7 +583,7 @@ dataTableConfig.prototype.itensBuiltFunc = function () {
                 let liNow = lis[i];
                 if(liNow.id){
                     console.log(liNow)
-                    liNow.onclick = function () {
+                    liNow.addEventListener('click', function () {
                         let nameIten = 'dataSelected'
                         let it = dataTablemi.itensBuilt[nameIten];
                         inp = it.getElementsByTagName('input')[0];
@@ -556,32 +593,45 @@ dataTableConfig.prototype.itensBuiltFunc = function () {
                         let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
                         let statusAssr      = itenPauta['hdn_aprvAssr'];
 
-                        if(this.value != statusAssr){
-                            console.log(itenPauta)    
+                        if(this.value != statusAssr){    
                             dataTablemi.APImethods.movePOST(inpValue, this.value); /******** */
                             var interv = setInterval(defineStatus, 200);
                         }
                         function defineStatus () { 
                             let colItens = dataTablemi.TableFluig().getCol('Aprov.Assessoria');
                             let colValue = dataTablemi.TableFluig().getCol('N° Solicitação');
-                            dataTablemi.resAPI  = window.res['response'];
-                            let order           = window.res['order'];
-                            let res             = dataTablemi.resAPI;
+                            //dataTablemi.resAPI  = window.res['response']; 
+                            var responsNow = window.res
+                            console.log(responsNow)
+                            responsNowIns = responsNow.responseIs
+                            console.log(responsNowIns)
+                            var order           = window.res['order'];
+                            console.log(order)
+                            console.log(window.res['check']);
+                            console.log(window.res['order']);
+                            console.log(window.res['responseIs']);
+                            //let res             = dataTablemi.resAPI;
+                            var  res             = window.res['responseIs'];
                             if(order == 2 && res != {}){
-                                let err                 = window.res['err'];
+                                var err                 = window.res['err'];
                                 window.res['check']     = false;
                                 if(err != undefined && err.indexOf('Error') == -1){
                                     if(res != undefined && res != '' && res != {}){
-                                        console.log(res)
-                                        let stateActive     = res.items[res.items.length - 1].active
-                                        let stateNow        = res.items[res.items.length - 1].state.sequence
-                                        let stateInstanced  = res.items[res.items.length - 1].processInstanceId
-                                        let colItem = 0;
+                                        console.log(res)      
+                                        console.log(window.res['responseIs'])                                                                         
+                                        var stateActive     = res.items[res.items.length - 1].active
+                                        var stateNow        = res.items[res.items.length - 1].state.sequence
+                                        var stateInstanced  = res.items[res.items.length - 1].processInstanceId
+                                        var colItem = 0;
                                         for(let i = 0; i < colValue.length; i++){
                                             if(inpValue == colValue[i].innerText){
                                                 colItem = colItens[i]
                                             }
                                         } 
+                                        console.log(stateNow);
+                                        //console.log(stateActive);
+                                        //console.log(stateInstanced)
+                                        //console.log(inpValue)
                                         if(stateActive == true && stateInstanced == inpValue){
                                             if(stateNow == 15){ 
                                                 //colItem.removeChild(colItem.children[0]); 
@@ -591,7 +641,9 @@ dataTableConfig.prototype.itensBuiltFunc = function () {
                                                 let icn             = colItem.innerHTML;                                     //Descrição
                                                 icn                 = icn +' <b>Aprovado</b>';
                                                 colItem.innerHTML    = icn;
-                                                dataTablemi.resAPI = {}
+                                                dataTablemi.resAPI = {};
+                                                window.res['arrIndx'].push('1');
+                                                orderMethodsMi.indexFunctionsX();
                                                 clearInterval(interv)
                                             }
                                             else if(stateNow == 11){
@@ -602,7 +654,9 @@ dataTableConfig.prototype.itensBuiltFunc = function () {
                                                 let icn             = colItem.innerHTML;                                     //Descrição
                                                 icn                 = icn +' <b>Análise</b>';
                                                 colItem.innerHTML    = icn;
-                                                dataTablemi.resAPI = {}
+                                                dataTablemi.resAPI = {};
+                                                window.res['arrIndx'].push('1');
+                                                orderMethodsMi.indexFunctionsX();
                                                 clearInterval(interv)
                                             }
                                             else if(stateNow == 16){
@@ -613,7 +667,9 @@ dataTableConfig.prototype.itensBuiltFunc = function () {
                                                 let icn             = colItem.innerHTML;                                     //Descrição
                                                 icn                 = icn +' <b>Excluído</b>';
                                                 colItem.innerHTML    = icn;
-                                                dataTablemi.resAPI = {}
+                                                dataTablemi.resAPI = {};
+                                                window.res['arrIndx'].push('1');
+                                                orderMethodsMi.indexFunctionsX();
                                                 clearInterval(interv)
                                             }
                                             else if(stateNow == 9){
@@ -624,20 +680,80 @@ dataTableConfig.prototype.itensBuiltFunc = function () {
                                                 let icn             = colItem.innerHTML;                                     //Descrição
                                                 icn                 = icn +' <b>Ajuste</b>';
                                                 colItem.innerHTML    = icn;
-                                                dataTablemi.resAPI = {}
+                                                dataTablemi.resAPI = {};
+                                                window.res['arrIndx'].push('1');
+                                                orderMethodsMi.indexFunctionsX();
                                                 clearInterval(interv)
                                             }
-                                            else{ clearInterval(interv) } 
+                                            else{ clearInterval(interv) }
                                         }else{ clearInterval(interv) } 
                                     }
                                 }else { clearInterval(interv) }
                             }else if(order == 0){ clearInterval(interv) }
                         }
-                       
-                    }
+                    })
                 }
             }
-        },
+        },desableOptions: function () {
+            drpDwn  = itens['btnDrpDwn1'];
+            let lis = drpDwn.getElementsByTagName('li')
+            for(let i = 0; i < lis.length; i++){
+                let liNow = lis[i];
+                if(liNow.id){
+                    liNow.addEventListener('click', function () { 
+                        var intervdesableOptions = setInterval(defineOptions, 200);
+                        function defineOptions(){
+                            let order           = window.res['order'];
+                            let res             = window.res['responseIs'];
+                            if(order == 2 && res != {}){
+                                let err                 = window.res['err'];
+                                if(err != undefined && err.indexOf('Error') == -1){
+                                    if(res != undefined && res != '' && res != {}){
+                                        let itens = dataTablemi.itensBuilt;
+                                        drpDwn  = itens['btnDrpDwn1'];
+                                        let lis = drpDwn.getElementsByTagName('li');
+                                        let dataSelected = document.getElementById('dataSelected').value;
+                                        let States      = [11, 9, 15, 16]
+                                        let refEnabled  = [
+                                            [11],
+                                            [9, 15, 16],
+                                            [9, 15, 16],
+                                            [9, 15, 16]
+                                        ] 
+                                        let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", dataSelected, dataSelected, ConstraintType.MUST); 
+                                        let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
+                                        if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
+                                            let assrAp = itenPauta['hdn_aprvAssr'];
+                                            for(let k = 0; k < lis.length; k++){ 
+                                                if(lis[k].hasAttribute("hidden")){
+                                                    lis[k].removeAttribute("hidden");
+                                                }
+                                            }
+                                            for(let i = 0; i < States.length; i++){
+                                                if(States[i] == assrAp){
+                                                    let itns = refEnabled[i];
+                                                    for(let l = 0; l < lis.length; l++){
+                                                        for(let j = 0; j < itns.length; j++){
+                                                            if(itns[j] == lis[l].value){
+                                                                lis[l].hidden = 'true';
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            window.res['arrIndx'].push('1');
+                                            orderMethodsMi.indexFunctionsX();
+
+                                            clearInterval(intervdesableOptions);  
+                                        }else{ clearInterval(intervdesableOptions); }
+                                    }
+                                }else{ clearInterval(intervdesableOptions); }
+                            }
+                        }
+                    });
+                }
+            }
+        }
     }
     if(itenBuitFunc != '' && itenBuitFunc != null && itenBuitFunc != undefined){
         for(let i = 0; i < itenBuitFunc.fnc.length; i++){
@@ -645,42 +761,6 @@ dataTableConfig.prototype.itensBuiltFunc = function () {
             itenBuitFunc[name]();
         }
     }
-}
-dataTableConfig.prototype.onselectrow = function () {
-    let itens = this.itensBuilt;
-    drpDwn  = itens['btnDrpDwn1'];
-    let lis = drpDwn.getElementsByTagName('li');
-    let dataSelected = document.getElementById('dataSelected').value;
-
-    let States      = [11, 9, 15, 16]
-    let refEnabled  = [
-        [11],
-        [9, 15, 16],
-        [9, 15, 16],
-        [9, 15, 16]
-    ] 
-    
-  
-    console.log(lis)
-    /**
-     *  targetState:    11  = Analise Assr
-     *                  9   = Ajuste
-     *                  15  = Incluir
-     *                  16  = Excluir
-     */
-   
-   for(let i = 0; i < lis.length; i++){
-        let liNow = lis[i];
-        if(liNow.id){
-            for(let l = 0; l < States; l++){
-                if(States[l] == dataSelected){
-
-                }
-            }
-        }
-    }
-    this.tableReference.onselectrow(this.tableReference.myTable, objFunc);
-
 }
 dataTableConfig.prototype.setitensBuilt = function (item, name) {
     this.itensBuilt.name.push(name);
