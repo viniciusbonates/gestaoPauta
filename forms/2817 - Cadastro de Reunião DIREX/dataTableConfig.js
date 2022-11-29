@@ -6,15 +6,30 @@ itensTools = {
             id: 'fluig-modal',
             size: 'large ',
             actions: [{
-                'label': 'Fechar',
-                'autoClose': true
-            }]
+                    'label': 'Cancelar',
+                    'autoClose': true
+                },{
+                    'bind': 'data-run-my-method',
+                    'label': 'Confirmar',
+                    'autoClose': true
+                }]
             }, function(err, data) {
                 if(err) {
             // do error handling
                 } else {
-            // do something with data
+                    console.log(data)
                 }
+            });
+            $(document).on('click', '[data-run-my-method]', function(ev) {
+            //    alert("Started from Message Page");
+                    console.log(window)
+            });
+    },
+    myToast: function () {
+        FLUIGC.toast({
+            title: 'Toast title: ',
+            message: 'My message',
+            type: 'success'
             });
     }
 }
@@ -612,9 +627,10 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                         let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", inpValue, inpValue, ConstraintType.MUST); 
                         let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
                         let statusAssr      = itenPauta['hdn_aprvAssr'];
+                        
+                        //console.log(itensTools.myModal())
+
                         if(elem.value != statusAssr){    
-                            console.log(inpValue);
-                            console.log(elem.value)
                             dataTablemi.APImethods.movePOST(inpValue, elem.value); /******** */
                             var interv = setInterval(defineStatus, 200);
                         }
@@ -665,6 +681,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                                 dataTablemi.resAPI = {};
                                                 window.res['arrIndx'].push('1');
                                                 orderMethodsMi.indexFunctionsX();
+                                                itensTools.myToast();
                                                 clearInterval(interv)
                                             }
                                             else if(stateNow == 11){
@@ -678,6 +695,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                                 dataTablemi.resAPI = {};
                                                 window.res['arrIndx'].push('1');
                                                 orderMethodsMi.indexFunctionsX();
+                                                itensTools.myToast();
                                                 clearInterval(interv)
                                             }
                                             else if(stateNow == 16){
@@ -691,6 +709,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                                 dataTablemi.resAPI = {};
                                                 window.res['arrIndx'].push('1');
                                                 orderMethodsMi.indexFunctionsX();
+                                                itensTools.myToast();
                                                 clearInterval(interv)
                                             }
                                             else if(stateNow == 9){
@@ -704,6 +723,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                                 dataTablemi.resAPI = {};
                                                 window.res['arrIndx'].push('1');
                                                 orderMethodsMi.indexFunctionsX();
+                                                itensTools.myToast();
                                                 clearInterval(interv)
                                             }
                                             else{ clearInterval(interv) }
