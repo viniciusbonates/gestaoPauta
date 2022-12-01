@@ -27,8 +27,8 @@ itensTools = {
     },
     myToast: function () {
         FLUIGC.toast({
-            title: 'Toast title: ',
-            message: 'My message',
+            title: 'Ação realizada com sucesso!',
+            message: '',
             type: 'success'
             });
     }
@@ -452,7 +452,7 @@ dataTableConfig.prototype.changeEventTable = function () {
                     //indexLink[i] = cells[0]
                     console.log(cells)
                     console.log(cells[0])
-                    if(cells[0].innerText != '' && cells[0].ml == undefined){
+                    if(cells[0].innerText != ''){
                         textLink = cells[0].innerText
                         let inHTML = "<a href=\""+ url + textLink +"\""+ "class=\"cad-link\""+"target=\"_blank\""+"style=\"color:blue\" ml=\"true\">"+"<i class=\"flaticon flaticon-link icon-md\"></i>"+
                         textLink+"</a>"
@@ -468,14 +468,16 @@ dataTableConfig.prototype.changeEventTable = function () {
             function pushStatusAsr(){
                 let col         = TableFluig.getCol('Aprov.Assessoria');
                 let colNumSol   = TableFluig.getCol('Solicitação');
+                console.log(colNumSol[0])
                 for(let i = 0; i < col.length; i++){
-                    let numSlct     = colNumSol[i].children[0].innerText;
+                    if(colNumSol[i].children[0].innerText != undefined){
+                        let numSlct     = colNumSol[i].children[0].innerText;
+                    }else{ clearInterval(secIntervalStatusAsr) }
                     let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", numSlct, numSlct, ConstraintType.MUST); 
                     let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
                     if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
                         console.log(itenPauta)
                         let assrAp = itenPauta['hdn_aprvAssr'];
-                        
                         if(assrAp == 15){
                             let iconChecked     = constructIcon.construct('fluigicon fluigicon-checked icon-md');
                             col[i].appendChild(iconChecked);
@@ -504,7 +506,9 @@ dataTableConfig.prototype.changeEventTable = function () {
 
                     }else{
                         let iconEmpty       = constructIcon.construct('fluigicon fluigicon-file-bell-empty icon-md');
-                        col[i].appendChild(iconEmpty)
+                        col[i].appendChild(iconEmpty);
+                        let icn = col[i].innerHTML;                                     //Descrição
+                        icn = icn +' <b>Análise</b>';
                     }
                 } 
                 clearInterval(secIntervalStatusAsr)  
@@ -529,8 +533,8 @@ dataTableConfig.prototype.loadEventTable = function () {
             var url = "http://10.4.4.52:8080/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID="
             var arrColumnsRender = ['N° Solicitação', 'Data Solicitação', 'Nome Solicitante', 'Unidade', 'Assunto', 'Justificativa']
             var indexLink = []
-            var divIn = document.getElementsByClassName('row fs-no-margin')
-            var divAll = divIn[0].parentElement.parentElement       //DIV com o componente dataTable
+            var divIn       = document.getElementsByClassName('row fs-no-margin')
+            var divAll      = divIn[0].parentElement.parentElement       //DIV com o componente dataTable
             var tableBody   = divAll.getElementsByTagName('tbody')[0]    
             var nomeCol     = divAll.getElementsByTagName('thead')[0].rows[0].cells
             var rows = tableBody.rows                              //Linhas da pagina atual da dataTable
@@ -551,9 +555,9 @@ dataTableConfig.prototype.loadEventTable = function () {
             let colNumSol   = TableFluig.getCol('Solicitação');
             console.log(colNumSol[3].children[0].innerText)
             for(let i = 0; i < col.length; i++){
-                let numSlct     = colNumSol[i].children[0].innerText;
+                let numSlct         = colNumSol[i].children[0].innerText;
                 let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", numSlct, numSlct, ConstraintType.MUST); 
-                let itenPauta      = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
+                let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
                 if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
                     //console.log(itenPauta)
                     let assrAp = itenPauta['hdn_aprvAssr'];

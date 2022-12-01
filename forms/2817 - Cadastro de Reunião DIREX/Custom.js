@@ -56,6 +56,13 @@ function Custom(){
 }
 window.addEventListener('load', Custom)
 */
+function defineState () {
+    let stts = window.parent.ECM.workflowView.sequence
+    if(stts == 4 || stts == 0){
+        document.getElementById('PainelControle').style.display = 'none'
+    }    
+}
+window.addEventListener('load', defineState)
 
 function unidade(){
     var ds_mat = DatasetFactory.getDataset("colleague",null,null,null);

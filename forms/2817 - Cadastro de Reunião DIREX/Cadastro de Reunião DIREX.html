@@ -416,9 +416,9 @@ var testDatatable = {
 						searchMark = 0
 						//console.log(itensCollection)
 						that.definePage(objData, 1, itensCollection);
-						that.opsNav(1, dataInit, objData, 2);
-						that.backward(that.myTable, itensCollection, objData, searchMark, thisObj);	//param that.myTable & thisObj
-						that.forward(that.myTable, itensCollection, objData, searchMark, thisObj);	//param that.myTable & thisObj
+						that.opsNav(1, dataInit, objData, 2, that.myTable, that.objFunc);
+						that.backward(that.myTable, itensCollection, objData, searchMark, thisObj, that.objFunc);	//param that.myTable & thisObj
+						that.forward(that.myTable, itensCollection, objData, searchMark, thisObj, that.objFunc);	//param that.myTable & thisObj
 					}
 					var dataAll = datafilt
                     var search = dataAll.filter(function(el) {
@@ -445,9 +445,9 @@ var testDatatable = {
 						};
 						itensCollection = search
 						searchMark = 1
-						that.opsNav(1, search, objData, 1);
-						that.backward(that.myTable, itensCollection, objData, searchMark, thisObj);	//param that.myTable & thisObj
-						that.forward(that.myTable, itensCollection, objData, searchMark, thisObj);	//param that.myTable & thisObj
+						that.opsNav(1, search, objData, 1, that.myTable, that.objFunc);
+						that.backward(that.myTable, itensCollection, objData, searchMark, thisObj, that.objFunc);	//param that.myTable & thisObj
+						that.forward(that.myTable, itensCollection, objData, searchMark, thisObj, that.objFunc);	//param that.myTable & thisObj
                     } else if (res != '') {
                         FLUIGC.toast({
                             title: 'Searching: ',
@@ -468,10 +468,9 @@ var testDatatable = {
                 });
 			}
 		});
-
-		that.opsNav(1, dataInit, objData, 2);
-		that.backward(that.myTable, itensCollection, objData, searchMark, thisObj);	//param that.myTable & thisObj
-		that.forward(that.myTable, itensCollection, objData, searchMark, thisObj);	//param that.myTable & thisObj
+		that.opsNav(1, dataInit, objData, 2, that.myTable, that.objFunc);
+		that.backward(that.myTable, itensCollection, objData, searchMark, thisObj, that.objFunc);	//param that.myTable & thisObj
+		that.forward(that.myTable, itensCollection, objData, searchMark, thisObj, that.objFunc);	//param that.myTable & thisObj
 	},
 	setFunc: function (objFnc) {
 		if(objFnc != '' && objFnc != null && objFnc != undefined){
@@ -481,13 +480,13 @@ var testDatatable = {
 				this.objFunc.fnc[this.objFunc.fnc.length] = params
 				this.objFunc[name] = objFnc[name]
 			}
-			//console.log(this.objFunc)
+			console.log(this.objFunc)
 		}
 	},
 	reload: function(myTable, data, objFunc){
 		if(myTable != undefined){
 			var a = myTable.reload(data);
-			//console.log(a)
+			console.log(a)
 			var funNow = 0;
 			if(objFunc != '' && objFunc != null && objFunc != undefined){
 				for(t = 0; t < objFunc.fnc.length; t++){
@@ -495,13 +494,13 @@ var testDatatable = {
 						
 						let name 		= objFunc.fnc[t].fncName
 						let funNow 		= objFunc[name]()
-						//console.log(funNow)
+						console.log(funNow)
 					}
 				}
 			}
 		}
 	},
-	opsNav: function (dirr, itens, obj, press){
+	opsNav: function (dirr, itens, obj, press, myTable, objFunc){
 		btnNav = {
 			btnPrev: 0,
 			btnNext: 0
@@ -517,12 +516,10 @@ var testDatatable = {
 		}
 		if(press == null || press == undefined){
 			this.definePage(obj, dirr, itens); 
-			this.myTable.reload(obj.arrItens);
-			console.log(obj);
-		}else if(press == 1){ 
+			this.reload(myTable, obj.arrItens, objFunc);
+		}else if(press == 1){
 			this.definePage(obj, dirr, itens, press); 
-			this.myTable.reload(obj.arrItens);
-			console.log(obj);
+			this.reload(myTable, obj.arrItens, objFunc);
 		}
 		if(obj.pageAtual != 0){
 			btnNav.btnPrev.disabled = false
@@ -568,16 +565,14 @@ var testDatatable = {
 			}
 		});
 	},
-	forward: function (myTable, itensCollection, objData, searchMark, Obj) { 
+	forward: function (myTable, itensCollection, objData, searchMark, Obj, objFunc) { 
 		//console.log(myTable)
 		myTable.on('fluig.datatable.forward', function() {
 			let dirr = 1
 			if(searchMark == 1){
-				console.log(dirr)
-				Obj.opsNav(dirr, itensCollection, objData, searchMark)
+				Obj.opsNav(dirr, itensCollection, objData, searchMark, myTable, objFunc)
 			}else{
-				console.log(dirr)
-				Obj.opsNav(dirr, itensCollection, objData)
+				Obj.opsNav(dirr, itensCollection, objData, null, myTable, objFunc)
 			}
 		});
 	}
