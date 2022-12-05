@@ -16,7 +16,7 @@ function orderMethods(){
     this.host                = window.origin //"http://10.4.4.52:8080";   
     resMethods();
 }
-orderMethods.prototype.movePOST = function (NumSolicitacao, acao) {
+orderMethods.prototype.movePOST = function (NumSolicitacao, acao, vtDISUP, vtDIRAF, vtDITEC) {
     var Nsolicitacao            = NumSolicitacao; 
     this.Nsolicitacao           = NumSolicitacao;
     orderMethodsMi.Nsolicitacao = NumSolicitacao;
@@ -37,29 +37,27 @@ orderMethods.prototype.movePOST = function (NumSolicitacao, acao) {
             if(resp != undefined && resp != ""){
                 var movementSequence    = request.responseIs.items.length;
                 var targetState         = request.responseIs.items[request.responseIs.items.length - 1].state.sequence;
-                var aprvAssr            = 0;
-                //if(targetState == 11){ 
-                    targetState = acao 
-                    aprvAssr    = acao
-
-                    //console.log(targetState)
-                    //console.log(aprvAssr)
-                //}
-                //else if(targetState == 5){ 
-                    //targetState = 9; 
-                    //aprvAssr    = 1
-                //}
-
+                var aprvAssr            = 0; 
+                targetState = acao 
+                aprvAssr    = acao
                 /**
                  *  targetState:    11  = Analise Assr
                  *                  9   = Ajuste
                  *                  15  = Incluir
                  *                  16  = Excluir
                 */
-
-
-
-
+               if(vtDISUP != undefined || vtDISUP != ''){
+                    var setFields = {
+                        "hdn_aprvAssr": aprvAssr,
+                        "hdn_DISUP_vt": vtDISUP,
+                        "hdn_DIRAF_vt": vtDIRAF,
+                        "hdn_DITEC_vt": vtDITEC
+                    }
+               }else{
+                    var setFields = {
+                        "hdn_aprvAssr": aprvAssr
+                    }
+               }
                 $.ajax({
                     method: "POST",
                     url: host+"/process-management/api/v2/requests/"+Nsolicitacao+"/move",
@@ -67,9 +65,7 @@ orderMethods.prototype.movePOST = function (NumSolicitacao, acao) {
                     data:  JSON.stringify({
                         "movementSequence":     movementSequence,   //7
                         "targetState":          targetState,        //9
-                        "formFields": {
-                            "hdn_aprvAssr": aprvAssr
-                        }
+                        "formFields": setFields
                         }),
                     async: false,
                     error: function(x, e) {

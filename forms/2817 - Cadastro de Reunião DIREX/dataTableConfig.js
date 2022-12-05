@@ -59,8 +59,8 @@ function dataTableConfig(){
     var configButton = {
         type: 'button',
         id: 'btn1',
-        innerText: 'Aprovar Inserção de Item',
-        setIcon: 'flaticon flaticon-document-check icon-md', 
+        innerText: 'Enviar Deliberação',
+        setIcon: 'flaticon flaticon-document-check icon-sm', 
         col: 'col-md-2'
     }
      /**
@@ -73,7 +73,7 @@ function dataTableConfig(){
         type: 'dropdown',
         id: 'btnDrpDwn1',
         innerText: 'Ações Assessoria ',
-        col: 'col-md-4',
+        col: 'col-md-2',
         ul: [
             {
                 id: 'AprovarAssr',
@@ -105,10 +105,10 @@ function dataTableConfig(){
         ]
     }
 
-    this.itensConfigs       = [configDropdowns];//configButton                                // Determina os itens criados e a ordem de posição conforme ordem de posição do array  
+    this.itensConfigs       = [configDropdowns, configButton];//configButton                                // Determina os itens criados e a ordem de posição conforme ordem de posição do array  
     
     /** */
-    this.orderSuper         = ["dataSelected", "btnDrpDwn1", "datatable-area-search"];//"btn1"              // Determina a ordem dos elementos no linha superior. Deve ser determinado da esquerda para direita indicando os elementos por 'id'. Ex: ['btn1', 'btnDrpDwn1', ...]
+    this.orderSuper         = ["dataSelected", "btnDrpDwn1", "btn1", "datatable-area-search"];//"btn1"              // Determina a ordem dos elementos no linha superior. Deve ser determinado da esquerda para direita indicando os elementos por 'id'. Ex: ['btn1', 'btnDrpDwn1', ...]
 
     this.APImethods         = new orderMethods();                                                           // se carregado pelo arquivo ServiceAPI: APImethods= window.orderMethodsMi. Construtor iniciado aqui.
     this.resAPI             = window.res
@@ -341,7 +341,7 @@ dataTableConfig.prototype.orderLineSuper = function (objConfig, itensConfigs, or
 dataTableConfig.prototype.changeEventInput = function () {
     let itens       = this.itensBuilt;
     let objFunc = {
-        fnc: ['formatDinamic', 'disabledOptions'],// 'enabledButton'
+        fnc: ['formatDinamic', 'disabledOptions', 'enabledButton'],
         formatDinamic: function () {
             var configFormat = {
                 inputId: 'dataSelected',
@@ -415,8 +415,17 @@ dataTableConfig.prototype.changeEventInput = function () {
             }
         },
         enabledButton: function (){
-            var iten = itens['btn1']
-            iten.getElementsByTagName('button')[0].disabled = false
+            var iten = itens['btn1'];
+            let dataSelected = document.getElementById('dataSelected').value;
+            let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", dataSelected, dataSelected, ConstraintType.MUST); 
+            let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
+            if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
+                let assrAp = itenPauta['hdn_aprvAssr'];
+                if(15 == assrAp){
+                    document.getElementById('Delibr').style.display = 'block'
+                    iten.getElementsByTagName('button')[0].disabled = false    
+                }
+            }
         }
     }
     this.tableReference.onselectrow(this.tableReference.myTable, objFunc);
@@ -431,7 +440,8 @@ dataTableConfig.prototype.changeEventTable = function () {
     let objFunc = {
         fnc: [
                 {'fncName': 'openItem', 'metodhParam': 'reload'},
-                {'fncName': 'statusAsr', 'metodhParam': 'reload'}//,{'fncName': 'enabledButton', 'metodhParam': 'reload'}    
+                {'fncName': 'statusAsr', 'metodhParam': 'reload'},
+                {'fncName': 'enabledButton', 'metodhParam': 'reload'}    
         ],
         openItem: function () {
             var secIntervalOpenItem = setInterval(pushOpenItem, 20)
@@ -471,7 +481,7 @@ dataTableConfig.prototype.changeEventTable = function () {
                 console.log(colNumSol[0])
                 for(let i = 0; i < col.length; i++){
                     if(colNumSol[i].children[0].innerText != undefined){
-                        let numSlct     = colNumSol[i].children[0].innerText;
+                        var numSlct     = colNumSol[i].children[0].innerText;
                     }else{ clearInterval(secIntervalStatusAsr) }
                     let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", numSlct, numSlct, ConstraintType.MUST); 
                     let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
@@ -516,6 +526,7 @@ dataTableConfig.prototype.changeEventTable = function () {
         },
         enabledButton: function (){
             var iten = itens['btn1']
+            document.getElementById('Delibr').style.display = 'none'
             iten.getElementsByTagName('button')[0].disabled = true
         }
     }
@@ -791,66 +802,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                     //})
                 }
             }
-        }/*,disabledOptions: function () {
-            drpDwn  = itens['btnDrpDwn1'];
-            let lis = drpDwn.getElementsByTagName('li')
-            for(let i = 0; i < lis.length; i++){
-                let liNow = lis[i];
-                if(liNow.id){
-                    liNow.addEventListener('click', function () { 
-                        var intervdisabledOptions = setInterval(defineOptions, 200);
-                        function defineOptions(){
-                            let order           = window.res['order'];
-                            let res             = window.res['responseIs'];
-                            if(order == 2 && res != {}){
-                                let err                 = window.res['err'];
-                                if(err != undefined && err.indexOf('Error') == -1){
-                                    if(res != undefined && res != '' && res != {}){
-                                        let itens = dataTablemi.itensBuilt;
-                                        drpDwn  = itens['btnDrpDwn1'];
-                                        let lis = drpDwn.getElementsByTagName('li');
-                                        let dataSelected = document.getElementById('dataSelected').value;
-                                        let States      = [11, 9, 15, 16]
-                                        let refEnabled  = [
-                                            [11],
-                                            [9, 15, 16],
-                                            [9, 15, 16],
-                                            [9, 15, 16]
-                                        ] 
-                                        let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", dataSelected, dataSelected, ConstraintType.MUST); 
-                                        let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
-                                        if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
-                                            let assrAp = itenPauta['hdn_aprvAssr'];
-                                            for(let k = 0; k < lis.length; k++){ 
-                                                if(lis[k].hasAttribute("hidden")){
-                                                    lis[k].removeAttribute("hidden");
-                                                }
-                                            }
-                                            for(let i = 0; i < States.length; i++){
-                                                if(States[i] == assrAp){
-                                                    let itns = refEnabled[i];
-                                                    for(let l = 0; l < lis.length; l++){
-                                                        for(let j = 0; j < itns.length; j++){
-                                                            if(itns[j] == lis[l].value){
-                                                                lis[l].hidden = 'true';
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            window.res['arrIndx'].push('1');
-                                            orderMethodsMi.indexFunctionsX();
-
-                                            clearInterval(intervdisabledOptions);  
-                                        }else{ clearInterval(intervdisabledOptions); }
-                                    }
-                                }else{ clearInterval(intervdisabledOptions); }
-                            }
-                        }
-                    });
-                }
-            }
-        }*/
+        }
     }
     if(itenBuitFunc != '' && itenBuitFunc != null && itenBuitFunc != undefined){
         for(let i = 0; i < itenBuitFunc.fnc.length; i++){

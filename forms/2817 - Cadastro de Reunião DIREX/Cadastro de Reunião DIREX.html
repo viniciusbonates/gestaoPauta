@@ -178,6 +178,45 @@
 			<div id="target"></div>
 			<input  type="text" class="form-control" name="dataSelected" id="dataSelected" style="display: block;" readonly>
 		</div>
+		<div class="panel-body" id="Delibr" style="display: none;">
+		<div class="col-md-4">
+		<div class="form-group">
+			<label for="slc_DISUP_vt">DISUP</label>
+			<select class="form-control" name="slc_DISUP_vt">
+				<option value="0"></option>
+				<option value="1">Aprovado</option>
+				<option value="2">Reprovado</option>
+			</select>
+		</div>
+		</div>
+		<div class="col-md-4">
+		<div class="form-group">
+			<label for="slc_UCOF_vt">UCOF</label>
+			<select class="form-control" name="slc_UCOF_vt">
+				<option value="0"></option>
+				<option value="1">Aprovado</option>
+				<option value="2">Reprovado</option>
+			</select>
+		</div>
+		</div>
+		<div class="col-md-4">
+		<div class="form-group">
+			<label for="slc_DITEC_vt">DITEC</label>
+			<select class="form-control" name="slc_DITEC_vt">
+				<option value="0"></option>
+				<option value="1">Aprovado</option>
+				<option value="2">Reprovado</option>
+			</select>
+		</div>
+		</div>
+		<div class="col-md-'12">
+		<div class="form-group">
+			<label for="txt_Deliberacao">Deliberação<span class="Obrigatorio"><strong>*</strong></span>:</label>
+			<textarea class="form-control" rows="13" name="txt_Deliberacao" id="txt_Deliberacao"></textarea>
+		</div>
+		</div>
+		</div>
+
 		</div>
 		</div>
 
@@ -193,10 +232,11 @@ objMain = {
 	 * 
 	*/
 	objCollection: DatasetFactory.getDataset('Pauta DIREX', null,null,null).values,
-	arrColumnsRender:  ['txt_NumProcess', 'dt_DataSolicita', 'cmb_NomeSolicita', 'zm_UnidadeSolicitante', 'txt_titulo', 'txt_Justificativa', 'Assess'],
+	arrColumnsRender:  ['txt_NumProcess', 'dataSelected', 'dt_DataSolicita', 'cmb_NomeSolicita', 'zm_UnidadeSolicitante', 'txt_titulo', 'txt_Justificativa', 'Assess'], //dt_DataSolicita
 	attRefer: 'cmb_NomeSolicita',
 	hder: [
 				{'title': 'N° Solicitação'},
+				{'title': 'Reunião Selecionada'},
 				{'title': 'Data Solicitação'},
 				{'title': 'Nome Solicitante'},
 				{'title': 'Unidade'},
@@ -435,7 +475,7 @@ var testDatatable = {
                     if (search && search.length && res != '') {
                         //that.myTable.reload(search);
 						console.log(that.objFunc)
-						that.reload(that.myTable, search, that.objFunc);
+						//that.reload(that.myTable, search, that.objFunc);
 						objData = {
 							arrItens: [],
 							arrItensAll: [],
@@ -494,7 +534,7 @@ var testDatatable = {
 						
 						let name 		= objFunc.fnc[t].fncName
 						let funNow 		= objFunc[name]()
-						console.log(funNow)
+						//console.log(funNow)
 					}
 				}
 			}
@@ -552,16 +592,16 @@ var testDatatable = {
 			});
 		}
 	},
-	backward: function (myTable, itensCollection, objData, searchMark, Obj) { 
+	backward: function (myTable, itensCollection, objData, searchMark, Obj, objFunc) { 
 		//console.log(myTable)
 		myTable.on('fluig.datatable.backward', function() {
 			let dirr = 0
 			if(searchMark == 1){
 				console.log(dirr)
-				Obj.opsNav(dirr, itensCollection, objData, searchMark)
+				Obj.opsNav(dirr, itensCollection, objData, searchMark, myTable, objFunc)
 			}else{
 				console.log(dirr)
-				Obj.opsNav(dirr, itensCollection, objData)
+				Obj.opsNav(dirr, itensCollection, objData, null, myTable, objFunc)
 			}
 		});
 	},
