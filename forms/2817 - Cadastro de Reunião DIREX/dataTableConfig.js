@@ -424,6 +424,9 @@ dataTableConfig.prototype.changeEventInput = function () {
                 if(15 == assrAp){
                     document.getElementById('Delibr').style.display = 'block'
                     iten.getElementsByTagName('button')[0].disabled = false    
+                }else{
+                    document.getElementById('Delibr').style.display = 'none'
+                    iten.getElementsByTagName('button')[0].disabled = true 
                 }
             }
         }
@@ -480,7 +483,7 @@ dataTableConfig.prototype.changeEventTable = function () {
                 let colNumSol   = TableFluig.getCol('Solicitação');
                 console.log(colNumSol[0])
                 for(let i = 0; i < col.length; i++){
-                    if(colNumSol[i].children[0].innerText != undefined){
+                    if(colNumSol[i].children[0] != undefined){
                         var numSlct     = colNumSol[i].children[0].innerText;
                     }else{ clearInterval(secIntervalStatusAsr) }
                     let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", numSlct, numSlct, ConstraintType.MUST); 
