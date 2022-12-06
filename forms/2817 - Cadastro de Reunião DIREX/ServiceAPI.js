@@ -16,7 +16,7 @@ function orderMethods(){
     this.host                = window.origin //"http://10.4.4.52:8080";   
     resMethods();
 }
-orderMethods.prototype.movePOST = function (NumSolicitacao, acao, vtDISUP, vtDIRAF, vtDITEC) {
+orderMethods.prototype.movePOST = function (NumSolicitacao, acao, vtDISUP, vtDIRAF, vtDITEC, dlbr) {
     var Nsolicitacao            = NumSolicitacao; 
     this.Nsolicitacao           = NumSolicitacao;
     orderMethodsMi.Nsolicitacao = NumSolicitacao;
@@ -40,23 +40,36 @@ orderMethods.prototype.movePOST = function (NumSolicitacao, acao, vtDISUP, vtDIR
                 var aprvAssr            = 0; 
                 targetState = acao 
                 aprvAssr    = acao
+                console.log(targetState)
+                console.log(movementSequence)
+                
+                console.log(vtDISUP)
+                console.log(vtDIRAF)
+                console.log(vtDITEC)
+                console.log(dlbr)
+
+
                 /**
                  *  targetState:    11  = Analise Assr
                  *                  9   = Ajuste
                  *                  15  = Incluir
                  *                  16  = Excluir
                 */
-               if(vtDISUP != undefined || vtDISUP != ''){
+               if(vtDISUP != undefined && vtDISUP != ''){
                     var setFields = {
                         "hdn_aprvAssr": aprvAssr,
                         "hdn_DISUP_vt": vtDISUP,
                         "hdn_DIRAF_vt": vtDIRAF,
-                        "hdn_DITEC_vt": vtDITEC
+                        "hdn_DITEC_vt": vtDITEC,
+                        "txt_Deliberacao": dlbr
                     }
+                    console.log('****** a ')
+                    console.log(setFields)
                }else{
                     var setFields = {
                         "hdn_aprvAssr": aprvAssr
                     }
+                    console.log('******* b ')
                }
                 $.ajax({
                     method: "POST",
