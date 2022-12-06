@@ -25,11 +25,11 @@ itensTools = {
                     console.log(window)
             });
     },
-    myToast: function () {
+    myToast: function (tp, title) {
         FLUIGC.toast({
-            title: 'Ação realizada com sucesso!',
+            title: title,   //'Ação realizada com sucesso!',
             message: '',
-            type: 'success'
+            type: tp        //success, danger, info and warning.
             });
     }
 }
@@ -422,13 +422,18 @@ dataTableConfig.prototype.changeEventInput = function () {
             console.log('1 * * ** * * * ** ')
             if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
                 let assrAp = itenPauta['hdn_aprvAssr'];
+                let inps = document.getElementsByClassName('inpDlbr')
+                arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao']
                 if(15 == assrAp){
-                    document.getElementById('Delibr').style.display = 'block'
-                    iten.getElementsByTagName('button')[0].disabled = false    
+                    document.getElementById('Delibr').style.display = 'block';
+                    iten.getElementsByTagName('button')[0].disabled = false;
+                    for(let i = 0; i < inps.length; i++){
+                        let nowInp = inps[arrNamesIt[i]];
+                        nowInp.value = '';
+                        nowInp.disabled = false;
+                    } 
                 }else if(26 == assrAp){
                     arrNames = ['hdn_DISUP_vt', 'hdn_DIRAF_vt', 'hdn_DITEC_vt', 'txt_Deliberacao']
-                    arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao']
-                    let inps = document.getElementsByClassName('inpDlbr')
                     for(let i = 0; i < inps.length; i++){
                         let nowInp = inps[arrNamesIt[i]]
                         console.log(itenPauta[arrNames[i]])
@@ -442,7 +447,9 @@ dataTableConfig.prototype.changeEventInput = function () {
                                     inps[arrNamesIt[i]].value = itenPauta[arrNames[i]];
                                 }
                             }
-                        }else{  inps[arrNamesIt[i]].value = itenPauta[arrNames[i]]; }
+                            nowInp.style.color = 'black';
+                            nowInp.disabled = 'disabled';
+                        }else{  inps[arrNamesIt[i]].value = itenPauta[arrNames[i]]; nowInp.style.color = 'black'; nowInp.disabled = 'disabled'; }
                     }
                     document.getElementById('Delibr').style.display = 'block'
                     iten.getElementsByTagName('button')[0].disabled = true 
@@ -735,7 +742,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                                 dataTablemi.resAPI = {};
                                                 window.res['arrIndx'].push('1');
                                                 orderMethodsMi.indexFunctionsX();
-                                                itensTools.myToast();
+                                                itensTools.myToast('success', 'Ação realizada com sucesso!');
                                                 clearInterval(interv)
                                             }
                                             else if(stateNow == 11){
@@ -749,7 +756,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                                 dataTablemi.resAPI = {};
                                                 window.res['arrIndx'].push('1');
                                                 orderMethodsMi.indexFunctionsX();
-                                                itensTools.myToast();
+                                                itensTools.myToast('success', 'Ação realizada com sucesso!');
                                                 clearInterval(interv)
                                             }
                                             else if(stateNow == 16){
@@ -763,7 +770,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                                 dataTablemi.resAPI = {};
                                                 window.res['arrIndx'].push('1');
                                                 orderMethodsMi.indexFunctionsX();
-                                                itensTools.myToast();
+                                                itensTools.myToast('success', 'Ação realizada com sucesso!');
                                                 clearInterval(interv)
                                             }
                                             else if(stateNow == 9){
@@ -778,7 +785,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                                 window.res['numIndx'] = 2;
                                                 window.res['arrIndx'].push('1');
                                                 orderMethodsMi.indexFunctionsX();
-                                                itensTools.myToast();
+                                                itensTools.myToast('success', 'Ação realizada com sucesso!');
                                                 clearInterval(interv)
                                             }
                                             else if(stateNow == 26){
@@ -793,7 +800,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                                 window.res['numIndx'] = 2;
                                                 window.res['arrIndx'].push('1');
                                                 orderMethodsMi.indexFunctionsX();
-                                                itensTools.myToast();
+                                                itensTools.myToast('success', 'Ação realizada com sucesso!');
                                                 clearInterval(interv)
                                             }
                                             else{ clearInterval(interv) }
@@ -874,14 +881,21 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                 let statusAssr      = itenPauta['hdn_aprvAssr'];
 
                 DISUP = inpsPanel['slc_DISUP_vt'].value;
-                DIRAF = inpsPanel['slc_UCOF_vt'].value;
+                DIRAF = inpsPanel['slc_DIRAF_vt'].value;
                 DITEC = inpsPanel['slc_DITEC_vt'].value;
                 Delibr = inpsPanel['txt_Deliberacao'].value;
+                
+                arrNamesInp = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao'];
+                for(i = 0; i < inpsPanel.length; i++){
+                    inpNow = inpsPanel[arrNamesInp[i]]
+                    if(inpNow.value != '' && inpNow.value != 0){
+                        if(statusDelibr != statusAssr){    
+                            dataTablemi.APImethods.movePOST(inpValue, statusDelibr, DISUP, DIRAF, DITEC, Delibr); 
+                            var interv = setInterval(defineStatus, 200);
+                        }
+                    }else{ itensTools.myToast('info', 'É necessário preencher todos os campos de Deliberação!'); break; }
+                }                
 
-                if(statusDelibr != statusAssr){    
-                    dataTablemi.APImethods.movePOST(inpValue, statusDelibr, DISUP, DIRAF, DITEC, Delibr); 
-                    var interv = setInterval(defineStatus, 200);
-                }
                 function defineStatus () { 
                     let colItens = dataTablemi.TableFluig().getCol('Aprov.Assessoria');
                     let colValue = dataTablemi.TableFluig().getCol('N° Solicitação');
@@ -918,7 +932,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                         window.res['numIndx'] = 1;
                                         window.res['arrIndx'].push('1');
                                         orderMethodsMi.indexFunctionsX();
-                                        itensTools.myToast();
+                                        itensTools.myToast('success', 'Ação realizada com sucesso!');
                                         clearInterval(interv)
                                     }
                                     else{ clearInterval(interv) }
