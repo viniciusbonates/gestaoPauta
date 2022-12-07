@@ -328,7 +328,12 @@ var testDatatable = {
 			i = objData.indIten 
 			objData.pageAtual++
 		}else if(dirr == 0){
-			i = objData.indIten - itens.length 
+			if(objData.pageAtual == 1){
+				i = objData.indIten - determineLenght - 6
+			}else{ i = objData.indIten - determineLenght -1 } 
+			
+			console.log(objData.back)
+			console.log(i)
 			objData.pageAtual--
 		}
 		function objS(rslt, ref){
@@ -389,7 +394,9 @@ var testDatatable = {
 								else{ obj_din = obj_din + virg }
 							}
 							if(lgnt == 0) { 
-								if(objData.arrItens.length != determineLenght){ objData.arrItens[0] = JSON.parse(obj_din);objData.indIten = i + 1 }
+								if(objData.arrItens.length != determineLenght){ objData.arrItens[0] = JSON.parse(obj_din);
+									objData.indIten = i + 1; 
+								}
 								if(objData.markItensAll == 0) { objData.arrItensAll[0] = JSON.parse(obj_din); }
 							}else { 
 								count++
@@ -457,8 +464,8 @@ var testDatatable = {
 						//console.log(itensCollection)
 						that.definePage(objData, 1, itensCollection);
 						that.opsNav(1, dataInit, objData, 2, that.myTable, that.objFunc);
-						that.backward(that.myTable, itensCollection, objData, searchMark, thisObj, that.objFunc);	//param that.myTable & thisObj
-						that.forward(that.myTable, itensCollection, objData, searchMark, thisObj, that.objFunc);	//param that.myTable & thisObj
+						//that.backward(that.myTable, itensCollection, objData, searchMark, thisObj, that.objFunc);	//param that.myTable & thisObj
+						//that.forward(that.myTable, itensCollection, objData, searchMark, thisObj, that.objFunc);	//param that.myTable & thisObj
 					}
 					var dataAll = datafilt
                     var search = dataAll.filter(function(el) {
@@ -486,8 +493,8 @@ var testDatatable = {
 						itensCollection = search
 						searchMark = 1
 						that.opsNav(1, search, objData, 1, that.myTable, that.objFunc);
-						that.backward(that.myTable, itensCollection, objData, searchMark, thisObj, that.objFunc);	//param that.myTable & thisObj
-						that.forward(that.myTable, itensCollection, objData, searchMark, thisObj, that.objFunc);	//param that.myTable & thisObj
+						//that.backward(that.myTable, itensCollection, objData, searchMark, thisObj, that.objFunc);	//param that.myTable & thisObj
+						//that.forward(that.myTable, itensCollection, objData, searchMark, thisObj, that.objFunc);	//param that.myTable & thisObj
                     } else if (res != '') {
                         FLUIGC.toast({
                             title: 'Searching: ',
@@ -508,6 +515,10 @@ var testDatatable = {
                 });
 			}
 		});
+
+		console.log(dataInit)
+		console.log(itensCollection)
+
 		that.opsNav(1, dataInit, objData, 2, that.myTable, that.objFunc);
 		that.backward(that.myTable, itensCollection, objData, searchMark, thisObj, that.objFunc);	//param that.myTable & thisObj
 		that.forward(that.myTable, itensCollection, objData, searchMark, thisObj, that.objFunc);	//param that.myTable & thisObj
@@ -541,6 +552,10 @@ var testDatatable = {
 		}
 	},
 	opsNav: function (dirr, itens, obj, press, myTable, objFunc){
+
+		console.log(itens)
+		console.log(obj)
+
 		btnNav = {
 			btnPrev: 0,
 			btnNext: 0
@@ -564,7 +579,8 @@ var testDatatable = {
 		if(obj.pageAtual != 0){
 			btnNav.btnPrev.disabled = false
 		}
-		if(obj.indIten == itens.length || obj.arrItensAll.length == itens.length){
+		//if(obj.indIten == itens.length || obj.arrItensAll.length == itens.length)
+		if(obj.indIten == itens.length){
 			btnNav.btnNext.disabled = true
 		}
 	},
