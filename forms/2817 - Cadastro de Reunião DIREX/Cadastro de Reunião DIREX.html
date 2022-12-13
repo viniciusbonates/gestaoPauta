@@ -10,6 +10,9 @@
 	<script type="text/javascript" src="dataTableConfig.js"></script>
 	<script type="text/javascript" src="ServiceAPI.js"></script>
 
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.6/pdfmake.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.6/vfs_fonts.js"></script>
+
 	<style type="text/css">
 		.Obrigatorio{
 			color: red;
@@ -670,6 +673,98 @@ var testDatatable = {
 
 
 };testDatatable.paramsInit(objMain);
+
+
+
+console.log(pdfMake)
+console.log(objMain.objCollection)
+var dt_slc 	= document.getElementById('dt_dataInicio').value
+var itns 	= objMain.objCollection;
+var itns_fil = [];
+var objInit			= '{';
+var objFim			= '}';
+var objVrg			= ',';
+var objStyles		= '\"styles\": {'+
+								'\"header\": {'+
+									'\"fontSize\": \"18\",'+
+									'\"bold\": \"true\",'+
+									'\"margin\": [0, 0, 0, 10]'+
+								'},'+
+								'\"subheader\": {'+
+									'\"fontSize\": \"16\",'+
+									'\"bold\": \"true\",'+
+									'\"margin\": [0, 10, 0, 5]'+
+								'},'+
+								'\"tableExample\": {'+
+									'\"margin\": [0, 5, 0, 15]'+
+								'},'+
+								'\"tableHeader\": {'+
+									'\"bold\": \"true\",'+
+									'\"fontSize\": \"13\",'+
+									'\"color\": \"black\"'+
+								'}'+
+							'}'
+var objContent	 	= '\"content\": [ ';
+var objPdf 			= 0; 
+var ck_itn_now		= 0;
+for(i = 0; i < itns.length; i++){
+	var dlbr_itn = itns[i]["txt_Deliberacao"]
+	console.log(dlbr_itn)
+	var dt_itn = itns[i].dataSelected
+	/*******		Validação 		********/
+	if(dt_itn != null & dt_itn != '' && dt_itn != undefined){
+		dt_itn = dt_itn.split('/');
+		dt_itn = dt_itn[2] + '-' +dt_itn[1] + '-'+ dt_itn[0]
+		console.log(itns[i]["txt_NumProcess"])
+		if(dlbr_itn == '' || dlbr_itn == null){
+			ck_itn_now = true;
+		}
+		if(dt_slc != dt_itn && itns[i].txt_NumProcess == ''){
+			ck_itn_now = true;
+		}
+		if(itns[i]["hdn_aprvAssr"] == ''){ //|| itns[i]["hdn_aprvAssr"] != '15'
+			ck_itn_now = true;
+		}
+	/***************************************/
+		if(ck_itn_now != true){		
+			console.log('***********************');
+			itns_fil.push(itns[i])
+		}else{ 
+			ck_itn_now = false; 
+		}
+	}
+	console.log(itns_fil)
+}
+/*******		itns_fil montado com os itens validados 		********/
+for(j = 0; j < itns_fil.length; j++){
+	dtr = j + 1;
+	if(objPdf == 0){ /****** INICIO  ********/
+		console.log(objPdf)
+		dlbr_now = itns_fil[j]["txt_Deliberacao"]
+		dlbr_now = dlbr_now.replace(/\r/g, '')
+		dlbr_now = dlbr_now.replace(/\n/g, ' ') 
+		dlbr_now = dlbr_now.replace(/\t/g, ' ')
+		objPdf = objInit + objContent + '{"text": "Deliberação 38ª Reunião DIREX 2022 ", "style": "header"},'
+		objPdf =  objPdf + '\"'+itns_fil[j].txt_NumProcess + dlbr_now+'\"';
+	}else{
+		dlbr_now = itns_fil[j]["txt_Deliberacao"]
+		dlbr_now = dlbr_now.replace(/\r/g, '')
+		dlbr_now = dlbr_now.replace(/\n/g, ' ')
+		dlbr_now = dlbr_now.replace(/\t/g, ' ')
+		objPdf = objPdf + ' \"'+itns_fil[j].txt_NumProcess + dlbr_now+'\"';
+	}
+	if(dtr == itns_fil.length){ /****** FIM  ********/
+		objPdf = objPdf + ']' + objVrg;
+	}else{ /****** MEIO  ********/ 
+		objPdf = objPdf + '\n' + objVrg; 
+	}
+}
+objPdf = objPdf + objStyles + objFim
+console.log(objPdf)
+objPdfFinal = JSON.parse(objPdf)
+pdfMake.createPdf(objPdfFinal).open();
+
+
 </script>
 </body>
 </html>
