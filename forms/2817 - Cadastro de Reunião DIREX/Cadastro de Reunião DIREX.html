@@ -251,25 +251,28 @@ objMain = {
 	validation: function () {
 		let dataItm 	= item['dt_DataSolicita'];
 		let numItm		= item['txt_NumProcess'];
-		console.log(dataItm)
-		console.log(numItm)
+		var dtRn		= item['dataSelected'];
+		let dtDeterm	= document.getElementById('dt_dataInicio').value
+		console.log(dtRn)
+		console.log(dtDeterm)
 		var arrResult  	= [];
 		let dataNow 	= new Date()
 		let anoNow		= dataNow.getFullYear();
 		dataItm = dataItm.split(' ')[0];
 		dataItm = dataItm.split('/')
-		console.log(dataItm)
-		//arrResult.push(true);
-		console.log(arrResult)
-		/*if(dataItm[2] != anoNow){
-			return true
-		}*/
 		if(dataItm[2] != anoNow){
 			arrResult.push(true);
 		}
 		if(numItm == '' || numItm == null || numItm == undefined){
 			arrResult.push(true);
 		}
+		if(dtRn != null && dtRn != undefined && dtRn != ''){
+			dtRn = dtRn.split('/');
+			dtRn = dtRn[2]+'-'+dtRn[1]+'-'+dtRn[0];
+			if(dtRn != dtDeterm){
+				arrResult.push(true);
+			}
+		}else{ arrResult.push(true); }
 		ckii = 0;
 		for(ii = 0; ii < arrResult.length; ii++){
 			if(arrResult[ii] == true){ return true; }
