@@ -249,14 +249,34 @@ objMain = {
 			{'fncName': 'validation', 'fncParam': 'dt_DataSolicita'}
 		],
 	validation: function () {
-		let dataItm 	= item['dt_DataSolicita']
+		let dataItm 	= item['dt_DataSolicita'];
+		let numItm		= item['txt_NumProcess'];
+		console.log(dataItm)
+		console.log(numItm)
+		var arrResult  	= [];
 		let dataNow 	= new Date()
 		let anoNow		= dataNow.getFullYear();
 		dataItm = dataItm.split(' ')[0];
 		dataItm = dataItm.split('/')
 		console.log(dataItm)
-		if(dataItm[2] != anoNow){ return true }
-		else{ return false }; 
+		//arrResult.push(true);
+		console.log(arrResult)
+		/*if(dataItm[2] != anoNow){
+			return true
+		}*/
+		if(dataItm[2] != anoNow){
+			arrResult.push(true);
+		}
+		if(numItm == '' || numItm == null || numItm == undefined){
+			arrResult.push(true);
+		}
+		ckii = 0;
+		for(ii = 0; ii < arrResult.length; ii++){
+			if(arrResult[ii] == true){ return true; }
+			else{ ckii = false }
+		} 
+		if(ckii == false){ return false }
+	
 	},
 	fnc: [
 			{'fncName': 'a', 'fncParam': 'cmb_NomeSolicita'},
@@ -327,13 +347,23 @@ var testDatatable = {
 		if(dirr == 1){
 			i = objData.indIten 
 			objData.pageAtual++
+			if(objData.pageAtual != 0){
+				a = objData.pageAtual + 1
+				objData.indIten = (a * determineLenght) + 1
+			}else{ objData.indIten = 6 }
 		}else if(dirr == 0){
-			if(objData.pageAtual == 1){
+			console.log(objData.pageAtual)
+			/*if(objData.pageAtual == 1){
 				i = objData.indIten - determineLenght - 6
-			}else{ i = objData.indIten - determineLenght -1 } 
-			
-			console.log(objData.back)
-			console.log(i)
+			}else{ 
+				i = objData.indIten - determineLenght - 1 
+			} */
+			if(objData.pageAtual != 0){
+				a = objData.pageAtual - 1
+				i = (a * determineLenght) + 1
+				a = objData.pageAtual
+				objData.indIten = (a * determineLenght) + 1
+			}else{ objData.indIten = 0 }
 			objData.pageAtual--
 		}
 		function objS(rslt, ref){
@@ -395,13 +425,13 @@ var testDatatable = {
 							}
 							if(lgnt == 0) { 
 								if(objData.arrItens.length != determineLenght){ objData.arrItens[0] = JSON.parse(obj_din);
-									objData.indIten = i + 1; 
+									//objData.indIten = i + 1; 
 								}
 								if(objData.markItensAll == 0) { objData.arrItensAll[0] = JSON.parse(obj_din); }
 							}else { 
 								count++
 	
-								if(objData.arrItens.length != determineLenght){ objData.arrItens[lgnt] = JSON.parse(obj_din);objData.indIten = i + 1 }
+								if(objData.arrItens.length != determineLenght){ objData.arrItens[lgnt] = JSON.parse(obj_din); } //objData.indIten = i + 1
 								if(objData.markItensAll == 0) { objData.arrItensAll[count] = JSON.parse(obj_din); }
 							}
 						}
