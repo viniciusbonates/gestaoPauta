@@ -683,6 +683,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                         let nameIten = 'dataSelected'
                         console.log(itens)
                         let it = dataTablemi.itensBuilt[nameIten];
+                        var iten = dataTablemi.itensBuilt['btn1'];
                         inp = it.getElementsByTagName('input')[0];
                         inpValue = inp.value;  
                         let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", inpValue, inpValue, ConstraintType.MUST); 
@@ -743,6 +744,16 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                                 window.res['arrIndx'].push('1');
                                                 orderMethodsMi.indexFunctionsX();
                                                 itensTools.myToast('success', 'Ação realizada com sucesso!');
+                                                let inps = document.getElementsByClassName('inpDlbr')
+                                                arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao']
+                                                document.getElementById('Delibr').style.display = 'block';
+                                                iten.getElementsByTagName('button')[0].disabled = false;
+                                                console.log('************** * ** * * * ** * *** **'+ iten)
+                                                for(let i = 0; i < inps.length; i++){
+                                                    let nowInp = inps[arrNamesIt[i]];
+                                                    nowInp.value = '';
+                                                    nowInp.disabled = false;
+                                                } 
                                                 clearInterval(interv)
                                             }
                                             else if(stateNow == 11){
@@ -757,6 +768,8 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                                 window.res['arrIndx'].push('1');
                                                 orderMethodsMi.indexFunctionsX();
                                                 itensTools.myToast('success', 'Ação realizada com sucesso!');
+                                                document.getElementById('Delibr').style.display = 'none'
+                                                iten.getElementsByTagName('button')[0].disabled = true 
                                                 clearInterval(interv)
                                             }
                                             else if(stateNow == 16){
