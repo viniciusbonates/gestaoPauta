@@ -56,6 +56,149 @@ function Custom(){
 }
 window.addEventListener('load', Custom)
 */
+
+function geradorPDF(){
+    
+console.log(pdfMake)
+console.log(objMain.objCollection)
+var dt_slc 	= document.getElementById('dt_dataInicio').value
+var itns 	= objMain.objCollection;
+var itns_fil = [];
+var objInit			= '{';
+var objFim			= '}';
+var objVrg			= ',';
+var objStyles		= '\"styles\": {'+
+								'\"header\": {'+
+									'\"fontSize\": \"18\",'+
+									'\"bold\": \"true\",'+
+									'\"margin\": [0, 0, 0, 10]'+
+								'},'+
+								'\"subheader\": {'+
+									'\"fontSize\": \"16\",'+
+									'\"bold\": \"true\",'+
+									'\"margin\": [0, 10, 0, 5]'+
+								'},'+
+								'\"tableExample\": {'+
+									'\"margin\": [0, 5, 0, 15]'+
+								'},'+
+								'\"tableHeader\": {'+
+									'\"bold\": \"true\",'+
+									'\"fontSize\": \"13\",'+
+									'\"color\": \"black\"'+
+								'}'+
+							'}'
+var objContent	 	= '\"content\": [ ';
+var objPdf 			= 0; 
+var ck_itn_now		= 0;
+for(i = 0; i < itns.length; i++){
+	var dlbr_itn = itns[i]["txt_Deliberacao"]
+	console.log(dlbr_itn)
+	var dt_itn = itns[i].dataSelected
+	/*******		Validação 		********/
+	if(dt_itn != null & dt_itn != '' && dt_itn != undefined){
+		dt_itn = dt_itn.split('/');
+		dt_itn = dt_itn[2] + '-' +dt_itn[1] + '-'+ dt_itn[0]
+		console.log(itns[i]["txt_NumProcess"])
+		if(dlbr_itn == '' || dlbr_itn == null){
+			ck_itn_now = true;
+		}
+		if(dt_slc != dt_itn && itns[i].txt_NumProcess == ''){
+			ck_itn_now = true;
+		}
+		if(itns[i]["hdn_aprvAssr"] == ''){ //|| itns[i]["hdn_aprvAssr"] != '15'
+			ck_itn_now = true;
+		}
+	/***************************************/
+		if(ck_itn_now != true){		
+			console.log('***********************');
+			itns_fil.push(itns[i])
+		}else{ 
+			ck_itn_now = false; 
+		}
+	}
+	console.log(itns_fil)
+}
+/*******		itns_fil montado com os itens validados 		********/
+for(j = 0; j < itns_fil.length; j++){
+	dtr = j + 1;
+	if(objPdf == 0){ /****** INICIO  ********/
+
+		console.log(objPdf)
+		objPdf = objInit + objContent + '{"text": "Deliberação 38ª Reunião DIREX 2022 ", "style": "header"},' 
+		objPdf =  objPdf + '{"text": \" N° Solicitação: '+itns_fil[j].txt_NumProcess + '\", "style": "subheader"},';
+		dlbr_now = itns_fil[j]["txt_Deliberacao"]
+
+		//dlbr_now = dlbr_now.replace(/\r/g, '---')
+		//dlbr_now = dlbr_now.replace(/\n/g, '---') 
+		dlbr_now = dlbr_now.replace(/\t/g, ' ')
+		//objPdf =  objPdf + '\"' + dlbr_now + '\"';
+
+		let totalLength = dlbr_now.length 
+		var arrParts 	= []; 
+		for(l = 0; l < totalLength; l++){
+			f 			= dlbr_now.indexOf('\n')
+			if(f == 0){
+				dlbr_now	= dlbr_now.slice(1, totalLength);
+			}else{
+				part_dlbr 	= dlbr_now.slice(0, f) 
+				dlbr_now	= dlbr_now.slice(f, totalLength);
+				if(part_dlbr != '' && part_dlbr != ' '){
+					arrParts.push(part_dlbr);
+				}
+			}
+		}
+		for(ll = 0; ll < arrParts.length; ll++){
+			teto = ll +1
+			if(teto == arrParts.length){
+				objPdf =  objPdf + '\"' + arrParts[ll] + '\"';	
+			}else { objPdf =  objPdf + '{ "text": \"' + arrParts[ll] + '\","margin": [0, 5] },'; }
+		}
+
+	}else{
+		objPdf =  objPdf + '{"text": \" N° Solicitação: '+itns_fil[j].txt_NumProcess + '\", "style": "subheader"},';
+		dlbr_now = itns_fil[j]["txt_Deliberacao"]
+		//dlbr_now = dlbr_now.replace(/\r/g, '')
+		//dlbr_now = dlbr_now.replace(/\n/g, '') 
+		dlbr_now = dlbr_now.replace(/\t/g, '')
+		let totalLength = dlbr_now.length 
+		var arrParts 	= []; 
+		for(l = 0; l < totalLength; l++){
+			f 			= dlbr_now.indexOf('\n')
+			if(f == 0){
+				dlbr_now	= dlbr_now.slice(1, totalLength);
+			}else{
+				part_dlbr 	= dlbr_now.slice(0, f) 
+				dlbr_now	= dlbr_now.slice(f, totalLength);
+				if(part_dlbr != '' && part_dlbr != ' '){
+					arrParts.push(part_dlbr);
+				}
+			}
+		}
+		for(ll = 0; ll < arrParts.length; ll++){
+			teto = ll +1
+			if(teto == arrParts.length){
+				objPdf =  objPdf + '\"' + arrParts[ll] + '\"';	
+			}else { objPdf =  objPdf + '{ "text": \"' + arrParts[ll] + '\","margin": [0, 5] },'; }
+		}
+
+		//objPdf = objPdf + ' \"'+ dlbr_now+'\"';
+	}
+	if(dtr == itns_fil.length){ /****** FIM  ********/
+		objPdf = objPdf + ']' + objVrg;
+	}else{ /****** MEIO  ********/ 
+		objPdf = objPdf + '\n' + objVrg; 
+	}
+}
+objPdf = objPdf + objStyles + objFim
+console.log(objPdf)
+objPdfFinal = JSON.parse(objPdf)
+pdfMake.createPdf(objPdfFinal).open();
+
+}
+function getPDF () { document.getElementById('getData').addEventListener('click', function () { geradorPDF() } ) }
+window.addEventListener('load', getPDF)
+
+
 function defineState () {
     let stts = window.parent.ECM.workflowView.sequence
     if(stts == 4 || stts == 0){
