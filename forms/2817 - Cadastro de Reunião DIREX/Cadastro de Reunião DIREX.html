@@ -37,7 +37,7 @@
 		<div class="panel panel-primary" id="DadosSolicitante">
 		<div class="panel-heading">
 			<h3 class="panel-title">
-				<b>Dados do Solicitante</b>
+				<b>Dados da Assessoria</b>
 			</h3>
 		</div>
 
@@ -324,6 +324,8 @@ objMain = {
 	},
 	b: function (){
 		valueIt = item['txt_Justificativa']
+		console.log(valueIt)
+		console.log(typeof valueIt)
 		if(typeof valueIt == 'string'){
 			valueIt = valueIt.replace(/\r/g, '')
 			valueIt = valueIt.replace(/\n/g, ' ')
@@ -376,6 +378,9 @@ var testDatatable = {
 		fnc = this.fnc
 		condValidation = this.condValidation
 		objAll = this.obj
+		console.log(objAll)
+		console.log(fnc	)
+		console.log(itens)
 		if(dirr == 1){
 
 			i = objData.indIten 
@@ -418,6 +423,7 @@ var testDatatable = {
 						console.log(aVal)	
 						if(aVal != true || aVal == undefined){
 				/*********************** Validação ***********************************/
+				console.log(press)
 							if(fnc != '' && press != 1){
 								for(t = 0; t < fnc.length; t++){
 									let name 		= fnc[t].fncName
@@ -426,6 +432,8 @@ var testDatatable = {
 									objsFunc[t] = new objS(a, ref)
 								}
 							}
+							console.log(objsFunc)
+							console.log(item)
 							var obj_din = ''
 							let inic  	= '{'
 							let final 	= '}'
@@ -522,7 +530,7 @@ var testDatatable = {
 						searchMark = 0
 						//console.log(itensCollection)
 						that.definePage(objData, 1, itensCollection);
-						that.opsNav(1, dataInit, objData, 2, that.myTable, that.objFunc);
+						that.opsNav(1, objData.arrItensAll, objData, 2, that.myTable, that.objFunc);
 						//that.backward(that.myTable, itensCollection, objData, searchMark, thisObj, that.objFunc);	//param that.myTable & thisObj
 						//that.forward(that.myTable, itensCollection, objData, searchMark, thisObj, that.objFunc);	//param that.myTable & thisObj
 					}
@@ -551,7 +559,7 @@ var testDatatable = {
 						};
 						itensCollection = search
 						searchMark = 1
-						that.opsNav(1, search, objData, 1, that.myTable, that.objFunc);
+						that.opsNav(1, search, objData, null, that.myTable, that.objFunc);
 						//that.backward(that.myTable, itensCollection, objData, searchMark, thisObj, that.objFunc);	//param that.myTable & thisObj
 						//that.forward(that.myTable, itensCollection, objData, searchMark, thisObj, that.objFunc);	//param that.myTable & thisObj
                     } else if (res != '') {
