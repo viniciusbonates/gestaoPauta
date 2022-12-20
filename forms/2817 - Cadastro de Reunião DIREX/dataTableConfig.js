@@ -603,7 +603,7 @@ dataTableConfig.prototype.loadEventTable = function () {
         statusAsr: function () {
             let col         = TableFluig.getCol('Aprov.Assessoria');
             let colNumSol   = TableFluig.getCol('Solicitação');
-            console.log(colNumSol[3].children[0].innerText)
+            //console.log(colNumSol[3].children[0].innerText)
             for(let i = 0; i < col.length; i++){
                 let numSlct         = colNumSol[i].children[0].innerText;
                 let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", numSlct, numSlct, ConstraintType.MUST); 
@@ -904,18 +904,22 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                     if(inpNow.value != '' && inpNow.value != 0){
                         if(statusDelibr != statusAssr){    
                             dataTablemi.APImethods.movePOST(inpValue, statusDelibr, DISUP, DIRAF, DITEC, Delibr); 
-                            var interv = setInterval(defineStatus, 200);
+                            var intervmoveItemDelibr = setInterval(defineStatusDelibr, 100);
                         }
                     }else{ itensTools.myToast('info', 'É necessário preencher todos os campos de Deliberação!'); break; }
                 }                
 
-                function defineStatus () { 
+                function defineStatusDelibr () { 
                     let colItens = dataTablemi.TableFluig().getCol('Aprov.Assessoria');
                     let colValue = dataTablemi.TableFluig().getCol('N° Solicitação');
+                    var itenBtn1 = dataTablemi.itensBuilt['btn1'];
                     var responsNow = window.res
                     responsNowIns = responsNow.responseIs
                     var order           = window.res['order'];
                     var  res             = window.res['responseIs'];
+                    console.log(window.res['responseIs'])   
+                    console.log(window.res['order'])    
+                    console.log(order)    
                     if(order == 2 && res != {}){
                         var err                 = window.res['err'];
                         window.res['check']     = false;
@@ -942,17 +946,29 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                         icn                 = icn +' <b>Deliberado</b>';
                                         colItem.innerHTML    = icn;
                                         dataTablemi.resAPI = {};
+                                        let inps = document.getElementsByClassName('inpDlbr')
+                                        arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao']
+                                        document.getElementById('Delibr').style.display = 'block';
+                                        itenBtn1.getElementsByTagName('button')[0].disabled = true;
+                                        console.log('************** * ** * * * ** * *** **'+ itenBtn1)
+                                        for(let i = 0; i < inps.length; i++){
+                                            let nowInp = inps[arrNamesIt[i]];
+                                            //nowInp.value = '';
+                                            nowInp.disabled = true;
+                                        } 
                                         window.res['numIndx'] = 1;
                                         window.res['arrIndx'].push('1');
                                         orderMethodsMi.indexFunctionsX();
                                         itensTools.myToast('success', 'Ação realizada com sucesso!');
-                                        clearInterval(interv)
+                                        clearInterval(intervmoveItemDelibr)
                                     }
-                                    else{ clearInterval(interv) }
-                                }else{ clearInterval(interv) } 
+                                    else{ clearInterval(intervmoveItemDelibr) }
+                                }else{ clearInterval(intervmoveItemDelibr) } 
                             }
-                        }else { clearInterval(interv) }
-                    }else if(order == 0){ clearInterval(interv) }
+                        }else { clearInterval(intervmoveItemDelibr) }
+                    }else if(window.res['order'] == 0){ 
+                        clearInterval(intervmoveItemDelibr); 
+                    }
                 }
             }
 
