@@ -446,6 +446,9 @@
       </renderingStyle>
     </styles>
     <styles foreground="/0/@colors.7" id="BPMNCLASS-TEXT"/>
+    <styles foreground="/0/@colors.7" id="BPMNCLASS-TEXT"/>
+    <styles background="/0/@colors.3" foreground="/0/@colors.3" id="BPMN-POLYGON-ARROW" lineWidth="1"/>
+    <styles foreground="/0/@colors.7" id="BPMNCLASS-TEXT"/>
     <styles foreground="/0/@colors.1" id="TASK">
       <renderingStyle>
         <adaptedGradientColoredAreas definedStyleId="blue-white-gloss" gradientType="0">
@@ -600,6 +603,7 @@
     </styles>
     <styles foreground="/0/@colors.7" id="BPMNCLASS-TEXT"/>
     <styles foreground="/0/@colors.7" id="BPMNCLASS-TEXT"/>
+
     <styles background="/0/@colors.3" foreground="/0/@colors.3" id="BPMN-POLYGON-ARROW" lineWidth="1"/>
     <styles foreground="/0/@colors.7" id="BPMNCLASS-TEXT"/>
     <styles foreground="/0/@colors.7" id="BPMNCLASS-TEXT"/>
