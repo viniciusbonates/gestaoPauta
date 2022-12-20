@@ -10,8 +10,14 @@ function displayFields(form,customHTML){
         case 0:
                 form.setValue("cmb_NomeSolicita",usuario);
                 form.setValue("dt_DataSolicita",data.format(new Date()));
+        break;
 
-        
+        case 8:
+            form.setValue("cmb_NomeSolicita",usuario);
+        break;
+
+        case 10:
+            form.setValue("cmb_NomeSolicita",usuario);
         break;
 
         default:

@@ -10,6 +10,9 @@
 	<script type="text/javascript" src="dataTableConfig.js"></script>
 	<script type="text/javascript" src="ServiceAPI.js"></script>
 
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.6/pdfmake.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.6/vfs_fonts.js"></script>
+
 	<style type="text/css">
 		.Obrigatorio{
 			color: red;
@@ -71,7 +74,7 @@
 		<div class="panel panel-primary" id="DadosCadastro">
 		<div class="panel-heading">
 			<h3 class="panel-title">
-				<b>Dados para Cadastro de Nova Reunião</b>
+				<b>Dados da Reunião</b>
 			</h3>
 		</div>
 		<div class="panel-body">
@@ -124,15 +127,15 @@
 			</tbody>
 			</table>
 			</div>-->
-			<div class="col-md-1">
-			<div class="pull-left">
+			<div class="col-md-2">
+			<!--<div class="pull-left">-->
 			<div class="form-group">
 				<label for="dt_dataInicio">Data da Reunião<span class="Obrigatorio"><strong>*</strong></span>:</label>
 				<input type="date" class="form-control" name="dt_dataInicio" id="dt_dataInicio">														
 			</div>
+			<!--</div>-->
 			</div>
-			</div>
-			<div class="col-md-2">
+			<div class="col-md-2" style="display: none;">
 			<div class="pull-left">
 			<div class="form-group">
 				<label for="dt_datalimit">Data Limite para Inserção<span class="Obrigatorio"><strong>*</strong></span>:</label>
@@ -140,11 +143,31 @@
 			</div>
 			</div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-2" style="display: none;">
 			<div class="custom-checkbox custom-checkbox-danger custom-checkbox-lg">
 				<p class="text-warning"><b>Selecionar essa opção em casos especificos.</b></p>
 				<input type="checkbox" name="checkbox1" id="checkbox1">
 				<label for="checkbox1">Reunião DIREX Extraordinária</label>
+			</div>
+			</div>
+			<div class="col-md-4">
+			<div class="form-group" id="CodContratacao">
+				<div class="card" style="color: black">
+				<div class="card-body">
+					<h3 class="card-title"><i class="flaticon flaticon-add-branch icon-thumbnail-md" aria-hidden="true"></i> Gerar ATA</h3>
+					<p class="card-text">O documento será gerado Automáticamente</p>
+					<div class="col-md-3" >
+					<div class="input-group">
+						<!--<input type="text" class="form-control" name="txt_CodContratacao" id="txt_CodContratacao" placeholder="Exemplo: AM0820220063">
+						-->
+							<button type="button" class="btn btn-primary" id="getData">Obter PDF</button>
+					</div>
+					</div>
+					<sup data-toggle="tooltip" data-placement="right" title="O documento será gerado em PDF, somente com os itens Deliberados.">
+					<i class="fluigicon fluigicon-info-sign icon-sm" aria-hidden="true"></i></sup>
+					
+				</div>
+				</div>
 			</div>
 			</div>
 		</div>	
@@ -178,6 +201,45 @@
 			<div id="target"></div>
 			<input  type="text" class="form-control" name="dataSelected" id="dataSelected" style="display: block;" readonly>
 		</div>
+		<div class="panel-body" id="Delibr" style="display: none;">
+		<div class="col-md-4">
+		<div class="form-group">
+			<label for="slc_DISUP_vt">DISUP</label>
+			<select class="form-control inpDlbr" name="slc_DISUP_vt" id="slc_DISUP_vt">
+				<option value="0"></option>
+				<option value="1">Aprovado</option>
+				<option value="2">Reprovado</option>
+			</select>
+		</div>
+		</div>
+		<div class="col-md-4">
+		<div class="form-group">
+			<label for="slc_UCOF_vt">DIRAF</label>
+			<select class="form-control inpDlbr" name="slc_UCOF_vt" id="slc_DIRAF_vt">
+				<option value="0"></option>
+				<option value="1">Aprovado</option>
+				<option value="2">Reprovado</option>
+			</select>
+		</div>
+		</div>
+		<div class="col-md-4">
+		<div class="form-group">
+			<label for="slc_DITEC_vt">DITEC</label>
+			<select class="form-control inpDlbr" name="slc_DITEC_vt" id="slc_DITEC_vt">
+				<option value="0"></option>
+				<option value="1">Aprovado</option>
+				<option value="2">Reprovado</option>
+			</select>
+		</div>
+		</div>
+		<div class="col-md-'12">
+		<div class="form-group">
+			<label for="txt_Deliberacao">Deliberação<span class="Obrigatorio"><strong>*</strong></span>:</label>
+			<textarea class="form-control inpDlbr" rows="22" name="txt_Deliberacao" id="txt_Deliberacao"></textarea>
+		</div>
+		</div>
+		</div>
+
 		</div>
 		</div>
 
@@ -193,10 +255,11 @@ objMain = {
 	 * 
 	*/
 	objCollection: DatasetFactory.getDataset('Pauta DIREX', null,null,null).values,
-	arrColumnsRender:  ['txt_NumProcess', 'dt_DataSolicita', 'cmb_NomeSolicita', 'zm_UnidadeSolicitante', 'txt_titulo', 'txt_Justificativa', 'Assess'],
+	arrColumnsRender:  ['txt_NumProcess', 'dataSelected', 'dt_DataSolicita', 'cmb_NomeSolicita', 'zm_UnidadeSolicitante', 'txt_titulo', 'txt_Justificativa', 'Assess'], //dt_DataSolicita
 	attRefer: 'cmb_NomeSolicita',
 	hder: [
 				{'title': 'N° Solicitação'},
+				{'title': 'Reunião Selecionada'},
 				{'title': 'Data Solicitação'},
 				{'title': 'Nome Solicitante'},
 				{'title': 'Unidade'},
@@ -209,14 +272,37 @@ objMain = {
 			{'fncName': 'validation', 'fncParam': 'dt_DataSolicita'}
 		],
 	validation: function () {
-		let dataItm 	= item['dt_DataSolicita']
+		let dataItm 	= item['dt_DataSolicita'];
+		let numItm		= item['txt_NumProcess'];
+		var dtRn		= item['dataSelected'];
+		let dtDeterm	= document.getElementById('dt_dataInicio').value
+		console.log(dtRn)
+		console.log(dtDeterm)
+		var arrResult  	= [];
 		let dataNow 	= new Date()
 		let anoNow		= dataNow.getFullYear();
 		dataItm = dataItm.split(' ')[0];
 		dataItm = dataItm.split('/')
-		console.log(dataItm)
-		if(dataItm[2] != anoNow){ return true }
-		else{ return false }; 
+		if(dataItm[2] != anoNow){
+			arrResult.push(true);
+		}
+		if(numItm == '' || numItm == null || numItm == undefined){
+			arrResult.push(true);
+		}
+		if(dtRn != null && dtRn != undefined && dtRn != ''){
+			dtRn = dtRn.split('/');
+			dtRn = dtRn[2]+'-'+dtRn[1]+'-'+dtRn[0];
+			if(dtRn != dtDeterm){
+				arrResult.push(true);
+			}
+		}else{ arrResult.push(true); }
+		ckii = 0;
+		for(ii = 0; ii < arrResult.length; ii++){
+			if(arrResult[ii] == true){ return true; }
+			else{ ckii = false }
+		} 
+		if(ckii == false){ return false }
+	
 	},
 	fnc: [
 			{'fncName': 'a', 'fncParam': 'cmb_NomeSolicita'},
@@ -241,6 +327,8 @@ objMain = {
 		if(typeof valueIt == 'string'){
 			valueIt = valueIt.replace(/\r/g, '')
 			valueIt = valueIt.replace(/\n/g, ' ')
+			valueIt = valueIt.replace(/\t/g, ' ')
+			valueIt = valueIt.replace(/"\"/g, '\\')
 		}
 		return valueIt
 	}
@@ -280,15 +368,31 @@ var testDatatable = {
 		cols = this.arrColumns;		
 		determineLenght = 5;
 		attIten = this.attRefer;
+
+	
 		itens = itensCollection
+		
+
 		fnc = this.fnc
 		condValidation = this.condValidation
 		objAll = this.obj
 		if(dirr == 1){
+
 			i = objData.indIten 
 			objData.pageAtual++
+			if(objData.pageAtual != 0){
+				a = objData.pageAtual + 1
+				objData.indIten = (a * determineLenght) //+ 1
+			}else{ objData.indIten = 5 }
+
+
 		}else if(dirr == 0){
-			i = objData.indIten - itens.length 
+			if(objData.pageAtual != 0){
+				a = objData.pageAtual - 1
+				i = (a * determineLenght) //+ 1
+				a = objData.pageAtual
+				objData.indIten = (a * determineLenght) //+ 1
+			}else{ objData.indIten = 0 }
 			objData.pageAtual--
 		}
 		function objS(rslt, ref){
@@ -349,13 +453,15 @@ var testDatatable = {
 								else{ obj_din = obj_din + virg }
 							}
 							if(lgnt == 0) { 
-								if(objData.arrItens.length != determineLenght){ objData.arrItens[0] = JSON.parse(obj_din);objData.indIten = i + 1 }
-								if(objData.markItensAll == 0) { objData.arrItensAll[0] = JSON.parse(obj_din); }
+								if(objData.arrItens.length != determineLenght){ objData.arrItens[0] = JSON.parse(obj_din);
+									//objData.indIten = i + 1; 
+								}
+								if(objData.markItensAll == 0) { objData.arrItensAll[0] = item; } //JSON.parse(obj_din)
 							}else { 
 								count++
 	
-								if(objData.arrItens.length != determineLenght){ objData.arrItens[lgnt] = JSON.parse(obj_din);objData.indIten = i + 1 }
-								if(objData.markItensAll == 0) { objData.arrItensAll[count] = JSON.parse(obj_din); }
+								if(objData.arrItens.length != determineLenght){ objData.arrItens[lgnt] = JSON.parse(obj_din); } //objData.indIten = i + 1
+								if(objData.markItensAll == 0) { objData.arrItensAll[count] = item; } //JSON.parse(obj_din)
 							}
 						}
 					}
@@ -363,7 +469,7 @@ var testDatatable = {
 			}else if(item == undefined)	{
 				if(objData.arrItens.length != determineLenght){ 
 					if(itens.length != objData.indIten){
-						objData.indIten = i + 1
+						objData.indIten = i 
 					}else{ objData.indIten = i  }
 				 }
 				if(objData.markItensAll == 0){ objData.markItensAll = 1 }
@@ -416,9 +522,9 @@ var testDatatable = {
 						searchMark = 0
 						//console.log(itensCollection)
 						that.definePage(objData, 1, itensCollection);
-						that.opsNav(1, dataInit, objData, 2);
-						that.backward(that.myTable, itensCollection, objData, searchMark, thisObj);	//param that.myTable & thisObj
-						that.forward(that.myTable, itensCollection, objData, searchMark, thisObj);	//param that.myTable & thisObj
+						that.opsNav(1, dataInit, objData, 2, that.myTable, that.objFunc);
+						//that.backward(that.myTable, itensCollection, objData, searchMark, thisObj, that.objFunc);	//param that.myTable & thisObj
+						//that.forward(that.myTable, itensCollection, objData, searchMark, thisObj, that.objFunc);	//param that.myTable & thisObj
 					}
 					var dataAll = datafilt
                     var search = dataAll.filter(function(el) {
@@ -435,7 +541,7 @@ var testDatatable = {
                     if (search && search.length && res != '') {
                         //that.myTable.reload(search);
 						console.log(that.objFunc)
-						that.reload(that.myTable, search, that.objFunc);
+						//that.reload(that.myTable, search, that.objFunc);
 						objData = {
 							arrItens: [],
 							arrItensAll: [],
@@ -445,9 +551,9 @@ var testDatatable = {
 						};
 						itensCollection = search
 						searchMark = 1
-						that.opsNav(1, search, objData, 1);
-						that.backward(that.myTable, itensCollection, objData, searchMark, thisObj);	//param that.myTable & thisObj
-						that.forward(that.myTable, itensCollection, objData, searchMark, thisObj);	//param that.myTable & thisObj
+						that.opsNav(1, search, objData, 1, that.myTable, that.objFunc);
+						//that.backward(that.myTable, itensCollection, objData, searchMark, thisObj, that.objFunc);	//param that.myTable & thisObj
+						//that.forward(that.myTable, itensCollection, objData, searchMark, thisObj, that.objFunc);	//param that.myTable & thisObj
                     } else if (res != '') {
                         FLUIGC.toast({
                             title: 'Searching: ',
@@ -469,9 +575,13 @@ var testDatatable = {
 			}
 		});
 
-		that.opsNav(1, dataInit, objData, 2);
-		that.backward(that.myTable, itensCollection, objData, searchMark, thisObj);	//param that.myTable & thisObj
-		that.forward(that.myTable, itensCollection, objData, searchMark, thisObj);	//param that.myTable & thisObj
+		console.log(dataInit)
+		console.log(itensCollection)
+		console.log(objData.arrItensAll)
+
+		that.opsNav(1, objData.arrItensAll, objData, 2, that.myTable, that.objFunc);
+		that.backward(that.myTable, objData.arrItensAll, objData, searchMark, thisObj, that.objFunc);	//param that.myTable & thisObj
+		that.forward(that.myTable, objData.arrItensAll, objData, searchMark, thisObj, that.objFunc);	//param that.myTable & thisObj
 	},
 	setFunc: function (objFnc) {
 		if(objFnc != '' && objFnc != null && objFnc != undefined){
@@ -481,13 +591,13 @@ var testDatatable = {
 				this.objFunc.fnc[this.objFunc.fnc.length] = params
 				this.objFunc[name] = objFnc[name]
 			}
-			//console.log(this.objFunc)
+			console.log(this.objFunc)
 		}
 	},
 	reload: function(myTable, data, objFunc){
 		if(myTable != undefined){
 			var a = myTable.reload(data);
-			//console.log(a)
+			console.log(a)
 			var funNow = 0;
 			if(objFunc != '' && objFunc != null && objFunc != undefined){
 				for(t = 0; t < objFunc.fnc.length; t++){
@@ -501,7 +611,11 @@ var testDatatable = {
 			}
 		}
 	},
-	opsNav: function (dirr, itens, obj, press){
+	opsNav: function (dirr, itens, obj, press, myTable, objFunc){
+
+		console.log(itens)
+		console.log(obj)
+
 		btnNav = {
 			btnPrev: 0,
 			btnNext: 0
@@ -517,17 +631,16 @@ var testDatatable = {
 		}
 		if(press == null || press == undefined){
 			this.definePage(obj, dirr, itens); 
-			this.myTable.reload(obj.arrItens);
-			console.log(obj);
-		}else if(press == 1){ 
+			this.reload(myTable, obj.arrItens, objFunc);
+		}else if(press == 1){
 			this.definePage(obj, dirr, itens, press); 
-			this.myTable.reload(obj.arrItens);
-			console.log(obj);
+			this.reload(myTable, obj.arrItens, objFunc);
 		}
 		if(obj.pageAtual != 0){
 			btnNav.btnPrev.disabled = false
 		}
-		if(obj.indIten == itens.length || obj.arrItensAll.length == itens.length){
+		//if(obj.indIten == itens.length || obj.arrItensAll.length == itens.length)
+		if(obj.indIten == itens.length){
 			btnNav.btnNext.disabled = true
 		}
 	},
@@ -555,35 +668,35 @@ var testDatatable = {
 			});
 		}
 	},
-	backward: function (myTable, itensCollection, objData, searchMark, Obj) { 
+	backward: function (myTable, itensCollection, objData, searchMark, Obj, objFunc) { 
 		//console.log(myTable)
 		myTable.on('fluig.datatable.backward', function() {
 			let dirr = 0
 			if(searchMark == 1){
 				console.log(dirr)
-				Obj.opsNav(dirr, itensCollection, objData, searchMark)
+				Obj.opsNav(dirr, itensCollection, objData, searchMark, myTable, objFunc)
 			}else{
 				console.log(dirr)
-				Obj.opsNav(dirr, itensCollection, objData)
+				Obj.opsNav(dirr, itensCollection, objData, null, myTable, objFunc)
 			}
 		});
 	},
-	forward: function (myTable, itensCollection, objData, searchMark, Obj) { 
+	forward: function (myTable, itensCollection, objData, searchMark, Obj, objFunc) { 
 		//console.log(myTable)
 		myTable.on('fluig.datatable.forward', function() {
 			let dirr = 1
 			if(searchMark == 1){
-				console.log(dirr)
-				Obj.opsNav(dirr, itensCollection, objData, searchMark)
+				Obj.opsNav(dirr, itensCollection, objData, searchMark, myTable, objFunc)
 			}else{
-				console.log(dirr)
-				Obj.opsNav(dirr, itensCollection, objData)
+				Obj.opsNav(dirr, itensCollection, objData, null, myTable, objFunc)
 			}
 		});
 	}
 
 
 };testDatatable.paramsInit(objMain);
+
+
 </script>
 </body>
 </html>

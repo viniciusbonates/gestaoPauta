@@ -25,11 +25,11 @@ itensTools = {
                     console.log(window)
             });
     },
-    myToast: function () {
+    myToast: function (tp, title) {
         FLUIGC.toast({
-            title: 'Toast title: ',
-            message: 'My message',
-            type: 'success'
+            title: title,   //'Ação realizada com sucesso!',
+            message: '',
+            type: tp        //success, danger, info and warning.
             });
     }
 }
@@ -59,8 +59,8 @@ function dataTableConfig(){
     var configButton = {
         type: 'button',
         id: 'btn1',
-        innerText: 'Aprovar Inserção de Item',
-        setIcon: 'flaticon flaticon-document-check icon-md', 
+        innerText: 'Enviar Deliberação',
+        setIcon: 'flaticon flaticon-document-check icon-sm', 
         col: 'col-md-2'
     }
      /**
@@ -73,7 +73,7 @@ function dataTableConfig(){
         type: 'dropdown',
         id: 'btnDrpDwn1',
         innerText: 'Ações Assessoria ',
-        col: 'col-md-4',
+        col: 'col-md-2',
         ul: [
             {
                 id: 'AprovarAssr',
@@ -105,10 +105,10 @@ function dataTableConfig(){
         ]
     }
 
-    this.itensConfigs       = [configDropdowns];//configButton                                // Determina os itens criados e a ordem de posição conforme ordem de posição do array  
+    this.itensConfigs       = [configDropdowns, configButton];//configButton                                // Determina os itens criados e a ordem de posição conforme ordem de posição do array  
     
     /** */
-    this.orderSuper         = ["dataSelected", "btnDrpDwn1", "datatable-area-search"];//"btn1"              // Determina a ordem dos elementos no linha superior. Deve ser determinado da esquerda para direita indicando os elementos por 'id'. Ex: ['btn1', 'btnDrpDwn1', ...]
+    this.orderSuper         = ["dataSelected", "btnDrpDwn1", "btn1", "datatable-area-search"];//"btn1"              // Determina a ordem dos elementos no linha superior. Deve ser determinado da esquerda para direita indicando os elementos por 'id'. Ex: ['btn1', 'btnDrpDwn1', ...]
 
     this.APImethods         = new orderMethods();                                                           // se carregado pelo arquivo ServiceAPI: APImethods= window.orderMethodsMi. Construtor iniciado aqui.
     this.resAPI             = window.res
@@ -341,7 +341,7 @@ dataTableConfig.prototype.orderLineSuper = function (objConfig, itensConfigs, or
 dataTableConfig.prototype.changeEventInput = function () {
     let itens       = this.itensBuilt;
     let objFunc = {
-        fnc: ['formatDinamic', 'disabledOptions'],// 'enabledButton'
+        fnc: ['formatDinamic', 'disabledOptions', 'enabledButton'],
         formatDinamic: function () {
             var configFormat = {
                 inputId: 'dataSelected',
@@ -415,8 +415,49 @@ dataTableConfig.prototype.changeEventInput = function () {
             }
         },
         enabledButton: function (){
-            var iten = itens['btn1']
-            iten.getElementsByTagName('button')[0].disabled = false
+            var iten = itens['btn1'];
+            let dataSelected = document.getElementById('dataSelected').value;
+            let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", dataSelected, dataSelected, ConstraintType.MUST); 
+            let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
+            console.log('1 * * ** * * * ** ')
+            if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
+                let assrAp = itenPauta['hdn_aprvAssr'];
+                let inps = document.getElementsByClassName('inpDlbr')
+                arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao']
+                if(15 == assrAp){
+                    document.getElementById('Delibr').style.display = 'block';
+                    iten.getElementsByTagName('button')[0].disabled = false;
+                    for(let i = 0; i < inps.length; i++){
+                        let nowInp = inps[arrNamesIt[i]];
+                        nowInp.value = '';
+                        nowInp.disabled = false;
+                    } 
+                }else if(26 == assrAp){
+                    arrNames = ['hdn_DISUP_vt', 'hdn_DIRAF_vt', 'hdn_DITEC_vt', 'txt_Deliberacao']
+                    for(let i = 0; i < inps.length; i++){
+                        let nowInp = inps[arrNamesIt[i]]
+                        console.log(itenPauta[arrNames[i]])
+                        if(nowInp.tagName == 'SELECT'){
+                            console.log(nowInp.options) 
+                            for(let j = 0; j < nowInp.options.length; j++){
+                                console.log(nowInp.options[j].value)
+                                console.log(itenPauta[arrNames[i]])
+                                if(nowInp.options[j].value == itenPauta[arrNames[i]]){
+                                    nowInp.options[j].selected = true;
+                                    inps[arrNamesIt[i]].value = itenPauta[arrNames[i]];
+                                }
+                            }
+                            nowInp.style.color = 'black';
+                            nowInp.disabled = 'disabled';
+                        }else{  inps[arrNamesIt[i]].value = itenPauta[arrNames[i]]; nowInp.style.color = 'black'; nowInp.disabled = 'disabled'; }
+                    }
+                    document.getElementById('Delibr').style.display = 'block'
+                    iten.getElementsByTagName('button')[0].disabled = true 
+                }else{
+                    document.getElementById('Delibr').style.display = 'none'
+                    iten.getElementsByTagName('button')[0].disabled = true 
+                }
+            }
         }
     }
     this.tableReference.onselectrow(this.tableReference.myTable, objFunc);
@@ -431,7 +472,8 @@ dataTableConfig.prototype.changeEventTable = function () {
     let objFunc = {
         fnc: [
                 {'fncName': 'openItem', 'metodhParam': 'reload'},
-                {'fncName': 'statusAsr', 'metodhParam': 'reload'}//,{'fncName': 'enabledButton', 'metodhParam': 'reload'}    
+                {'fncName': 'statusAsr', 'metodhParam': 'reload'},
+                {'fncName': 'enabledButton', 'metodhParam': 'reload'}    
         ],
         openItem: function () {
             var secIntervalOpenItem = setInterval(pushOpenItem, 20)
@@ -452,7 +494,7 @@ dataTableConfig.prototype.changeEventTable = function () {
                     //indexLink[i] = cells[0]
                     console.log(cells)
                     console.log(cells[0])
-                    if(cells[0].innerText != '' && cells[0].ml == undefined){
+                    if(cells[0].innerText != ''){
                         textLink = cells[0].innerText
                         let inHTML = "<a href=\""+ url + textLink +"\""+ "class=\"cad-link\""+"target=\"_blank\""+"style=\"color:blue\" ml=\"true\">"+"<i class=\"flaticon flaticon-link icon-md\"></i>"+
                         textLink+"</a>"
@@ -468,16 +510,18 @@ dataTableConfig.prototype.changeEventTable = function () {
             function pushStatusAsr(){
                 let col         = TableFluig.getCol('Aprov.Assessoria');
                 let colNumSol   = TableFluig.getCol('Solicitação');
+                console.log(colNumSol[0])
                 for(let i = 0; i < col.length; i++){
-                    let numSlct     = colNumSol[i].children[0].innerText;
+                    if(colNumSol[i].children[0] != undefined){
+                        var numSlct     = colNumSol[i].children[0].innerText;
+                    }else{ clearInterval(secIntervalStatusAsr) }
                     let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", numSlct, numSlct, ConstraintType.MUST); 
                     let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
                     if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
                         console.log(itenPauta)
                         let assrAp = itenPauta['hdn_aprvAssr'];
-                        
                         if(assrAp == 15){
-                            let iconChecked     = constructIcon.construct('fluigicon fluigicon-checked icon-md');
+                            let iconChecked     = constructIcon.construct('flaticon flaticon-file-check icon-md');
                             col[i].appendChild(iconChecked);
                             let icn = col[i].innerHTML;                                     //Descrição
                             icn = icn +' <b>Aprovado</b>';
@@ -501,10 +545,19 @@ dataTableConfig.prototype.changeEventTable = function () {
                             icn = icn +' <b>Ajuste</b>';
                             col[i].innerHTML = icn;    
                         }
+                        else if(assrAp == 26){
+                            let iconEmpty       = constructIcon.construct('fluigicon fluigicon-checked icon-md');
+                            col[i].appendChild(iconEmpty);    
+                            let icn = col[i].innerHTML;                                     //Descrição
+                            icn = icn +' <b>Deliberado</b>';
+                            col[i].innerHTML = icn;
+                        }
 
                     }else{
                         let iconEmpty       = constructIcon.construct('fluigicon fluigicon-file-bell-empty icon-md');
-                        col[i].appendChild(iconEmpty)
+                        col[i].appendChild(iconEmpty);
+                        let icn = col[i].innerHTML;                                     //Descrição
+                        icn = icn +' <b>Análise</b>';
                     }
                 } 
                 clearInterval(secIntervalStatusAsr)  
@@ -512,6 +565,7 @@ dataTableConfig.prototype.changeEventTable = function () {
         },
         enabledButton: function (){
             var iten = itens['btn1']
+            document.getElementById('Delibr').style.display = 'none'
             iten.getElementsByTagName('button')[0].disabled = true
         }
     }
@@ -529,8 +583,8 @@ dataTableConfig.prototype.loadEventTable = function () {
             var url = "http://10.4.4.52:8080/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID="
             var arrColumnsRender = ['N° Solicitação', 'Data Solicitação', 'Nome Solicitante', 'Unidade', 'Assunto', 'Justificativa']
             var indexLink = []
-            var divIn = document.getElementsByClassName('row fs-no-margin')
-            var divAll = divIn[0].parentElement.parentElement       //DIV com o componente dataTable
+            var divIn       = document.getElementsByClassName('row fs-no-margin')
+            var divAll      = divIn[0].parentElement.parentElement       //DIV com o componente dataTable
             var tableBody   = divAll.getElementsByTagName('tbody')[0]    
             var nomeCol     = divAll.getElementsByTagName('thead')[0].rows[0].cells
             var rows = tableBody.rows                              //Linhas da pagina atual da dataTable
@@ -549,17 +603,17 @@ dataTableConfig.prototype.loadEventTable = function () {
         statusAsr: function () {
             let col         = TableFluig.getCol('Aprov.Assessoria');
             let colNumSol   = TableFluig.getCol('Solicitação');
-            console.log(colNumSol[3].children[0].innerText)
+            //console.log(colNumSol[3].children[0].innerText)
             for(let i = 0; i < col.length; i++){
-                let numSlct     = colNumSol[i].children[0].innerText;
+                let numSlct         = colNumSol[i].children[0].innerText;
                 let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", numSlct, numSlct, ConstraintType.MUST); 
-                let itenPauta      = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
+                let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
                 if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
                     //console.log(itenPauta)
                     let assrAp = itenPauta['hdn_aprvAssr'];
 
                     if(assrAp == 15){
-                        let iconChecked     = constructIcon.construct('fluigicon fluigicon-checked icon-md');
+                        let iconChecked     = constructIcon.construct('flaticon flaticon-file-check icon-md');
                         col[i].appendChild(iconChecked);
                         let icn = col[i].innerHTML;                                     //Descrição
                         icn = icn +' <b>Aprovado</b>';
@@ -581,6 +635,13 @@ dataTableConfig.prototype.loadEventTable = function () {
                         col[i].appendChild(iconEmpty);    
                         let icn = col[i].innerHTML;                                     //Descrição
                         icn = icn +' <b>Ajuste</b>';
+                        col[i].innerHTML = icn;
+                    }
+                    else if(assrAp == 26){
+                        let iconEmpty       = constructIcon.construct('fluigicon fluigicon-checked icon-md');
+                        col[i].appendChild(iconEmpty);    
+                        let icn = col[i].innerHTML;                                     //Descrição
+                        icn = icn +' <b>Deliberado</b>';
                         col[i].innerHTML = icn;
                     }
 
@@ -608,8 +669,8 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
     let TableFluig  = this.TableFluig();
     let itenBuitFunc = {
         fnc: [
-                {'fncName': 'moveItem'}
-                //{'fncName': 'disabledOptions'}
+                {'fncName': 'moveItem'},
+                {'fncName': 'moveItemDelibr'}
         ],
         moveItem: function () {
             drpDwn  = itens['btnDrpDwn1'];
@@ -622,6 +683,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                         let nameIten = 'dataSelected'
                         console.log(itens)
                         let it = dataTablemi.itensBuilt[nameIten];
+                        var iten = dataTablemi.itensBuilt['btn1'];
                         inp = it.getElementsByTagName('input')[0];
                         inpValue = inp.value;  
                         let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", inpValue, inpValue, ConstraintType.MUST); 
@@ -673,7 +735,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                             if(stateNow == 15){ 
                                                 //colItem.removeChild(colItem.children[0]); 
                                                 colItem.innerHTML = ''
-                                                let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-checked icon-md');
+                                                let icon = dataTablemi.constructIcon().construct('flaticon flaticon-file-check icon-md');
                                                 colItem.appendChild(icon);
                                                 let icn             = colItem.innerHTML;                                     //Descrição
                                                 icn                 = icn +' <b>Aprovado</b>';
@@ -681,7 +743,17 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                                 dataTablemi.resAPI = {};
                                                 window.res['arrIndx'].push('1');
                                                 orderMethodsMi.indexFunctionsX();
-                                                itensTools.myToast();
+                                                itensTools.myToast('success', 'Ação realizada com sucesso!');
+                                                let inps = document.getElementsByClassName('inpDlbr')
+                                                arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao']
+                                                document.getElementById('Delibr').style.display = 'block';
+                                                iten.getElementsByTagName('button')[0].disabled = false;
+                                                console.log('************** * ** * * * ** * *** **'+ iten)
+                                                for(let i = 0; i < inps.length; i++){
+                                                    let nowInp = inps[arrNamesIt[i]];
+                                                    nowInp.value = '';
+                                                    nowInp.disabled = false;
+                                                } 
                                                 clearInterval(interv)
                                             }
                                             else if(stateNow == 11){
@@ -695,7 +767,9 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                                 dataTablemi.resAPI = {};
                                                 window.res['arrIndx'].push('1');
                                                 orderMethodsMi.indexFunctionsX();
-                                                itensTools.myToast();
+                                                itensTools.myToast('success', 'Ação realizada com sucesso!');
+                                                document.getElementById('Delibr').style.display = 'none'
+                                                iten.getElementsByTagName('button')[0].disabled = true 
                                                 clearInterval(interv)
                                             }
                                             else if(stateNow == 16){
@@ -709,7 +783,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                                 dataTablemi.resAPI = {};
                                                 window.res['arrIndx'].push('1');
                                                 orderMethodsMi.indexFunctionsX();
-                                                itensTools.myToast();
+                                                itensTools.myToast('success', 'Ação realizada com sucesso!');
                                                 clearInterval(interv)
                                             }
                                             else if(stateNow == 9){
@@ -721,9 +795,25 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                                 icn                 = icn +' <b>Ajuste</b>';
                                                 colItem.innerHTML    = icn;
                                                 dataTablemi.resAPI = {};
+                                                window.res['numIndx'] = 2;
                                                 window.res['arrIndx'].push('1');
                                                 orderMethodsMi.indexFunctionsX();
-                                                itensTools.myToast();
+                                                itensTools.myToast('success', 'Ação realizada com sucesso!');
+                                                clearInterval(interv)
+                                            }
+                                            else if(stateNow == 26){
+                                                //colItem.removeChild(colItem.children[0])
+                                                colItem.innerHTML = ''
+                                                let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-checked icon-md');
+                                                colItem.appendChild(icon);
+                                                let icn             = colItem.innerHTML;                                     //Descrição
+                                                icn                 = icn +' <b>Deliberado</b>';
+                                                colItem.innerHTML    = icn;
+                                                dataTablemi.resAPI = {};
+                                                window.res['numIndx'] = 2;
+                                                window.res['arrIndx'].push('1');
+                                                orderMethodsMi.indexFunctionsX();
+                                                itensTools.myToast('success', 'Ação realizada com sucesso!');
                                                 clearInterval(interv)
                                             }
                                             else{ clearInterval(interv) }
@@ -774,6 +864,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                                     }
                                                 }
                                             }
+                                            window.res['numIndx'] = 2;
                                             window.res['arrIndx'].push('1');
                                             orderMethodsMi.indexFunctionsX();
 
@@ -787,66 +878,101 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                     //})
                 }
             }
-        }/*,disabledOptions: function () {
-            drpDwn  = itens['btnDrpDwn1'];
-            let lis = drpDwn.getElementsByTagName('li')
-            for(let i = 0; i < lis.length; i++){
-                let liNow = lis[i];
-                if(liNow.id){
-                    liNow.addEventListener('click', function () { 
-                        var intervdisabledOptions = setInterval(defineOptions, 200);
-                        function defineOptions(){
-                            let order           = window.res['order'];
-                            let res             = window.res['responseIs'];
-                            if(order == 2 && res != {}){
-                                let err                 = window.res['err'];
-                                if(err != undefined && err.indexOf('Error') == -1){
-                                    if(res != undefined && res != '' && res != {}){
-                                        let itens = dataTablemi.itensBuilt;
-                                        drpDwn  = itens['btnDrpDwn1'];
-                                        let lis = drpDwn.getElementsByTagName('li');
-                                        let dataSelected = document.getElementById('dataSelected').value;
-                                        let States      = [11, 9, 15, 16]
-                                        let refEnabled  = [
-                                            [11],
-                                            [9, 15, 16],
-                                            [9, 15, 16],
-                                            [9, 15, 16]
-                                        ] 
-                                        let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", dataSelected, dataSelected, ConstraintType.MUST); 
-                                        let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
-                                        if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
-                                            let assrAp = itenPauta['hdn_aprvAssr'];
-                                            for(let k = 0; k < lis.length; k++){ 
-                                                if(lis[k].hasAttribute("hidden")){
-                                                    lis[k].removeAttribute("hidden");
-                                                }
-                                            }
-                                            for(let i = 0; i < States.length; i++){
-                                                if(States[i] == assrAp){
-                                                    let itns = refEnabled[i];
-                                                    for(let l = 0; l < lis.length; l++){
-                                                        for(let j = 0; j < itns.length; j++){
-                                                            if(itns[j] == lis[l].value){
-                                                                lis[l].hidden = 'true';
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            window.res['arrIndx'].push('1');
-                                            orderMethodsMi.indexFunctionsX();
+        },moveItemDelibr: function () {
+            btn             = itens['btn1'];
+            console.log(btn)
+            btn.addEventListener('click', function() { hipotesis(); }); 
+            function hipotesis(){
+                let nameIten    = 'dataSelected'
+                statusDelibr    = 26;
+                inpsPanel       = document.getElementsByClassName('inpDlbr')
+                let it = dataTablemi.itensBuilt[nameIten];
+                inp = it.getElementsByTagName('input')[0];
+                inpValue = inp.value;  
+                let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", inpValue, inpValue, ConstraintType.MUST); 
+                let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
+                let statusAssr      = itenPauta['hdn_aprvAssr'];
 
-                                            clearInterval(intervdisabledOptions);  
-                                        }else{ clearInterval(intervdisabledOptions); }
-                                    }
-                                }else{ clearInterval(intervdisabledOptions); }
-                            }
+                DISUP = inpsPanel['slc_DISUP_vt'].value;
+                DIRAF = inpsPanel['slc_DIRAF_vt'].value;
+                DITEC = inpsPanel['slc_DITEC_vt'].value;
+                Delibr = inpsPanel['txt_Deliberacao'].value;
+                
+                arrNamesInp = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao'];
+                for(i = 0; i < inpsPanel.length; i++){
+                    inpNow = inpsPanel[arrNamesInp[i]]
+                    if(inpNow.value != '' && inpNow.value != 0){
+                        if(statusDelibr != statusAssr){    
+                            dataTablemi.APImethods.movePOST(inpValue, statusDelibr, DISUP, DIRAF, DITEC, Delibr); 
+                            var intervmoveItemDelibr = setInterval(defineStatusDelibr, 100);
                         }
-                    });
+                    }else{ itensTools.myToast('info', 'É necessário preencher todos os campos de Deliberação!'); break; }
+                }                
+
+                function defineStatusDelibr () { 
+                    let colItens = dataTablemi.TableFluig().getCol('Aprov.Assessoria');
+                    let colValue = dataTablemi.TableFluig().getCol('N° Solicitação');
+                    var itenBtn1 = dataTablemi.itensBuilt['btn1'];
+                    var responsNow = window.res
+                    responsNowIns = responsNow.responseIs
+                    var order           = window.res['order'];
+                    var  res             = window.res['responseIs'];
+                    console.log(window.res['responseIs'])   
+                    console.log(window.res['order'])    
+                    console.log(order)    
+                    if(order == 2 && res != {}){
+                        var err                 = window.res['err'];
+                        window.res['check']     = false;
+                        if(err != undefined && err.indexOf('Error') == -1){
+                            if(res != undefined && res != '' && res != {}){
+                                console.log(res)      
+                                console.log(window.res['responseIs'])                                                                         
+                                var stateActive     = res.items[res.items.length - 1].active
+                                var stateNow        = res.items[res.items.length - 1].state.sequence
+                                var stateInstanced  = res.items[res.items.length - 1].processInstanceId
+                                var colItem = 0;
+                                for(let i = 0; i < colValue.length; i++){
+                                    if(inpValue == colValue[i].innerText){
+                                        colItem = colItens[i]
+                                    }
+                                } 
+                                console.log(stateNow);
+                                if(stateActive == true && stateInstanced == inpValue){
+                                    if(stateNow == 26){  
+                                        colItem.innerHTML = ''
+                                        let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-checked icon-md');
+                                        colItem.appendChild(icon);
+                                        let icn             = colItem.innerHTML;                                     //Descrição
+                                        icn                 = icn +' <b>Deliberado</b>';
+                                        colItem.innerHTML    = icn;
+                                        dataTablemi.resAPI = {};
+                                        let inps = document.getElementsByClassName('inpDlbr')
+                                        arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao']
+                                        document.getElementById('Delibr').style.display = 'block';
+                                        itenBtn1.getElementsByTagName('button')[0].disabled = true;
+                                        console.log('************** * ** * * * ** * *** **'+ itenBtn1)
+                                        for(let i = 0; i < inps.length; i++){
+                                            let nowInp = inps[arrNamesIt[i]];
+                                            //nowInp.value = '';
+                                            nowInp.disabled = true;
+                                        } 
+                                        window.res['numIndx'] = 1;
+                                        window.res['arrIndx'].push('1');
+                                        orderMethodsMi.indexFunctionsX();
+                                        itensTools.myToast('success', 'Ação realizada com sucesso!');
+                                        clearInterval(intervmoveItemDelibr)
+                                    }
+                                    else{ clearInterval(intervmoveItemDelibr) }
+                                }else{ clearInterval(intervmoveItemDelibr) } 
+                            }
+                        }else { clearInterval(intervmoveItemDelibr) }
+                    }else if(window.res['order'] == 0){ 
+                        clearInterval(intervmoveItemDelibr); 
+                    }
                 }
             }
-        }*/
+
+        }
     }
     if(itenBuitFunc != '' && itenBuitFunc != null && itenBuitFunc != undefined){
         for(let i = 0; i < itenBuitFunc.fnc.length; i++){

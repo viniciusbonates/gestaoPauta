@@ -4,4 +4,10 @@ function enableFields(form){
 	if(Now_State == 0){
 		form.setEnabled("cmb_NomeSolicita", false);
 	}
+	if(Now_State == 8){
+		form.setEnabled("cmb_NomeSolicita", false);
+	}
+	if(Now_State == 10){
+		form.setEnabled("cmb_NomeSolicita", false);
+	}
 }
