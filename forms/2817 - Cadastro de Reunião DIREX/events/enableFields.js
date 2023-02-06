@@ -9,5 +9,6 @@ function enableFields(form){
 	}
 	if(Now_State == 10){
 		form.setEnabled("cmb_NomeSolicita", false);
+		form.setEnabled("dt_dataInicio", false);
 	}
 }

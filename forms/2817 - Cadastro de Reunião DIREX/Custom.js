@@ -1,6 +1,11 @@
 function definePainelEnabled(){
     let stateNow = window.parentOBJ.ECM.workflowView.stateDescription;
     if(stateNow == 'Detalhes da Solicitação'){ document.getElementById('PainelControle').style.display = 'none'; }
+
+    let stts = window.parent.ECM.workflowView.sequence
+    if(stts == 10){
+        document.getElementById('PainelControle').style.display = 'none'
+    }  
 }window.addEventListener('load', definePainelEnabled)
 
 function geradorPDF(){
