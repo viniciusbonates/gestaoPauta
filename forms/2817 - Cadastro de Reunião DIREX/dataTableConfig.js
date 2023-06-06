@@ -478,7 +478,7 @@ dataTableConfig.prototype.changeEventTable = function () {
         openItem: function () {
             var secIntervalOpenItem = setInterval(pushOpenItem, 20)
             function pushOpenItem(){    
-                var url = "http://10.4.4.52:8080/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID="
+                var url = "http://mywebhm.am.sebrae.com.br/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID="
                 var arrColumnsRender = ['N° Solicitação', 'Data Solicitação', 'Nome Solicitante', 'Unidade', 'Assunto', 'Justificativa']
                 var indexLink = []
                 var divIn = document.getElementsByClassName('row fs-no-margin')
@@ -580,7 +580,7 @@ dataTableConfig.prototype.loadEventTable = function () {
                 {'fncName': 'statusAsr', 'metodhParam': 'load'}
         ],
         openItem: function () {
-            var url = "http://10.4.4.52:8080/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID="
+            var url = "http://mywebhm.am.sebrae.com.br/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID="
             var arrColumnsRender = ['N° Solicitação', 'Data Solicitação', 'Nome Solicitante', 'Unidade', 'Assunto', 'Justificativa']
             var indexLink = []
             var divIn       = document.getElementsByClassName('row fs-no-margin')
@@ -672,14 +672,14 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                 {'fncName': 'moveItem'},
                 {'fncName': 'moveItemDelibr'}
         ],
-        moveItem: function () {
+        moveItem: async function () {
             drpDwn  = itens['btnDrpDwn1'];
             let lis = drpDwn.getElementsByTagName('li')
             for(let i = 0; i < lis.length; i++){
                 let liNow = lis[i];
                 if(liNow.id){
-                    liNow.addEventListener('click', function() { hipotesis(this); hipotesis2(); }); /******************************** */
-                    function hipotesis(elem){
+                    await liNow.addEventListener('click', async function() { await hipotesis(this); await hipotesis2(); }); /******************************** */
+                    async function hipotesis(elem){
                         let nameIten = 'dataSelected'
                         console.log(itens)
                         let it = dataTablemi.itensBuilt[nameIten];
@@ -693,7 +693,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                         //console.log(itensTools.myModal())
 
                         if(elem.value != statusAssr){    
-                            dataTablemi.APImethods.movePOST(inpValue, elem.value); /******** */
+                            await dataTablemi.APImethods.movePOST(inpValue, elem.value); /******** */
                             var interv = setInterval(defineStatus, 200);
                         }
                         function defineStatus () { 
@@ -823,7 +823,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                             }else if(order == 0){ clearInterval(interv) }
                         }
                     }
-                    function hipotesis2() { 
+                    async function hipotesis2() { 
                         var intervdisabledOptions = setInterval(defineOptions, 200);
                         function defineOptions(){
                             let order           = window.res['order'];
@@ -836,12 +836,13 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                         drpDwn  = itens['btnDrpDwn1'];
                                         let lis = drpDwn.getElementsByTagName('li');
                                         let dataSelected = document.getElementById('dataSelected').value;
-                                        let States      = [11, 9, 15, 16]
+                                        let States      = [11, 9, 15, 16, 26]
                                         let refEnabled  = [
                                             [11],
                                             [9, 15, 16],
                                             [9, 15, 16],
-                                            [9, 15, 16]
+                                            [9, 15, 16],
+                                            [11, 9, 15, 16],
                                         ] 
                                         let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", dataSelected, dataSelected, ConstraintType.MUST); 
                                         let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
