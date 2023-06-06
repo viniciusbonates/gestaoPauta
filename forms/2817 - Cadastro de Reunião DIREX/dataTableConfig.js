@@ -61,6 +61,13 @@ function dataTableConfig(){
         id: 'btn1',
         innerText: 'Enviar Deliberação',
         setIcon: 'flaticon flaticon-document-check icon-sm', 
+        col: 'col-md-1'
+    }
+    var configButton1 = {
+        type: 'button',
+        id: 'btn2',
+        innerText: '',
+        setIcon: 'flaticon flaticon-refresh icon-sm', 
         col: 'col-md-2'
     }
      /**
@@ -73,7 +80,7 @@ function dataTableConfig(){
         type: 'dropdown',
         id: 'btnDrpDwn1',
         innerText: 'Ações Assessoria ',
-        col: 'col-md-2',
+        col: 'col-md-1',
         ul: [
             {
                 id: 'AprovarAssr',
@@ -105,12 +112,10 @@ function dataTableConfig(){
         ]
     }
 
-    this.itensConfigs       = [configDropdowns, configButton];//configButton                                // Determina os itens criados e a ordem de posição conforme ordem de posição do array  
-    
-    /** */
-    this.orderSuper         = ["dataSelected", "btnDrpDwn1", "btn1", "datatable-area-search"];//"btn1"              // Determina a ordem dos elementos no linha superior. Deve ser determinado da esquerda para direita indicando os elementos por 'id'. Ex: ['btn1', 'btnDrpDwn1', ...]
+    this.itensConfigs       = [configDropdowns, configButton, configButton1];//configButton                                 // Determina os itens criados
+    this.orderSuper         = ["dataSelected", "btnDrpDwn1", "btn1", "btn2", "datatable-area-search"];//"btn1"              // Determina a ordem dos elementos no linha superior. Deve ser determinado da esquerda para direita indicando os elementos por 'id'. Ex: ['btn1', 'btnDrpDwn1', ...]
 
-    this.APImethods         = new orderMethods();                                                           // se carregado pelo arquivo ServiceAPI: APImethods= window.orderMethodsMi. Construtor iniciado aqui.
+    this.APImethods         = new orderMethods();                                                                           // se carregado pelo arquivo ServiceAPI: APImethods= window.orderMethodsMi. Construtor iniciado aqui.
     this.resAPI             = window.res
     this.initMyInterval     = true;
     this.setChangeEvent		= true;
@@ -182,7 +187,7 @@ dataTableConfig.prototype.constructButton = function (configButton){
         buttonV.appendChild(iV);
         divV.appendChild(buttonV)
     
-    this.setitensBuilt(divV, 'btn1');   
+    this.setitensBuilt(divV, configButton.id);   
     return divV;
 }
 dataTableConfig.prototype.constructButtonDropDown = function (configButtonDrpDwn){
@@ -569,9 +574,11 @@ dataTableConfig.prototype.changeEventTable = function () {
             }
         },
         enabledButton: function (){
-            var iten = itens['btn1']
+            var iten = itens['btn1'];
+            drpDwnIn = itens['btnDrpDwn1']
             document.getElementById('Delibr').style.display = 'none'
             iten.getElementsByTagName('button')[0].disabled = true
+            drpDwnIn.getElementsByTagName('button')[0].disabled = true
         }
     }
     this.tableReference.setFunc(objFunc);
@@ -579,10 +586,13 @@ dataTableConfig.prototype.changeEventTable = function () {
 dataTableConfig.prototype.loadEventTable = function () {
     var TableFluig          = this.TableFluig();
     var constructIcon       = this.constructIcon(); 
+    let itens = this.itensBuilt;
+    console.log(itens)
     let objFuncload = {
         fnc: [
                 {'fncName': 'openItem', 'metodhParam': 'load'},
-                {'fncName': 'statusAsr', 'metodhParam': 'load'}
+                {'fncName': 'statusAsr', 'metodhParam': 'load'},
+                {'fncName': 'enabledRefresh', 'metodhParam': 'load'}
         ],
         openItem: function () {
             var url = "http://mywebhm.am.sebrae.com.br/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID="
@@ -658,6 +668,11 @@ dataTableConfig.prototype.loadEventTable = function () {
                     col[i].innerHTML = icn;
                 }
             }   
+        },
+        enabledRefresh: function (){
+            var iten = itens['btn2']
+            console.log(iten)
+            iten.getElementsByTagName('button')[0].disabled = false
         }
     }
     if(objFuncload != '' && objFuncload != null && objFuncload != undefined){
@@ -675,7 +690,8 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
     let itenBuitFunc = {
         fnc: [
                 {'fncName': 'moveItem'},
-                {'fncName': 'moveItemDelibr'}
+                {'fncName': 'moveItemDelibr'},
+                {'fncName': 'refreshTable'}
         ],
         moveItem: async function () {
             drpDwn  = itens['btnDrpDwn1'];
@@ -978,6 +994,16 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                 }
             }
 
+        }, refreshTable: function () {
+            btn             = itens['btn2'];
+            console.log(btn)
+            btn.getElementsByTagName('button')[0].addEventListener('click', function() { 
+                console.log(dataTablemi)
+                tbIn        = dataTablemi.tableReference.myTable;
+                dtIn        = dataTablemi.tableReference.dataInit;
+                objFuncIn   = dataTablemi.tableReference.objFunc;
+                dataTablemi.tableReference.reload(tbIn, dtIn, objFuncIn); 
+            }); 
         }
     }
     if(itenBuitFunc != '' && itenBuitFunc != null && itenBuitFunc != undefined){

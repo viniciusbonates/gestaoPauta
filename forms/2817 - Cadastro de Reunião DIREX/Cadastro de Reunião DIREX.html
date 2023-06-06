@@ -517,7 +517,7 @@ var testDatatable = {
                 onSearch: function(res) {
                     if (!res) {
                         //that.myTable.reload(dataInit);
-						that.reload(that.myTable, dataInit, that.objFunc);
+						that.reload(that.myTable, that.dataInit, that.objFunc);
 						console.log(that.objFunc)
 						objData = {
 							arrItens: [],
@@ -573,7 +573,7 @@ var testDatatable = {
             },
         }, function(err, data) {
             if(data) {
-                dataInit = data;
+                that.dataInit = data;
             }
             else if (err) {
                 FLUIGC.toast({
@@ -583,7 +583,7 @@ var testDatatable = {
 			}
 		});
 
-		console.log(dataInit)
+		console.log(that.dataInit)
 		console.log(itensCollection)
 		console.log(objData.arrItensAll)
 
