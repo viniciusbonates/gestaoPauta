@@ -138,7 +138,7 @@ dataTableConfig.prototype.constructInputValueSelected = function (configField){
     var config = {}
         config = this.determineObjConfig(configField, config);
     var dataSelected = document.getElementById(config.inputId);
-        dataSelected.setAttribute('style', 'color: black')
+        dataSelected.setAttribute('style', 'color: black');
     var objDivCol = document.createElement('div');
         objDivCol.setAttribute('class', config.col);
     var objDivInnerCol = document.createElement('div');
@@ -194,7 +194,7 @@ dataTableConfig.prototype.constructButtonDropDown = function (configButtonDrpDwn
     var buttonV = document.createElement('button');
         buttonV.setAttribute('type', 'button');
         buttonV.setAttribute('class','btn btn-primary dropdown-toggle');
-        //buttonV.setAttribute('disabled','disabled');
+        buttonV.setAttribute('disabled','disabled');
         buttonV.setAttribute('data-toggle','dropdown');
         buttonV.innerText = configButtonDrpDwn.innerText;
     var spanV = document.createElement('span');
@@ -381,6 +381,7 @@ dataTableConfig.prototype.changeEventInput = function () {
         },
         disabledOptions: function () {
             drpDwn  = itens['btnDrpDwn1'];
+            drpDwn.getElementsByTagName('button')[0].disabled = false
             let lis = drpDwn.getElementsByTagName('li');
             let dataSelected = document.getElementById('dataSelected').value;
             console.log(dataSelected)
@@ -395,23 +396,27 @@ dataTableConfig.prototype.changeEventInput = function () {
             let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
             if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
                 let assrAp = itenPauta['hdn_aprvAssr'];
-                for(let k = 0; k < lis.length; k++){ 
-                    if(lis[k].hasAttribute("hidden")){
-                        lis[k].removeAttribute("hidden");
+                if (assrAp == 26){
+                    drpDwn.getElementsByTagName('button')[0].disabled = 'disabled'
+                } else {
+                    for(let k = 0; k < lis.length; k++){ 
+                        if(lis[k].hasAttribute("hidden")){
+                            lis[k].removeAttribute("hidden");
+                        }
                     }
-                }
-                for(let i = 0; i < States.length; i++){
-                    if(States[i] == assrAp){
-                        let itns = refEnabled[i];
-                        for(let l = 0; l < lis.length; l++){
-                            for(let j = 0; j < itns.length; j++){
-                                if(itns[j] == lis[l].value){
-                                    lis[l].hidden = 'true';
+                    for(let i = 0; i < States.length; i++){
+                        if(States[i] == assrAp){
+                            let itns = refEnabled[i];
+                            for(let l = 0; l < lis.length; l++){
+                                for(let j = 0; j < itns.length; j++){
+                                    if(itns[j] == lis[l].value){
+                                        lis[l].hidden = 'true';
+                                    }
                                 }
                             }
                         }
-                    }
-                }  
+                    }  
+                }
             }
         },
         enabledButton: function (){
