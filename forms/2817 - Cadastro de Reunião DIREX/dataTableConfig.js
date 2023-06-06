@@ -61,6 +61,13 @@ function dataTableConfig(){
         id: 'btn1',
         innerText: 'Enviar Deliberação',
         setIcon: 'flaticon flaticon-document-check icon-sm', 
+        col: 'col-md-1'
+    }
+    var configButton1 = {
+        type: 'button',
+        id: 'btn2',
+        innerText: '',
+        setIcon: 'flaticon flaticon-refresh icon-sm', 
         col: 'col-md-2'
     }
      /**
@@ -73,7 +80,7 @@ function dataTableConfig(){
         type: 'dropdown',
         id: 'btnDrpDwn1',
         innerText: 'Ações Assessoria ',
-        col: 'col-md-2',
+        col: 'col-md-1',
         ul: [
             {
                 id: 'AprovarAssr',
@@ -105,12 +112,10 @@ function dataTableConfig(){
         ]
     }
 
-    this.itensConfigs       = [configDropdowns, configButton];//configButton                                // Determina os itens criados e a ordem de posição conforme ordem de posição do array  
-    
-    /** */
-    this.orderSuper         = ["dataSelected", "btnDrpDwn1", "btn1", "datatable-area-search"];//"btn1"              // Determina a ordem dos elementos no linha superior. Deve ser determinado da esquerda para direita indicando os elementos por 'id'. Ex: ['btn1', 'btnDrpDwn1', ...]
+    this.itensConfigs       = [configDropdowns, configButton, configButton1];//configButton                                 // Determina os itens criados
+    this.orderSuper         = ["dataSelected", "btnDrpDwn1", "btn1", "btn2", "datatable-area-search"];//"btn1"              // Determina a ordem dos elementos no linha superior. Deve ser determinado da esquerda para direita indicando os elementos por 'id'. Ex: ['btn1', 'btnDrpDwn1', ...]
 
-    this.APImethods         = new orderMethods();                                                           // se carregado pelo arquivo ServiceAPI: APImethods= window.orderMethodsMi. Construtor iniciado aqui.
+    this.APImethods         = new orderMethods();                                                                           // se carregado pelo arquivo ServiceAPI: APImethods= window.orderMethodsMi. Construtor iniciado aqui.
     this.resAPI             = window.res
     this.initMyInterval     = true;
     this.setChangeEvent		= true;
@@ -138,7 +143,7 @@ dataTableConfig.prototype.constructInputValueSelected = function (configField){
     var config = {}
         config = this.determineObjConfig(configField, config);
     var dataSelected = document.getElementById(config.inputId);
-        dataSelected.setAttribute('style', 'color: black')
+        dataSelected.setAttribute('style', 'color: black');
     var objDivCol = document.createElement('div');
         objDivCol.setAttribute('class', config.col);
     var objDivInnerCol = document.createElement('div');
@@ -182,7 +187,7 @@ dataTableConfig.prototype.constructButton = function (configButton){
         buttonV.appendChild(iV);
         divV.appendChild(buttonV)
     
-    this.setitensBuilt(divV, 'btn1');   
+    this.setitensBuilt(divV, configButton.id);   
     return divV;
 }
 dataTableConfig.prototype.constructButtonDropDown = function (configButtonDrpDwn){
@@ -194,7 +199,7 @@ dataTableConfig.prototype.constructButtonDropDown = function (configButtonDrpDwn
     var buttonV = document.createElement('button');
         buttonV.setAttribute('type', 'button');
         buttonV.setAttribute('class','btn btn-primary dropdown-toggle');
-        //buttonV.setAttribute('disabled','disabled');
+        buttonV.setAttribute('disabled','disabled');
         buttonV.setAttribute('data-toggle','dropdown');
         buttonV.innerText = configButtonDrpDwn.innerText;
     var spanV = document.createElement('span');
@@ -381,6 +386,7 @@ dataTableConfig.prototype.changeEventInput = function () {
         },
         disabledOptions: function () {
             drpDwn  = itens['btnDrpDwn1'];
+            drpDwn.getElementsByTagName('button')[0].disabled = false
             let lis = drpDwn.getElementsByTagName('li');
             let dataSelected = document.getElementById('dataSelected').value;
             console.log(dataSelected)
@@ -395,23 +401,27 @@ dataTableConfig.prototype.changeEventInput = function () {
             let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
             if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
                 let assrAp = itenPauta['hdn_aprvAssr'];
-                for(let k = 0; k < lis.length; k++){ 
-                    if(lis[k].hasAttribute("hidden")){
-                        lis[k].removeAttribute("hidden");
+                if (assrAp == 26){
+                    drpDwn.getElementsByTagName('button')[0].disabled = 'disabled'
+                } else {
+                    for(let k = 0; k < lis.length; k++){ 
+                        if(lis[k].hasAttribute("hidden")){
+                            lis[k].removeAttribute("hidden");
+                        }
                     }
-                }
-                for(let i = 0; i < States.length; i++){
-                    if(States[i] == assrAp){
-                        let itns = refEnabled[i];
-                        for(let l = 0; l < lis.length; l++){
-                            for(let j = 0; j < itns.length; j++){
-                                if(itns[j] == lis[l].value){
-                                    lis[l].hidden = 'true';
+                    for(let i = 0; i < States.length; i++){
+                        if(States[i] == assrAp){
+                            let itns = refEnabled[i];
+                            for(let l = 0; l < lis.length; l++){
+                                for(let j = 0; j < itns.length; j++){
+                                    if(itns[j] == lis[l].value){
+                                        lis[l].hidden = 'true';
+                                    }
                                 }
                             }
                         }
-                    }
-                }  
+                    }  
+                }
             }
         },
         enabledButton: function (){
@@ -478,7 +488,7 @@ dataTableConfig.prototype.changeEventTable = function () {
         openItem: function () {
             var secIntervalOpenItem = setInterval(pushOpenItem, 20)
             function pushOpenItem(){    
-                var url = "http://10.4.4.52:8080/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID="
+                var url = "http://mywebhm.am.sebrae.com.br/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID="
                 var arrColumnsRender = ['N° Solicitação', 'Data Solicitação', 'Nome Solicitante', 'Unidade', 'Assunto', 'Justificativa']
                 var indexLink = []
                 var divIn = document.getElementsByClassName('row fs-no-margin')
@@ -564,9 +574,11 @@ dataTableConfig.prototype.changeEventTable = function () {
             }
         },
         enabledButton: function (){
-            var iten = itens['btn1']
+            var iten = itens['btn1'];
+            drpDwnIn = itens['btnDrpDwn1']
             document.getElementById('Delibr').style.display = 'none'
             iten.getElementsByTagName('button')[0].disabled = true
+            drpDwnIn.getElementsByTagName('button')[0].disabled = true
         }
     }
     this.tableReference.setFunc(objFunc);
@@ -574,13 +586,16 @@ dataTableConfig.prototype.changeEventTable = function () {
 dataTableConfig.prototype.loadEventTable = function () {
     var TableFluig          = this.TableFluig();
     var constructIcon       = this.constructIcon(); 
+    let itens = this.itensBuilt;
+    console.log(itens)
     let objFuncload = {
         fnc: [
                 {'fncName': 'openItem', 'metodhParam': 'load'},
-                {'fncName': 'statusAsr', 'metodhParam': 'load'}
+                {'fncName': 'statusAsr', 'metodhParam': 'load'},
+                {'fncName': 'enabledRefresh', 'metodhParam': 'load'}
         ],
         openItem: function () {
-            var url = "http://10.4.4.52:8080/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID="
+            var url = "http://mywebhm.am.sebrae.com.br/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID="
             var arrColumnsRender = ['N° Solicitação', 'Data Solicitação', 'Nome Solicitante', 'Unidade', 'Assunto', 'Justificativa']
             var indexLink = []
             var divIn       = document.getElementsByClassName('row fs-no-margin')
@@ -653,6 +668,11 @@ dataTableConfig.prototype.loadEventTable = function () {
                     col[i].innerHTML = icn;
                 }
             }   
+        },
+        enabledRefresh: function (){
+            var iten = itens['btn2']
+            console.log(iten)
+            iten.getElementsByTagName('button')[0].disabled = false
         }
     }
     if(objFuncload != '' && objFuncload != null && objFuncload != undefined){
@@ -670,16 +690,17 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
     let itenBuitFunc = {
         fnc: [
                 {'fncName': 'moveItem'},
-                {'fncName': 'moveItemDelibr'}
+                {'fncName': 'moveItemDelibr'},
+                {'fncName': 'refreshTable'}
         ],
-        moveItem: function () {
+        moveItem: async function () {
             drpDwn  = itens['btnDrpDwn1'];
             let lis = drpDwn.getElementsByTagName('li')
             for(let i = 0; i < lis.length; i++){
                 let liNow = lis[i];
                 if(liNow.id){
-                    liNow.addEventListener('click', function() { hipotesis(this); hipotesis2(); }); /******************************** */
-                    function hipotesis(elem){
+                    await liNow.addEventListener('click', async function() { await hipotesis(this); await hipotesis2(); }); /******************************** */
+                    async function hipotesis(elem){
                         let nameIten = 'dataSelected'
                         console.log(itens)
                         let it = dataTablemi.itensBuilt[nameIten];
@@ -693,7 +714,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                         //console.log(itensTools.myModal())
 
                         if(elem.value != statusAssr){    
-                            dataTablemi.APImethods.movePOST(inpValue, elem.value); /******** */
+                            await dataTablemi.APImethods.movePOST(inpValue, elem.value); /******** */
                             var interv = setInterval(defineStatus, 200);
                         }
                         function defineStatus () { 
@@ -823,7 +844,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                             }else if(order == 0){ clearInterval(interv) }
                         }
                     }
-                    function hipotesis2() { 
+                    async function hipotesis2() { 
                         var intervdisabledOptions = setInterval(defineOptions, 200);
                         function defineOptions(){
                             let order           = window.res['order'];
@@ -841,7 +862,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                             [11],
                                             [9, 15, 16],
                                             [9, 15, 16],
-                                            [9, 15, 16]
+                                            [9, 15, 16],
                                         ] 
                                         let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", dataSelected, dataSelected, ConstraintType.MUST); 
                                         let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
@@ -972,6 +993,16 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                 }
             }
 
+        }, refreshTable: function () {
+            btn             = itens['btn2'];
+            console.log(btn)
+            btn.getElementsByTagName('button')[0].addEventListener('click', function() { 
+                console.log(dataTablemi)
+                tbIn        = dataTablemi.tableReference.myTable;
+                dtIn        = dataTablemi.tableReference.dataInit;
+                objFuncIn   = dataTablemi.tableReference.objFunc;
+                dataTablemi.tableReference.reload(tbIn, dtIn, objFuncIn); 
+            }); 
         }
     }
     if(itenBuitFunc != '' && itenBuitFunc != null && itenBuitFunc != undefined){
