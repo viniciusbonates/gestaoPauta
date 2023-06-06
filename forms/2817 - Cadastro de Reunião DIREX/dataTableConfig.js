@@ -367,6 +367,7 @@ dataTableConfig.prototype.changeEventInput = function () {
                     innerText: 'Item Selecionado.'
                 }
             }
+            
             if(configFormat != undefined){
                 var divCol      = document.getElementById(configFormat.inputId).parentElement.parentElement.parentElement
                 var divInCol    = document.getElementById(configFormat.inputId).parentElement.parentElement
@@ -483,8 +484,47 @@ dataTableConfig.prototype.changeEventTable = function () {
         fnc: [
                 {'fncName': 'openItem', 'metodhParam': 'reload'},
                 {'fncName': 'statusAsr', 'metodhParam': 'reload'},
-                {'fncName': 'enabledButton', 'metodhParam': 'reload'}    
-        ],
+                {'fncName': 'enabledButton', 'metodhParam': 'reload'},
+                {'fncName': 'formatDinamic', 'metodhParam': 'reload'}      
+        ], 
+        formatDinamic: function () {
+            var configFormat = {                                                                            // Caso configField não seja configurado. As opçãoes Default serão apresentadas.
+                inputId:          'dataSelected',                                                       // Nome do campo que será utilizado para receber o valor selecionado na dataTable.
+                validationStyle:  'has-warning has-feedback',                                           // Estilo de apresentação do campo. Style-guide: 'has-success has-feedback', 'has-error has-feedback'.
+                col:              'col-md-1',                                                           // Configuração de GRID style-guide. 
+                colInnerDistri:   'pull-left',                                                          // Determina a posição do campo dentro da COL. Default: 'pull-right'.
+                setLabel: {                                                                             // Caso não configurado não será apresentado.
+                    enabled:      false,                                                                // Default: false. true: Apresnta Label | false: Não apresenta.
+                    value:        'dataSelected',
+                    innerText:    'Input with success'
+                },                                                                              
+                setIcone: {                                                                             // Caso não configurado será apresentado o valor padrão: true, 'flaticon flaticon-check-circle icon-sm form-control-feedback'.
+                    enabled:      true,                                                                 // Default: true. true: Apresnta Icone | false: Não apresenta. 
+                    value:        'flaticon flaticon-alert icon-sm form-control-feedback'               // Caso não configurado será apresentado o valor padrão 'flaticon flaticon-check-circle icon-sm form-control-feedback'.
+                },
+                setHelpBlock: {                                                                         // Caso não configurado será apresentado o valor padrão: true, 'Valor Selecionado.'.
+                    enabled:      true,                                                                 // Default: true. true: Apresnta HelpBlock | false: Não apresenta. 
+                    innerText:    'Selecione um Item.'                                                  // Determina o texto de Auxilio. Default 'Valor Selecionado.'.
+                }
+            }
+            if(configFormat != undefined){
+                document.getElementById(configFormat.inputId).value = ''
+                var divCol      = document.getElementById(configFormat.inputId).parentElement.parentElement.parentElement
+                var divInCol    = document.getElementById(configFormat.inputId).parentElement.parentElement
+                var divFeedBack = document.getElementById(configFormat.inputId).parentElement
+                var labelInp    = divFeedBack.children[0]
+                var iconInp     = divFeedBack.children[2]
+                var pInp        = divFeedBack.children[3]
+        
+                divCol.className        = configFormat.col
+                divInCol.className      = configFormat.colInnerDistri
+                divFeedBack.className   = configFormat.validationStyle
+                labelInp.value          = configFormat.setLabel.value
+                labelInp.innerText      = configFormat.setLabel.innerText
+                iconInp.className       = configFormat.setIcone.value
+                pInp.innerText          = configFormat.setHelpBlock.innerText
+            }
+        },
         openItem: function () {
             var secIntervalOpenItem = setInterval(pushOpenItem, 20)
             function pushOpenItem(){    
