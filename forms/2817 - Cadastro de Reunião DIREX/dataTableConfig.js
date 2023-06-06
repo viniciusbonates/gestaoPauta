@@ -857,13 +857,12 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                         drpDwn  = itens['btnDrpDwn1'];
                                         let lis = drpDwn.getElementsByTagName('li');
                                         let dataSelected = document.getElementById('dataSelected').value;
-                                        let States      = [11, 9, 15, 16, 26]
+                                        let States      = [11, 9, 15, 16]
                                         let refEnabled  = [
                                             [11],
                                             [9, 15, 16],
                                             [9, 15, 16],
                                             [9, 15, 16],
-                                            [11, 9, 15, 16],
                                         ] 
                                         let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", dataSelected, dataSelected, ConstraintType.MUST); 
                                         let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
