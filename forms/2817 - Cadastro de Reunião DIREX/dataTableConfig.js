@@ -434,7 +434,7 @@ dataTableConfig.prototype.changeEventInput = function () {
             if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
                 let assrAp = itenPauta['hdn_aprvAssr'];
                 let inps = document.getElementsByClassName('inpDlbr')
-                arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao']
+                arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao', 'txt_Justificativa']
                 if(15 == assrAp){
                     document.getElementById('Delibr').style.display = 'block';
                     iten.getElementsByTagName('button')[0].disabled = false;
@@ -443,24 +443,25 @@ dataTableConfig.prototype.changeEventInput = function () {
                         nowInp.value = '';
                         nowInp.disabled = false;
                     } 
+                    inps['txt_Justificativa'].value = itenPauta['txt_Justificativa']; inps['txt_Justificativa'].style.color = 'black'; 
                 }else if(26 == assrAp){
-                    arrNames = ['hdn_DISUP_vt', 'hdn_DIRAF_vt', 'hdn_DITEC_vt', 'txt_Deliberacao']
                     for(let i = 0; i < inps.length; i++){
                         let nowInp = inps[arrNamesIt[i]]
-                        console.log(itenPauta[arrNames[i]])
+                        console.log(itenPauta[arrNamesIt[i]])
+                          console.log(nowInp)
                         if(nowInp.tagName == 'SELECT'){
                             console.log(nowInp.options) 
                             for(let j = 0; j < nowInp.options.length; j++){
                                 console.log(nowInp.options[j].value)
-                                console.log(itenPauta[arrNames[i]])
-                                if(nowInp.options[j].value == itenPauta[arrNames[i]]){
+                                console.log(itenPauta[arrNamesIt[i]])
+                                if(nowInp.options[j].value == itenPauta[arrNamesIt[i]]){
                                     nowInp.options[j].selected = true;
-                                    inps[arrNamesIt[i]].value = itenPauta[arrNames[i]];
+                                    inps[arrNamesIt[i]].value = itenPauta[arrNamesIt[i]];
                                 }
                             }
                             nowInp.style.color = 'black';
                             nowInp.disabled = 'disabled';
-                        }else{  inps[arrNamesIt[i]].value = itenPauta[arrNames[i]]; nowInp.style.color = 'black'; nowInp.disabled = 'disabled'; }
+                        }else{  inps[arrNamesIt[i]].value = itenPauta[arrNamesIt[i]]; nowInp.style.color = 'black'; nowInp.disabled = 'disabled'; }
                     }
                     document.getElementById('Delibr').style.display = 'block'
                     iten.getElementsByTagName('button')[0].disabled = true 
