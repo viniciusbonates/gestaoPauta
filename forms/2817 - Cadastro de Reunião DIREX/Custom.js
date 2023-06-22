@@ -8,6 +8,14 @@ function definePainelEnabled(){
     }  
 }window.addEventListener('load', definePainelEnabled)
 
+var myToast =  function (tp, title) {
+    FLUIGC.toast({
+        title: title,   //'Ação realizada com sucesso!',
+        message: '',
+        type: tp        //success, danger, info and warning.
+        });
+}
+
 function geradorPDF(){
         
     console.log(pdfMake)
@@ -21,12 +29,12 @@ function geradorPDF(){
     var objVrg			= ',';
     var objStyles		= '\"styles\": {'+
                                     '\"header\": {'+
-                                        '\"fontSize\": \"18\",'+
+                                        '\"fontSize\": \"13\",'+
                                         '\"bold\": \"true\",'+
                                         '\"margin\": [0, 0, 0, 10]'+
                                     '},'+
                                     '\"subheader\": {'+
-                                        '\"fontSize\": \"16\",'+
+                                        '\"fontSize\": \"12\",'+
                                         '\"bold\": \"true\",'+
                                         '\"margin\": [0, 10, 0, 5]'+
                                     '},'+
@@ -35,8 +43,18 @@ function geradorPDF(){
                                     '},'+
                                     '\"tableHeader\": {'+
                                         '\"bold\": \"true\",'+
-                                        '\"fontSize\": \"13\",'+
+                                        '\"fontSize\": \"12\",'+
                                         '\"color\": \"black\"'+
+                                    '},'+
+                                    '\"tableText\": {'+
+                                        '\"bold\": \"true\",'+
+                                        '\"fontSize\": \"11\",'+
+                                        '\"color\": \"black\"'+
+                                    '},'+
+                                    '\"txtH\": {'+
+                                        '\"bold\": \"true\",'+
+                                        '\"fontSize\": \"11\",'+
+                                        '\"alignment\": \"justify\"'+
                                     '}'+
                                 '}'
     var objContent	 	= '\"content\": [ ';
@@ -51,13 +69,13 @@ function geradorPDF(){
             dt_itn = dt_itn.split('/');
             dt_itn = dt_itn[2] + '-' +dt_itn[1] + '-'+ dt_itn[0]
             console.log(itns[i]["txt_NumProcess"])
-            if(dlbr_itn == '' || dlbr_itn == null){
+            if(dlbr_itn == '' || dlbr_itn == null){                     // < ---- Texto Deliberacao preenchido
                 ck_itn_now = true;
             }
-            if(dt_slc != dt_itn || itns[i].txt_NumProcess == ''){
+            if(dt_slc != dt_itn || itns[i].txt_NumProcess == ''){       // < ---- N° processo existente ou data de reunião selecionada no momento da solicitacao igual a de reunião cadastrada
                 ck_itn_now = true;
             }
-            if(itns[i]["hdn_aprvAssr"] == ''){ //|| itns[i]["hdn_aprvAssr"] != '15'
+            if(itns[i]["hdn_aprvAssr"] == ''){                          // < ---- || itns[i]["hdn_aprvAssr"] != '15' 'hdn_aprvAssr deve existir valor'
                 ck_itn_now = true;
             }
         /***************************************/
@@ -74,9 +92,67 @@ function geradorPDF(){
     for(j = 0; j < itns_fil.length; j++){
         dtr = j + 1;
         if(objPdf == 0){ /****** INICIO  ********/
-
+        /*{
+			style: 'tableExample',
+			table: {
+				body: [
+					['Column 1', 'Column 2', 'Column 3'],
+					['One value goes here', 'Another one here', 'OK?']
+				]
+			}
+		}*/
+            /*var a = {
+                "content": [{
+                    "style": "tableExample",
+                    "table": {
+                        "body": [
+                            ["REUNIÃO ORDINÁRIA DIREX/AM 28/06/2023"],
+                        ]
+                    }
+                }, {
+                    "text": " N° Solicitação: 26247",
+                    "style": "subheader"
+                }, "dfgbdsfghgfsdhfgd"],
+                "styles": {
+                    "header": {
+                        "fontSize": "18",
+                        "bold": "true",
+                        "margin": [0, 0, 0, 10]
+                    },
+                    "subheader": {
+                        "fontSize": "16",
+                        "bold": "true",
+                        "margin": [0, 10, 0, 5]
+                    },
+                    "tableExample": {
+                        "margin": [0, 5, 0, 15]
+                    },
+                    "tableHeader": {
+                        "bold": "true",
+                        "fontSize": "13",
+                        "color": "black"
+                    }
+                }
+            }*/
             console.log(objPdf)
-            objPdf = objInit + objContent + '{"text": "Deliberação DIREX Reunião '+dtPDF[2]+"/"+dtPDF[1]+"/"+dtPDF[0]+' ", "style": "header"},' 
+            
+            objPdf = objInit + objContent + '{ "style": "tableExample", "table": {  "widths": ["*"], "body": [ [{"text": "REUNIÃO ORDINÁRIA DIREX/AM - '+dtPDF[2]+"/"+dtPDF[1]+"/"+dtPDF[0]+'", "style": "tableText"}], '+
+                                                                                            '[{"text": "Manaus, '+dtPDF[2]+' de '+dtPDF[1]+' de '+dtPDF[0]+'.", "style": "tableText"}], '+
+                                                                                            '[{"text": "DELIBERAÇÕES", "style": "tableText"}] ] }},' 
+            objPdf = objPdf + '{'+
+                '"text": "Aos cinco dias do mês de dezembro de 2022, às 10h, reuniu-se a Diretoria Executiva do SEBRAE no Amazonas, de forma virtual, com a participação das Diretoras Lamisse '+
+                'Said da Silva Cavalcanti – Diretora Superintendente, Adrianne Antony Gonçalves – Diretora Técnica e Ananda Carvalho Normando Pessôa – Diretora Administrativa e Financeira para deliberarem os seguintes assuntos: ",'+
+                '"style": "txtH",'+
+                '"bold": "false"'+
+            '},'
+
+            objPdf = objPdf + '{'+
+                '"text": "PROPOSIÇÕES:",'+
+                '"style": "txtH",'+
+                '"alignment": "center",'+
+			    '"margin": [0, 20, 0, 5]'+
+            '},'
+
             objPdf =  objPdf + '{"text": \" N° Solicitação: '+itns_fil[j].txt_NumProcess + '\", "style": "subheader"},';
             dlbr_now = itns_fil[j]["txt_Deliberacao"]
 
@@ -141,11 +217,21 @@ function geradorPDF(){
             objPdf = objPdf + '\n' + objVrg; 
         }
     }
-    objPdf = objPdf + objStyles + objFim
-    console.log(objPdf)
-    objPdfFinal = JSON.parse(objPdf)
-    pdfMake.createPdf(objPdfFinal).open();
-
+    if(objPdf != 0){
+        objPdf = objPdf + objStyles + objFim
+        console.log(objPdf)
+        objPdfFinal = JSON.parse(objPdf)
+        pdfMake.createPdf(objPdfFinal).open();
+    }else{
+        myToast('warning', 'Não a itens de Pauta para Gerar o Arquivo');
+    }
+    /*var objPdfFinal = {
+        content: [
+            'First paragraph',
+            'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines'
+        ]
+        
+    }*/
 }
 function getPDF () { document.getElementById('getData').addEventListener('click', function () { geradorPDF() } ) }
 window.addEventListener('load', getPDF)
