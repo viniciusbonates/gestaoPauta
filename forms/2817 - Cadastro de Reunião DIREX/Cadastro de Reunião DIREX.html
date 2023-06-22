@@ -6,12 +6,18 @@
 	<script type="text/javascript" src="/portal/resources/js/mustache/mustache-min.js"></script>
 	<script type="text/javascript" src="/style-guide/js/fluig-style-guide.min.js" charset="utf-8"></script>
 	<script type="text/javascript" src="/webdesk/vcXMLRPC.js"></script>
-	<script type="text/javascript" src="Custom.js"></script>
+
 	<script type="text/javascript" src="dataTableConfig.js"></script>
 	<script type="text/javascript" src="ServiceAPI.js"></script>
 
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.6/pdfmake.min.js"></script>
+	<!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.6/pdfmake.min.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.6/vfs_fonts.js"></script>
+	-->
+	
+	<script type="text/javascript" src="pdfmake/pdfmake.min.js"></script>
+	<script type="text/javascript" src="pdfmake/vfs_fonts.js"></script>
+
+	<script type="text/javascript" src="Custom.js"></script>
 
 	<style type="text/css">
 		.Obrigatorio{
@@ -232,12 +238,19 @@
 			</select>
 		</div>
 		</div>
-		<div class="col-md-'12">
+		<div class="col-md-6">
 		<div class="form-group">
 			<label for="txt_Deliberacao">Deliberação<span class="Obrigatorio"><strong>*</strong></span>:</label>
 			<textarea class="form-control inpDlbr" rows="22" name="txt_Deliberacao" id="txt_Deliberacao"></textarea>
 		</div>
 		</div>
+		<div class="col-md-6">
+		<div class="form-group">
+			<label for="txt_Justificativa">Justificativa do Demandante:</label>
+			<textarea class="form-control inpDlbr" rows="22" name="txt_Justificativa" id="txt_Justificativa" style="color: black;"></textarea>
+		</div>
+		</div>
+
 		</div>
 
 		</div>
@@ -247,14 +260,34 @@
 </form>
 </div>
 <script>
-	
+var ds_mat = DatasetFactory.getDataset("colleague",null,null,null);
+var ds_und = dsc_Unidades = DatasetFactory.getDataset("dsc_Unidades",null,null,null);
+var matDir = 0
+var mat = window.parent.params.taskUserId;
+for(var i=0;i<ds_mat.values.length;i++){
+	if(mat == ds_mat.values[i]['colleaguePK.colleagueId']){
+		var und = ds_mat.values[i]['groupId'];
+		console.log(und)
+		for(var j=0;j<ds_und.values.length;j++){
+			if(und == ds_und.values[j]['AntigaSigla']){
+				console.log("%Pool:Role:"+ds_und.values[j]['Sigla']+"%")
+				if(ds_und.values[j]['Sigla'] == 'ATIC'){
+					matDir = "%Pool:Role:DISUP%";
+				}else{
+					matDir = "%Pool:Role:"+ds_und.values[j]['Sigla']+"%";
+				}
+			}
+		}
+	}
+}
+c1 = DatasetFactory.createConstraint("hdn_dir_vinc", matDir , matDir,  ConstraintType.MUST, true); 
 objMain = {
 	/**
 	 * 	1 = Preencher toda a tabela
 	 * 	2 = Inserir coluna
 	 * 
 	*/
-	objCollection: DatasetFactory.getDataset('Pauta DIREX', null,null,null).values,
+	objCollection: DatasetFactory.getDataset('Pauta DIREX', null,new Array(c1),null).values,
 	arrColumnsRender:  ['txt_NumProcess', 'dataSelected', 'dt_DataSolicita', 'cmb_NomeSolicita', 'zm_UnidadeSolicitante', 'txt_titulo', 'txt_Justificativa', 'Assess'], //dt_DataSolicita
 	attRefer: 'cmb_NomeSolicita',
 	hder: [
@@ -276,15 +309,13 @@ objMain = {
 		let numItm		= item['txt_NumProcess'];
 		var dtRn		= item['dataSelected'];
 		let dtDeterm	= document.getElementById('dt_dataInicio').value
-		console.log(dtRn)
-		console.log(dtDeterm)
 		var arrResult  	= [];
 		let dataNow 	= new Date()
 		let anoNow		= dataNow.getFullYear();
 		dataItm = dataItm.split(' ')[0];
-		dataItm = dataItm.split('/')
+		dataItm = dataItm.split('/');
 		if(dataItm[2] != anoNow){
-			//arrResult.push(true);
+			arrResult.push(true);
 		}
 		if(numItm == '' || numItm == null || numItm == undefined){
 			arrResult.push(true);

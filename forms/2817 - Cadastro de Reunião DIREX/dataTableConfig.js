@@ -434,8 +434,18 @@ dataTableConfig.prototype.changeEventInput = function () {
             if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
                 let assrAp = itenPauta['hdn_aprvAssr'];
                 let inps = document.getElementsByClassName('inpDlbr')
-                arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao']
-                if(15 == assrAp){
+                arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao', 'txt_Justificativa']
+                if(11 == assrAp){
+                    document.getElementById('Delibr').style.display = 'block';
+                    iten.getElementsByTagName('button')[0].disabled = true;
+                    for(let i = 0; i < inps.length; i++){
+                        let nowInp = inps[arrNamesIt[i]];
+                        nowInp.value = '';
+                        nowInp.disabled = true;
+                    } 
+                    inps['txt_Justificativa'].disabled = false
+                    inps['txt_Justificativa'].value = itenPauta['txt_Justificativa']; inps['txt_Justificativa'].style.color = 'black'; 
+                }else if(15 == assrAp){
                     document.getElementById('Delibr').style.display = 'block';
                     iten.getElementsByTagName('button')[0].disabled = false;
                     for(let i = 0; i < inps.length; i++){
@@ -443,24 +453,25 @@ dataTableConfig.prototype.changeEventInput = function () {
                         nowInp.value = '';
                         nowInp.disabled = false;
                     } 
+                    inps['txt_Justificativa'].value = itenPauta['txt_Justificativa']; inps['txt_Justificativa'].style.color = 'black'; 
                 }else if(26 == assrAp){
-                    arrNames = ['hdn_DISUP_vt', 'hdn_DIRAF_vt', 'hdn_DITEC_vt', 'txt_Deliberacao']
                     for(let i = 0; i < inps.length; i++){
                         let nowInp = inps[arrNamesIt[i]]
-                        console.log(itenPauta[arrNames[i]])
+                        console.log(itenPauta[arrNamesIt[i]])
+                          console.log(nowInp)
                         if(nowInp.tagName == 'SELECT'){
                             console.log(nowInp.options) 
                             for(let j = 0; j < nowInp.options.length; j++){
                                 console.log(nowInp.options[j].value)
-                                console.log(itenPauta[arrNames[i]])
-                                if(nowInp.options[j].value == itenPauta[arrNames[i]]){
+                                console.log(itenPauta[arrNamesIt[i]])
+                                if(nowInp.options[j].value == itenPauta[arrNamesIt[i]]){
                                     nowInp.options[j].selected = true;
-                                    inps[arrNamesIt[i]].value = itenPauta[arrNames[i]];
+                                    inps[arrNamesIt[i]].value = itenPauta[arrNamesIt[i]];
                                 }
                             }
                             nowInp.style.color = 'black';
                             nowInp.disabled = 'disabled';
-                        }else{  inps[arrNamesIt[i]].value = itenPauta[arrNames[i]]; nowInp.style.color = 'black'; nowInp.disabled = 'disabled'; }
+                        }else{  inps[arrNamesIt[i]].value = itenPauta[arrNamesIt[i]]; nowInp.style.color = 'black'; nowInp.disabled = 'disabled'; }
                     }
                     document.getElementById('Delibr').style.display = 'block'
                     iten.getElementsByTagName('button')[0].disabled = true 
@@ -527,6 +538,7 @@ dataTableConfig.prototype.changeEventTable = function () {
         },
         openItem: function () {
             var secIntervalOpenItem = setInterval(pushOpenItem, 20)
+            console.log(secIntervalOpenItem)
             function pushOpenItem(){    
                 var url = "http://mywebhm.am.sebrae.com.br/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID="
                 var arrColumnsRender = ['N° Solicitação', 'Data Solicitação', 'Nome Solicitante', 'Unidade', 'Assunto', 'Justificativa']
@@ -557,6 +569,7 @@ dataTableConfig.prototype.changeEventTable = function () {
         },
         statusAsr: function () {
             var secIntervalStatusAsr = setInterval(pushStatusAsr, 20);
+            console.log(secIntervalStatusAsr)
             function pushStatusAsr(){
                 let col         = TableFluig.getCol('Aprov.Assessoria');
                 let colNumSol   = TableFluig.getCol('Solicitação');
@@ -727,18 +740,78 @@ dataTableConfig.prototype.loadEventTable = function () {
 dataTableConfig.prototype.itensBuiltFunctions = function () {
     let itens = this.itensBuilt;
     let TableFluig  = this.TableFluig();
+    async function hipotesis2() { 
+        var intervdisabledOptions = setInterval(defineOptions, 200);
+        console.log(intervdisabledOptions)
+        function defineOptions(){
+            console.log('******************** aqui')
+            let order           = window.res['order'];
+            let res             = window.res['responseIs'];
+            if(order == 2 && res != {}){
+                let err                 = window.res['err'];
+                if(err != undefined && err.indexOf('Error') == -1){
+                    if(res != undefined && res != '' && res != {}){
+                        let itens = dataTablemi.itensBuilt;
+                        drpDwn  = itens['btnDrpDwn1'];
+                        let lis = drpDwn.getElementsByTagName('li');
+                        let dataSelected = document.getElementById('dataSelected').value;
+                        let States      = [11, 9, 15, 16]
+                        let refEnabled  = [
+                            [11],
+                            [9, 15, 16],
+                            [9, 15, 16],
+                            [9, 15, 16],
+                        ] 
+                        let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", dataSelected, dataSelected, ConstraintType.MUST); 
+                        let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
+                        if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
+                            let assrAp = itenPauta['hdn_aprvAssr'];
+                            for(let k = 0; k < lis.length; k++){ 
+                                if(lis[k].hasAttribute("hidden")){
+                                    lis[k].removeAttribute("hidden");
+                                }
+                            }
+                            if(assrAp == 26){
+                                drpDwnIn = itens['btnDrpDwn1'];
+                                drpDwnIn.getElementsByTagName('button')[0].disabled = true
+                            }
+                            for(let i = 0; i < States.length; i++){
+                                if(States[i] == assrAp){
+                                    let itns = refEnabled[i];
+                                    for(let l = 0; l < lis.length; l++){
+                                        for(let j = 0; j < itns.length; j++){
+                                            if(itns[j] == lis[l].value){
+                                                lis[l].hidden = 'true';
+                                            }
+                                        }
+                                    }
+                                    
+                                }
+                            }
+                            window.res['numIndx'] = 2;
+                            window.res['arrIndx'].push('1');
+                            orderMethodsMi.indexFunctionsX();
+
+                            clearInterval(intervdisabledOptions);  
+                        }else{ clearInterval(intervdisabledOptions); }
+                    }
+                }else{ clearInterval(intervdisabledOptions); }
+            }else{ clearInterval(intervdisabledOptions); }
+        }
+    }
     let itenBuitFunc = {
         fnc: [
                 {'fncName': 'moveItem'},
                 {'fncName': 'moveItemDelibr'},
-                {'fncName': 'refreshTable'}
+                {'fncName': 'refreshTable'},
+                {'fncName': 'moveItemAprov'}
         ],
         moveItem: async function () {
             drpDwn  = itens['btnDrpDwn1'];
             let lis = drpDwn.getElementsByTagName('li')
             for(let i = 0; i < lis.length; i++){
                 let liNow = lis[i];
-                if(liNow.id){
+                if(liNow.id && liNow.id != 'AprovarAssr'){
                     await liNow.addEventListener('click', async function() { await hipotesis(this); await hipotesis2(); }); /******************************** */
                     async function hipotesis(elem){
                         let nameIten = 'dataSelected'
@@ -756,196 +829,218 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                         if(elem.value != statusAssr){    
                             await dataTablemi.APImethods.movePOST(inpValue, elem.value); /******** */
                             var interv = setInterval(defineStatus, 200);
+                            console.log(interv)
                         }
                         function defineStatus () { 
                             let colItens = dataTablemi.TableFluig().getCol('Aprov.Assessoria');
                             let colValue = dataTablemi.TableFluig().getCol('N° Solicitação');
-                            //dataTablemi.resAPI  = window.res['response']; 
-                            var responsNow = window.res
-                            console.log(responsNow)
-                            responsNowIns = responsNow.responseIs
-                            console.log(responsNowIns)
-                            var order           = window.res['order'];
-                            console.log(order)
-                            console.log(window.res['check']);
-                            console.log(window.res['order']);
-                            console.log(window.res['responseIs']);
-                            //let res             = dataTablemi.resAPI;
-                            var  res             = window.res['responseIs'];
-                            if(order == 2 && res != {}){
-                                var err                 = window.res['err'];
-                                window.res['check']     = false;
-                                if(err != undefined && err.indexOf('Error') == -1){
-                                    if(res != undefined && res != '' && res != {}){
-                                        console.log(res)      
-                                        console.log(window.res['responseIs'])                                                                         
-                                        var stateActive     = res.items[res.items.length - 1].active
-                                        var stateNow        = res.items[res.items.length - 1].state.sequence
-                                        var stateInstanced  = res.items[res.items.length - 1].processInstanceId
-                                        var colItem = 0;
-                                        for(let i = 0; i < colValue.length; i++){
-                                            if(inpValue == colValue[i].innerText){
-                                                colItem = colItens[i]
-                                            }
-                                        } 
-                                        console.log(stateNow);
-                                        //console.log(stateActive);
-                                        //console.log(stateInstanced)
-                                        //console.log(inpValue)
-                                        if(stateActive == true && stateInstanced == inpValue){
-                                            if(stateNow == 15){ 
-                                                //colItem.removeChild(colItem.children[0]); 
-                                                colItem.innerHTML = ''
-                                                let icon = dataTablemi.constructIcon().construct('flaticon flaticon-file-check icon-md');
-                                                colItem.appendChild(icon);
-                                                let icn             = colItem.innerHTML;                                     //Descrição
-                                                icn                 = icn +' <b>Aprovado</b>';
-                                                colItem.innerHTML    = icn;
-                                                dataTablemi.resAPI = {};
-                                                window.res['arrIndx'].push('1');
-                                                orderMethodsMi.indexFunctionsX();
-                                                itensTools.myToast('success', 'Ação realizada com sucesso!');
-                                                let inps = document.getElementsByClassName('inpDlbr')
-                                                arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao']
-                                                document.getElementById('Delibr').style.display = 'block';
-                                                iten.getElementsByTagName('button')[0].disabled = false;
-                                                console.log('************** * ** * * * ** * *** **'+ iten)
-                                                for(let i = 0; i < inps.length; i++){
-                                                    let nowInp = inps[arrNamesIt[i]];
-                                                    nowInp.value = '';
-                                                    nowInp.disabled = false;
-                                                } 
-                                                clearInterval(interv)
-                                            }
-                                            else if(stateNow == 11){
-                                                //colItem.removeChild(colItem.children[0])
-                                                colItem.innerHTML = ''
-                                                let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-file-bell-empty icon-md');
-                                                colItem.appendChild(icon);
-                                                let icn             = colItem.innerHTML;                                     //Descrição
-                                                icn                 = icn +' <b>Análise</b>';
-                                                colItem.innerHTML    = icn;
-                                                dataTablemi.resAPI = {};
-                                                window.res['arrIndx'].push('1');
-                                                orderMethodsMi.indexFunctionsX();
-                                                itensTools.myToast('success', 'Ação realizada com sucesso!');
-                                                document.getElementById('Delibr').style.display = 'none'
-                                                iten.getElementsByTagName('button')[0].disabled = true 
-                                                clearInterval(interv)
-                                            }
-                                            else if(stateNow == 16){
-                                                //colItem.removeChild(colItem.children[0])
-                                                colItem.innerHTML = ''
-                                                let icon = dataTablemi.constructIcon().construct('flaticon flaticon-file-delete icon-md');
-                                                colItem.appendChild(icon);
-                                                let icn             = colItem.innerHTML;                                     //Descrição
-                                                icn                 = icn +' <b>Excluído</b>';
-                                                colItem.innerHTML    = icn;
-                                                dataTablemi.resAPI = {};
-                                                window.res['arrIndx'].push('1');
-                                                orderMethodsMi.indexFunctionsX();
-                                                itensTools.myToast('success', 'Ação realizada com sucesso!');
-                                                clearInterval(interv)
-                                            }
-                                            else if(stateNow == 9){
-                                                //colItem.removeChild(colItem.children[0])
-                                                colItem.innerHTML = ''
-                                                let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-fileedit icon-md');
-                                                colItem.appendChild(icon);
-                                                let icn             = colItem.innerHTML;                                     //Descrição
-                                                icn                 = icn +' <b>Ajuste</b>';
-                                                colItem.innerHTML    = icn;
-                                                dataTablemi.resAPI = {};
-                                                window.res['numIndx'] = 2;
-                                                window.res['arrIndx'].push('1');
-                                                orderMethodsMi.indexFunctionsX();
-                                                itensTools.myToast('success', 'Ação realizada com sucesso!');
-                                                clearInterval(interv)
-                                            }
-                                            else if(stateNow == 26){
-                                                //colItem.removeChild(colItem.children[0])
-                                                colItem.innerHTML = ''
-                                                let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-checked icon-md');
-                                                colItem.appendChild(icon);
-                                                let icn             = colItem.innerHTML;                                     //Descrição
-                                                icn                 = icn +' <b>Deliberado</b>';
-                                                colItem.innerHTML    = icn;
-                                                dataTablemi.resAPI = {};
-                                                window.res['numIndx'] = 2;
-                                                window.res['arrIndx'].push('1');
-                                                orderMethodsMi.indexFunctionsX();
-                                                itensTools.myToast('success', 'Ação realizada com sucesso!');
-                                                clearInterval(interv)
-                                            }
-                                            else{ clearInterval(interv) }
-                                        }else{ clearInterval(interv) } 
-                                    }
-                                }else { clearInterval(interv) }
-                            }else if(order == 0){ clearInterval(interv) }
-                        }
-                    }
-                    async function hipotesis2() { 
-                        var intervdisabledOptions = setInterval(defineOptions, 200);
-                        function defineOptions(){
-                            let order           = window.res['order'];
-                            let res             = window.res['responseIs'];
-                            if(order == 2 && res != {}){
-                                let err                 = window.res['err'];
-                                if(err != undefined && err.indexOf('Error') == -1){
-                                    if(res != undefined && res != '' && res != {}){
-                                        let itens = dataTablemi.itensBuilt;
-                                        drpDwn  = itens['btnDrpDwn1'];
-                                        let lis = drpDwn.getElementsByTagName('li');
-                                        let dataSelected = document.getElementById('dataSelected').value;
-                                        let States      = [11, 9, 15, 16]
-                                        let refEnabled  = [
-                                            [11],
-                                            [9, 15, 16],
-                                            [9, 15, 16],
-                                            [9, 15, 16],
-                                        ] 
-                                        let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", dataSelected, dataSelected, ConstraintType.MUST); 
-                                        let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
-                                        if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
-                                            let assrAp = itenPauta['hdn_aprvAssr'];
-                                            for(let k = 0; k < lis.length; k++){ 
-                                                if(lis[k].hasAttribute("hidden")){
-                                                    lis[k].removeAttribute("hidden");
-                                                }
-                                            }
-                                            for(let i = 0; i < States.length; i++){
-                                                if(States[i] == assrAp){
-                                                    let itns = refEnabled[i];
-                                                    for(let l = 0; l < lis.length; l++){
-                                                        for(let j = 0; j < itns.length; j++){
-                                                            if(itns[j] == lis[l].value){
-                                                                lis[l].hidden = 'true';
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            window.res['numIndx'] = 2;
-                                            window.res['arrIndx'].push('1');
-                                            orderMethodsMi.indexFunctionsX();
 
-                                            clearInterval(intervdisabledOptions);  
-                                        }else{ clearInterval(intervdisabledOptions); }
+                            let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", inpValue, inpValue, ConstraintType.MUST); 
+                            let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
+                            stateNow      = itenPauta['hdn_aprvAssr'];                                            
+                           
+                            if(stateNow == elem.value){
+                                var colItem = 0;
+                                for(let i = 0; i < colValue.length; i++){
+                                    if(inpValue == colValue[i].innerText){
+                                        colItem = colItens[i]
                                     }
-                                }else{ clearInterval(intervdisabledOptions); }
+                                } 
+                                console.log(stateNow);
+
+                                /* if(stateNow == 15){ 
+                                    //colItem.removeChild(colItem.children[0]); 
+                                    colItem.innerHTML = ''
+                                    let icon = dataTablemi.constructIcon().construct('flaticon flaticon-file-check icon-md');
+                                    colItem.appendChild(icon);
+                                    let icn             = colItem.innerHTML;                                     //Descrição
+                                    icn                 = icn +' <b>Aprovado</b>';
+                                    colItem.innerHTML    = icn;
+                                    dataTablemi.resAPI = {};
+                                    window.res['arrIndx'].push('1');
+                                    orderMethodsMi.indexFunctionsX();
+                                    itensTools.myToast('success', 'Ação realizada com sucesso!');
+                                    let inps = document.getElementsByClassName('inpDlbr')
+                                    arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao']
+                                    document.getElementById('Delibr').style.display = 'block';
+                                    iten.getElementsByTagName('button')[0].disabled = false;
+                                    console.log('************** * ** * * * ** * *** **'+ iten)
+                                    for(let i = 0; i < inps.length; i++){
+                                        let nowInp = inps[arrNamesIt[i]];
+                                        nowInp.value = '';
+                                        nowInp.disabled = false;
+                                    } 
+                                    clearInterval(interv)
+                                }*/
+                                if(stateNow == 11){
+                                    //colItem.removeChild(colItem.children[0])
+                                    colItem.innerHTML = ''
+                                    let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-file-bell-empty icon-md');
+                                    colItem.appendChild(icon);
+                                    let icn             = colItem.innerHTML;                                     //Descrição
+                                    icn                 = icn +' <b>Análise</b>';
+                                    colItem.innerHTML    = icn;
+                                    dataTablemi.resAPI = {};
+                                    window.res['arrIndx'].push('1');
+                                    orderMethodsMi.indexFunctionsX();
+                                    itensTools.myToast('success', 'Ação realizada com sucesso!');
+
+                                    let inps = document.getElementsByClassName('inpDlbr')
+                                    arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao']
+                                    document.getElementById('Delibr').style.display = 'block';
+                                    iten.getElementsByTagName('button')[0].disabled = true 
+                                    for(let i = 0; i < inps.length; i++){
+                                        let nowInp = inps[arrNamesIt[i]];
+                                        if(nowInp != undefined){
+                                            nowInp.value = '';
+                                            nowInp.disabled = true;
+                                        }
+                                    } 
+                                    document.getElementById('txt_Justificativa').disabled = false
+                                    
+                                    clearInterval(interv)
+                                }
+                                else if(stateNow == 16){
+                                    //colItem.removeChild(colItem.children[0])
+                                    colItem.innerHTML = ''
+                                    let icon = dataTablemi.constructIcon().construct('flaticon flaticon-file-delete icon-md');
+                                    colItem.appendChild(icon);
+                                    let icn             = colItem.innerHTML;                                     //Descrição
+                                    icn                 = icn +' <b>Excluído</b>';
+                                    colItem.innerHTML    = icn;
+                                    dataTablemi.resAPI = {};
+                                    window.res['arrIndx'].push('1');
+                                    orderMethodsMi.indexFunctionsX();
+                                    itensTools.myToast('success', 'Ação realizada com sucesso!');
+                                    clearInterval(interv)
+                                }
+                                else if(stateNow == 9){
+                                    //colItem.removeChild(colItem.children[0])
+                                    colItem.innerHTML = ''
+                                    let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-fileedit icon-md');
+                                    colItem.appendChild(icon);
+                                    let icn             = colItem.innerHTML;                                     //Descrição
+                                    icn                 = icn +' <b>Ajuste</b>';
+                                    colItem.innerHTML    = icn;
+                                    dataTablemi.resAPI = {};
+                                    window.res['numIndx'] = 2;
+                                    window.res['arrIndx'].push('1');
+                                    orderMethodsMi.indexFunctionsX();
+                                    itensTools.myToast('success', 'Ação realizada com sucesso!');
+                                    clearInterval(interv)
+                                }
+                                else if(stateNow == 26){
+                                    //colItem.removeChild(colItem.children[0])
+                                    colItem.innerHTML = ''
+                                    let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-checked icon-md');
+                                    colItem.appendChild(icon);
+                                    let icn             = colItem.innerHTML;                                     //Descrição
+                                    icn                 = icn +' <b>Deliberado</b>';
+                                    colItem.innerHTML    = icn;
+                                    dataTablemi.resAPI = {};
+                                    window.res['numIndx'] = 2;
+                                    window.res['arrIndx'].push('1');
+                                    orderMethodsMi.indexFunctionsX();
+                                    itensTools.myToast('success', 'Ação realizada com sucesso!');
+                                    clearInterval(interv)
+                                }
+                                else{ clearInterval(interv) }
                             }
                         }
                     }
-                    //})
+                }
+            }
+        },moveItemAprov: function () {
+            drpDwn  = itens['btnDrpDwn1'];
+            let lis = drpDwn.getElementsByTagName('li')
+            for(let i = 0; i < lis.length; i++){
+                let liNow = lis[i];
+                if(liNow.id == 'AprovarAssr'){
+                    liNow.addEventListener('click', async function() { await AprovarAssrDefinition(); await hipotesis2();})
+                }
+                break
+            }
+            async function AprovarAssrDefinition(){
+                let nameIten        = 'dataSelected'
+                statusNext          = 15;
+                inpsPanel           = document.getElementsByClassName('inpDlbr')
+                let it              = dataTablemi.itensBuilt[nameIten];
+                inp                 = it.getElementsByTagName('input')[0];
+                inpValue            = inp.value;  
+                let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", inpValue, inpValue, ConstraintType.MUST); 
+                let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
+                let statusAssr      = itenPauta['hdn_aprvAssr'];
+
+                Justf = inpsPanel['txt_Justificativa'].value;
+                arrNamesInp = ['txt_Justificativa'];
+                
+                for(i = 0; i < inpsPanel.length; i++){
+                    inpNow = inpsPanel[arrNamesInp[i]]
+                    if(inpNow != undefined){
+                        if(inpNow.value != '' && inpNow.value != 0){
+                            if(statusNext != statusAssr){    
+                                await dataTablemi.APImethods.movePOST(inpValue, statusNext, '', '', '', '', Justf); 
+                                var intervmoveItemAprov = setInterval(defineStatusDelibrAprov, 100); 
+                                console.log(intervmoveItemAprov)
+                            }
+                        }else{ itensTools.myToast('info', 'É necessário preencher o campo Justificativa do Demandante!'); break; }
+                    }
+                }                
+
+                function defineStatusDelibrAprov () { 
+                    let colItens        = dataTablemi.TableFluig().getCol('Aprov.Assessoria');
+                    let colValue        = dataTablemi.TableFluig().getCol('N° Solicitação');
+                    var itenBtn1        = dataTablemi.itensBuilt['btn1'];
+                  
+                    let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", inpValue, inpValue, ConstraintType.MUST); 
+                    let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
+                    let stateNow      = itenPauta['hdn_aprvAssr'];
+
+                    if(stateNow == statusNext){
+                        var colItem = 0;
+                        for(let i = 0; i < colValue.length; i++){
+                            if(inpValue == colValue[i].innerText){
+                                colItem = colItens[i]
+                            }
+                        } 
+                        console.log(stateNow);
+                        if(stateNow == 15){  
+                            colItem.innerHTML = ''
+                            let icon = dataTablemi.constructIcon().construct('flaticon flaticon-file-check icon-md');
+                            colItem.appendChild(icon);
+                            let icn             = colItem.innerHTML;                                     //Descrição
+                            icn                 = icn +' <b>Aprovado</b>';
+                            colItem.innerHTML    = icn;
+                            dataTablemi.resAPI = {};
+                            window.res['arrIndx'].push('1');
+                            orderMethodsMi.indexFunctionsX();
+                            itensTools.myToast('success', 'Ação realizada com sucesso!');
+                            let inps = document.getElementsByClassName('inpDlbr')
+                            arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao']
+                            document.getElementById('Delibr').style.display = 'block';
+                            itenBtn1.getElementsByTagName('button')[0].disabled = false;
+                            for(let i = 0; i < inps.length; i++){
+                                var nowInp = inps[arrNamesIt[i]];
+                                if(nowInp != undefined){
+                                    nowInp.value = '';
+                                    nowInp.disabled = false;
+                                }
+                            } 
+                            console.log(intervmoveItemAprov)
+                            clearInterval(intervmoveItemAprov)
+                        }
+                        else{ clearInterval(intervmoveItemAprov) }
+                    }
                 }
             }
         },moveItemDelibr: function () {
             btn             = itens['btn1'];
             console.log(btn)
-            btn.addEventListener('click', function() { hipotesis(); }); 
-            function hipotesis(){
+            btn.addEventListener('click', async function() { await moveDelibrDefinition(); await hipotesis2();}); 
+            async function moveDelibrDefinition(){
                 let nameIten    = 'dataSelected'
                 statusDelibr    = 26;
+                ckX             = 0
                 inpsPanel       = document.getElementsByClassName('inpDlbr')
                 let it = dataTablemi.itensBuilt[nameIten];
                 inp = it.getElementsByTagName('input')[0];
@@ -958,81 +1053,73 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                 DIRAF = inpsPanel['slc_DIRAF_vt'].value;
                 DITEC = inpsPanel['slc_DITEC_vt'].value;
                 Delibr = inpsPanel['txt_Deliberacao'].value;
+                Justf = inpsPanel['txt_Justificativa'].value;
                 
-                arrNamesInp = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao'];
+                arrNamesInp = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao', 'txt_Justificativa'];
+                ckY = 0
                 for(i = 0; i < inpsPanel.length; i++){
                     inpNow = inpsPanel[arrNamesInp[i]]
-                    if(inpNow.value != '' && inpNow.value != 0){
-                        if(statusDelibr != statusAssr){    
-                            dataTablemi.APImethods.movePOST(inpValue, statusDelibr, DISUP, DIRAF, DITEC, Delibr); 
-                            var intervmoveItemDelibr = setInterval(defineStatusDelibr, 100);
+                    if(inpNow != undefined){
+                        if(inpNow.value == '' && inpNow.value == 0){
+                            ckY++
                         }
-                    }else{ itensTools.myToast('info', 'É necessário preencher todos os campos de Deliberação!'); break; }
-                }                
-
+                        if(ckY == 0 && statusDelibr != statusAssr){    
+                            await dataTablemi.APImethods.movePOST(inpValue, statusDelibr, DISUP, DIRAF, DITEC, Delibr, Justf); 
+                            var intervmoveItemDelibr = setInterval(defineStatusDelibr, 200);
+                            console.log(intervmoveItemDelibr)
+                        }else{ itensTools.myToast('info', 'É necessário preencher todos os campos de Deliberação!'); break; }
+                    }                
+                }
                 function defineStatusDelibr () { 
                     let colItens = dataTablemi.TableFluig().getCol('Aprov.Assessoria');
                     let colValue = dataTablemi.TableFluig().getCol('N° Solicitação');
                     var itenBtn1 = dataTablemi.itensBuilt['btn1'];
-                    var responsNow = window.res
-                    responsNowIns = responsNow.responseIs
-                    var order           = window.res['order'];
-                    var  res             = window.res['responseIs'];
-                    console.log(window.res['responseIs'])   
-                    console.log(window.res['order'])    
-                    console.log(order)    
-                    if(order == 2 && res != {}){
-                        var err                 = window.res['err'];
-                        window.res['check']     = false;
-                        if(err != undefined && err.indexOf('Error') == -1){
-                            if(res != undefined && res != '' && res != {}){
-                                console.log(res)      
-                                console.log(window.res['responseIs'])                                                                         
-                                var stateActive     = res.items[res.items.length - 1].active
-                                var stateNow        = res.items[res.items.length - 1].state.sequence
-                                var stateInstanced  = res.items[res.items.length - 1].processInstanceId
-                                var colItem = 0;
-                                for(let i = 0; i < colValue.length; i++){
-                                    if(inpValue == colValue[i].innerText){
-                                        colItem = colItens[i]
-                                    }
-                                } 
-                                console.log(stateNow);
-                                if(stateActive == true && stateInstanced == inpValue){
-                                    if(stateNow == 26){  
-                                        colItem.innerHTML = ''
-                                        let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-checked icon-md');
-                                        colItem.appendChild(icon);
-                                        let icn             = colItem.innerHTML;                                     //Descrição
-                                        icn                 = icn +' <b>Deliberado</b>';
-                                        colItem.innerHTML    = icn;
-                                        dataTablemi.resAPI = {};
-                                        let inps = document.getElementsByClassName('inpDlbr')
-                                        arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao']
-                                        document.getElementById('Delibr').style.display = 'block';
-                                        itenBtn1.getElementsByTagName('button')[0].disabled = true;
-                                        console.log('************** * ** * * * ** * *** **'+ itenBtn1)
-                                        for(let i = 0; i < inps.length; i++){
-                                            let nowInp = inps[arrNamesIt[i]];
-                                            //nowInp.value = '';
-                                            nowInp.disabled = true;
-                                        } 
-                                        window.res['numIndx'] = 1;
-                                        window.res['arrIndx'].push('1');
-                                        orderMethodsMi.indexFunctionsX();
-                                        itensTools.myToast('success', 'Ação realizada com sucesso!');
-                                        clearInterval(intervmoveItemDelibr)
-                                    }
-                                    else{ clearInterval(intervmoveItemDelibr) }
-                                }else{ clearInterval(intervmoveItemDelibr) } 
+
+                    let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", inpValue, inpValue, ConstraintType.MUST); 
+                    let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
+                    let stateNow        = itenPauta['hdn_aprvAssr'];
+                    console.log(ckX)
+                    if(ckX != 3){ ckX++ }
+                    else{ clearInterval(intervmoveItemDelibr) }
+                    if(stateNow == statusDelibr){
+                        for(let i = 0; i < colValue.length; i++){
+                            if(inpValue == colValue[i].innerText){
+                                colItem = colItens[i]
                             }
-                        }else { clearInterval(intervmoveItemDelibr) }
-                    }else if(window.res['order'] == 0){ 
-                        clearInterval(intervmoveItemDelibr); 
+                        } 
+                        console.log(stateNow);
+                        if(stateNow == 26){  
+                            colItem.innerHTML = ''
+                            let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-checked icon-md');
+                            colItem.appendChild(icon);
+                            let icn             = colItem.innerHTML;                                     //Descrição
+                            icn                 = icn +' <b>Deliberado</b>';
+                            colItem.innerHTML   = icn;
+                            dataTablemi.resAPI  = {};
+                            let inps = document.getElementsByClassName('inpDlbr')
+                            arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao', 'txt_Justificativa']
+                            document.getElementById('Delibr').style.display = 'block';
+                            itenBtn1.getElementsByTagName('button')[0].disabled = true;
+                            for(let i = 0; i < inps.length; i++){
+                                var nowInp = inps[arrNamesIt[i]];
+                                if(nowInp != undefined){
+                                    let nowInp = inps[arrNamesIt[i]];
+                                    nowInp.disabled = true;
+                                }
+                            } 
+                            window.res['numIndx'] = 1;
+                            window.res['arrIndx'].push('1');
+                            orderMethodsMi.indexFunctionsX();
+                            itensTools.myToast('success', 'Ação realizada com sucesso!');
+                            console.log('*************************** succs')
+                            console.log(intervmoveItemDelibr)
+                           
+                            clearInterval(intervmoveItemDelibr)
+                        }
+                        else{ clearInterval(intervmoveItemDelibr) }
                     }
                 }
             }
-
         }, refreshTable: function () {
             btn             = itens['btn2'];
             console.log(btn)
