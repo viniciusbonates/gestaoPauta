@@ -28,7 +28,7 @@
     <processDefinitionVersionPK>
       <companyId>1</companyId>
       <processId>Cadastro de Reunião DIREX</processId>
-      <version>7</version>
+      <version>8</version>
     </processDefinitionVersionPK>
     <versionDescription></versionDescription>
     <formId>2817</formId>
@@ -275,7 +275,7 @@
         <linkSequence>11</linkSequence>
       </processLinkPK>
       <actionLabel></actionLabel>
-      <returnPermited>true</returnPermited>
+      <returnPermited>false</returnPermited>
       <initialStateSequence>8</initialStateSequence>
       <finalStateSequence>10</finalStateSequence>
       <returnLabel></returnLabel>
@@ -295,6 +295,23 @@
       <returnPermited>false</returnPermited>
       <initialStateSequence>10</initialStateSequence>
       <finalStateSequence>7</finalStateSequence>
+      <returnLabel></returnLabel>
+      <name></name>
+      <automaticLink>false</automaticLink>
+      <defaultLink>false</defaultLink>
+      <type>0</type>
+    </ProcessLink>
+    <ProcessLink>
+      <processLinkPK>
+        <companyId>1</companyId>
+        <processId>CadastrodeReuniãoDIREX</processId>
+        <version>1</version>
+        <linkSequence>13</linkSequence>
+      </processLinkPK>
+      <actionLabel></actionLabel>
+      <returnPermited>false</returnPermited>
+      <initialStateSequence>10</initialStateSequence>
+      <finalStateSequence>8</finalStateSequence>
       <returnLabel></returnLabel>
       <name></name>
       <automaticLink>false</automaticLink>

@@ -176,6 +176,18 @@
 				</div>
 			</div>
 			</div>
+			<div class="col-md-6">
+			<div class="form-group">
+				<label for="txt_IniDelibr">Texto Inicio Deliberação<span class="Obrigatorio"><strong>*</strong></span>:</label>
+				<textarea class="form-control" rows="3" name="txt_IniDelibr" id="txt_IniDelibr"></textarea>
+			</div>
+			</div>
+			<div class="col-md-6">
+			<div class="form-group">
+				<label for="txt_FinDelibr">Texto Final Deliberação<span class="Obrigatorio"><strong>*</strong></span>:</label>
+				<textarea class="form-control" rows="3" name="txt_FinDelibr" id="txt_FinDelibr"></textarea>
+			</div>
+			</div>
 		</div>	
 		</div>
 		
@@ -260,34 +272,41 @@
 </form>
 </div>
 <script>
-var ds_mat = DatasetFactory.getDataset("colleague",null,null,null);
-var ds_und = dsc_Unidades = DatasetFactory.getDataset("dsc_Unidades",null,null,null);
-var matDir = 0
-var mat = window.parent.params.taskUserId;
-for(var i=0;i<ds_mat.values.length;i++){
-	if(mat == ds_mat.values[i]['colleaguePK.colleagueId']){
-		var und = ds_mat.values[i]['groupId'];
-		console.log(und)
-		for(var j=0;j<ds_und.values.length;j++){
-			if(und == ds_und.values[j]['AntigaSigla']){
-				console.log("%Pool:Role:"+ds_und.values[j]['Sigla']+"%")
-				if(ds_und.values[j]['Sigla'] == 'ATIC'){
-					matDir = "%Pool:Role:DISUP%";
-				}else{
-					matDir = "%Pool:Role:"+ds_und.values[j]['Sigla']+"%";
+var atvd 	= window.parent.ECM.workflowView.sequence;	
+var ds_mat 	= DatasetFactory.getDataset("colleague",null,null,null);
+var ds_und 	= DatasetFactory.getDataset("dsc_Unidades",null,null,null);
+var matDir 	= 0
+var mat 	= window.parent.params.taskUserId;
+if(atvd == 8){
+	for(var i = 0;i<ds_mat.values.length;i++){
+		if(mat == ds_mat.values[i]['colleaguePK.colleagueId']){
+			var und = ds_mat.values[i]['groupId'];
+			console.log(und)
+			for(var j=0;j<ds_und.values.length;j++){
+				if(und == ds_und.values[j]['AntigaSigla']){
+					console.log("%Pool:Role:"+ds_und.values[j]['Sigla']+"%")
+					if(ds_und.values[j]['Sigla'] == 'ATIC'){
+						matDir = "%Pool:Role:DISUP%";
+					}else{
+						matDir = "%Pool:Role:"+ds_und.values[j]['Sigla']+"%";
+					}
 				}
 			}
 		}
 	}
+	c1 = DatasetFactory.createConstraint("hdn_dir_vinc", matDir , matDir,  ConstraintType.MUST, true); 
+	cnst = new Array(c1)
+}else{
+	c1 = DatasetFactory.createConstraint("hdn_dir_vinc", "%Pool:Role:%" , "%Pool:Role:%",  ConstraintType.MUST, true); 
+	cnst = new Array(c1)
 }
-c1 = DatasetFactory.createConstraint("hdn_dir_vinc", matDir , matDir,  ConstraintType.MUST, true); 
 objMain = {
 	/**
 	 * 	1 = Preencher toda a tabela
 	 * 	2 = Inserir coluna
 	 * 
 	*/
-	objCollection: DatasetFactory.getDataset('Pauta DIREX', null,new Array(c1),null).values,
+	objCollection: DatasetFactory.getDataset('Pauta DIREX', null, cnst,null).values,
 	arrColumnsRender:  ['txt_NumProcess', 'dataSelected', 'dt_DataSolicita', 'cmb_NomeSolicita', 'zm_UnidadeSolicitante', 'txt_titulo', 'txt_Justificativa', 'Assess'], //dt_DataSolicita
 	attRefer: 'cmb_NomeSolicita',
 	hder: [

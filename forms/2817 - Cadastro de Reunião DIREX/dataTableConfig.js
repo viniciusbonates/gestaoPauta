@@ -390,7 +390,6 @@ dataTableConfig.prototype.changeEventInput = function () {
             drpDwn.getElementsByTagName('button')[0].disabled = false
             let lis = drpDwn.getElementsByTagName('li');
             let dataSelected = document.getElementById('dataSelected').value;
-            console.log(dataSelected)
             let States      = [11, 9, 15, 16]
             let refEnabled  = [
                 [11],
@@ -430,11 +429,11 @@ dataTableConfig.prototype.changeEventInput = function () {
             let dataSelected = document.getElementById('dataSelected').value;
             let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", dataSelected, dataSelected, ConstraintType.MUST); 
             let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
-            console.log('1 * * ** * * * ** ')
             if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
                 let assrAp = itenPauta['hdn_aprvAssr'];
                 let inps = document.getElementsByClassName('inpDlbr')
-                arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao', 'txt_Justificativa']
+                arrNamesIt  = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao', 'txt_Justificativa']
+                arrAlt      = ['hdn_DIRAF_vt', 'hdn_DISUP_vt', 'hdn_DITEC_vt']
                 if(11 == assrAp){
                     document.getElementById('Delibr').style.display = 'block';
                     iten.getElementsByTagName('button')[0].disabled = true;
@@ -457,16 +456,11 @@ dataTableConfig.prototype.changeEventInput = function () {
                 }else if(26 == assrAp){
                     for(let i = 0; i < inps.length; i++){
                         let nowInp = inps[arrNamesIt[i]]
-                        console.log(itenPauta[arrNamesIt[i]])
-                          console.log(nowInp)
                         if(nowInp.tagName == 'SELECT'){
-                            console.log(nowInp.options) 
                             for(let j = 0; j < nowInp.options.length; j++){
-                                console.log(nowInp.options[j].value)
-                                console.log(itenPauta[arrNamesIt[i]])
-                                if(nowInp.options[j].value == itenPauta[arrNamesIt[i]]){
+                                if(nowInp.options[j].value == itenPauta[arrAlt[i]]){
                                     nowInp.options[j].selected = true;
-                                    inps[arrNamesIt[i]].value = itenPauta[arrNamesIt[i]];
+                                    inps[arrNamesIt[i]].value = itenPauta[arrAlt[i]];
                                 }
                             }
                             nowInp.style.color = 'black';
