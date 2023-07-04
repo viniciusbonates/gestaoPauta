@@ -20,6 +20,17 @@ determineEditor.prototype.disabledEditor = function (inp) {
         divIn.append(divDisabled);
     } 
 }
+determineEditor.prototype.cleanEditor = function (inp) {
+    var thisInput   = document.getElementById(inp.id);
+    objCheck        = thisInput.parentElement.getElementsByClassName('in');
+    if(objCheck.length != 0){
+        //var divDisabled = objCheck[0];
+        thisInput.parentElement.getElementsByTagName('iframe')[0].tabIndex = 0;
+        divEditor   = thisInput.parentElement.children[2];
+        divIn       = divEditor.children[1];
+        divIn.removeChild(divIn.children[3]);
+    } 
+}
 determineEditor.prototype.setDataInput = function (inp) {
     for(i = 0; i < this.arrEdits.length; i++){
         if(this.arrEdits[i].editor.name == inp.id){

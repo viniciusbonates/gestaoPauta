@@ -456,6 +456,7 @@ dataTableConfig.prototype.changeEventInput = function () {
                     } 
                     inps['txt_Justificativa'].value = itenPauta['txt_Justificativa']; inps['txt_Justificativa'].style.color = 'black'; 
                     console.log(myEditor)
+                    myEditor.cleanEditor(document.getElementById('txt_Deliberacao'))
                     myEditor.setDataInput(document.getElementById('txt_Deliberacao'))
                 }else if(26 == assrAp){
                     for(let i = 0; i < inps.length; i++){
