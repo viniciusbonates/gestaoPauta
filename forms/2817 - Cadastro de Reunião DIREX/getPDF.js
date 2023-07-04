@@ -1,17 +1,55 @@
 function determineEditor(){
-    this.inpIn = document.getElementById('txt_IniDelibr');
-    this.edit = FLUIGC.richeditor('txt_IniDelibr');
-    this.edit.setData(this.inpIn.value);
+    this.buttonReference = 'getData';
+    this.inpIn = ['txt_IniDelibr', 'txt_FinDelibr', 'txt_Deliberacao'];
+    this.arrEdits = [];
+    this.setRichEditor();
     this.setFuncbutton();
 }
-determineEditor.prototype.setDataInput = function () {
-    this.inpIn.value = this.edit.getData();
+determineEditor.prototype.disabledEditor = function (inp) {
+    var thisInput   = document.getElementById(inp.id);
+    objCheck        = thisInput.parentElement.getElementsByClassName('in');
+    if(objCheck.length == 0){
+        var divDisabled = document.createElement('div');
+        divDisabled.setAttribute('class', "fluig-style-guide modal-backdrop  in");
+        divDisabled.setAttribute('style', "height: 375px; top: 26px; left: 15px; width: 1090px; background-color: rgba( 0, 0, 0, .1);display: block;");
+        divDisabled.setAttribute('id', "shadow");
+        divDisabled.setAttribute('tabindex', "-1");
+        thisInput.parentElement.getElementsByTagName('iframe')[0].tabIndex = -1;
+        divEditor   = document.getElementById(inp.id).parentElement.children[2];
+        divIn       = divEditor.children[1];
+        divIn.append(divDisabled);
+    } 
+}
+determineEditor.prototype.setDataInput = function (inp) {
+    for(i = 0; i < this.arrEdits.length; i++){
+        if(this.arrEdits[i].editor.name == inp.id){
+            this.arrEdits[i].setData(inp.value);
+        }
+    }
+}
+determineEditor.prototype.setDataInputsParams = function () {
+    for(i = 0; i < this.inpIn.length; i++){
+        inpNow = document.getElementById(this.inpIn[i]);
+        inpNow.value = this.arrEdits[i].getData();
+    }  
+    //this.inpIn.value = this.edit.getData();
 }
 determineEditor.prototype.setFuncbutton = function () {
-    document.getElementById('getData').addEventListener('click', function () { myEditor.setDataInput(); }) 
+    document.getElementById(this.buttonReference).addEventListener('click', function () { myEditor.setDataInputsParams(); }) 
+}
+determineEditor.prototype.setRichEditor = function () {
+    arrInps = [];
+    for(i = 0; i < this.inpIn.length; i++){
+        inpNow = document.getElementById(this.inpIn[i]);
+        arrInps.push(inpNow);
+        editNow = FLUIGC.richeditor(inpNow.id);
+        this.arrEdits.push(editNow);
+        this.arrEdits[i].setData(inpNow.value);
+    }  
 }
 function initEditor(){ myEditor = new determineEditor(); }
 window.addEventListener('load', initEditor)
+
 
 function updatePDF(){
     document.scrollingElement.scrollTop = 0
