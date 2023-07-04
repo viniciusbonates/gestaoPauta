@@ -446,6 +446,7 @@ dataTableConfig.prototype.changeEventInput = function () {
                     inps['txt_Justificativa'].value = itenPauta['txt_Justificativa']; inps['txt_Justificativa'].style.color = 'black';
                     console.log(myEditor)
                     myEditor.setDataInput(document.getElementById('txt_Deliberacao'))
+                    myEditor.disabledEditor(document.getElementById('txt_Deliberacao'))
                 }else if(15 == assrAp){
                     document.getElementById('Delibr').style.display = 'block';
                     iten.getElementsByTagName('button')[0].disabled = false;
@@ -899,7 +900,9 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                         }
                                     } 
                                     document.getElementById('txt_Justificativa').disabled = false
-                                    
+                                    console.log(myEditor)
+                                    myEditor.setDataInput(document.getElementById('txt_Deliberacao'))
+                                    myEditor.disabledEditor(document.getElementById('txt_Deliberacao'))
                                     clearInterval(interv)
                                 }
                                 else if(stateNow == 16){
@@ -1029,6 +1032,9 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                 }
                             } 
                             console.log(intervmoveItemAprov)
+                            console.log(myEditor)
+                            myEditor.cleanEditor(document.getElementById('txt_Deliberacao'))
+                            myEditor.setDataInput(document.getElementById('txt_Deliberacao'))
                             clearInterval(intervmoveItemAprov)
                         }
                         else{ clearInterval(intervmoveItemAprov) }
@@ -1115,7 +1121,9 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                             itensTools.myToast('success', 'Ação realizada com sucesso!');
                             console.log('*************************** succs')
                             console.log(intervmoveItemDelibr)
-                           
+                            console.log(myEditor)
+                            myEditor.setDataInput(document.getElementById('txt_Deliberacao'))
+                            myEditor.disabledEditor(document.getElementById('txt_Deliberacao'))
                             clearInterval(intervmoveItemDelibr)
                         }
                         else{ clearInterval(intervmoveItemDelibr) }
