@@ -443,7 +443,9 @@ dataTableConfig.prototype.changeEventInput = function () {
                         nowInp.disabled = true;
                     } 
                     inps['txt_Justificativa'].disabled = false
-                    inps['txt_Justificativa'].value = itenPauta['txt_Justificativa']; inps['txt_Justificativa'].style.color = 'black'; 
+                    inps['txt_Justificativa'].value = itenPauta['txt_Justificativa']; inps['txt_Justificativa'].style.color = 'black';
+                    console.log(myEditor)
+                    myEditor.setDataInput(document.getElementById('txt_Deliberacao'))
                 }else if(15 == assrAp){
                     document.getElementById('Delibr').style.display = 'block';
                     iten.getElementsByTagName('button')[0].disabled = false;
@@ -453,6 +455,8 @@ dataTableConfig.prototype.changeEventInput = function () {
                         nowInp.disabled = false;
                     } 
                     inps['txt_Justificativa'].value = itenPauta['txt_Justificativa']; inps['txt_Justificativa'].style.color = 'black'; 
+                    console.log(myEditor)
+                    myEditor.setDataInput(document.getElementById('txt_Deliberacao'))
                 }else if(26 == assrAp){
                     for(let i = 0; i < inps.length; i++){
                         let nowInp = inps[arrNamesIt[i]]
@@ -469,6 +473,9 @@ dataTableConfig.prototype.changeEventInput = function () {
                     }
                     document.getElementById('Delibr').style.display = 'block'
                     iten.getElementsByTagName('button')[0].disabled = true 
+                    console.log(myEditor)
+                    myEditor.setDataInput(document.getElementById('txt_Deliberacao'))
+                    myEditor.disabledEditor(document.getElementById('txt_Deliberacao'))
                 }else{
                     document.getElementById('Delibr').style.display = 'none'
                     iten.getElementsByTagName('button')[0].disabled = true 
