@@ -68,11 +68,36 @@ function updatePDF(){
     var finTxt = document.getElementById('txt_FinDelibr').value 
     var tblIn = 0;
 
-    var tblIn = '<div style="border:solid windowtext 1.0pt; padding:7.0pt 4.0pt 1.0pt 4.0pt; margin-left:0cm; margin-right:-8.85pt">'+
+    /*'<div style="border:solid windowtext 1.0pt; padding:7.0pt 4.0pt 1.0pt 4.0pt; margin-left:0cm; margin-right:-8.85pt">'+
         '<p align="center" style="border:none; border-bottom:.5pt solid windowtext; margin-bottom:0cm; text-align:center; padding:0cm; padding-bottom:1.0pt"><span style="line-height:normal"><span style="text-autospace:none"><b><span style="font-size:12.0pt">20ª REUNI&Atilde;O ORDIN&Aacute;RIA DIREX/AM 2023</span></b></span></span></p>'+
         '<p align="center" style="border:none; border-bottom:.5pt solid windowtext; margin-bottom:0cm; text-align:center; padding:0cm; padding-top:1.0pt; padding-bottom:1.0pt"><span style="line-height:normal"><span style="text-autospace:none"><b><span style="font-size:12.0pt">Manaus, 15 de maio de 2023</span></b></span></span></p>'+
         '<p style="border:none; margin-bottom:0cm; padding:0cm; padding-top:1.0pt"><span style="line-height:normal"><span style="tab-stops:center 233.85pt right 467.75pt"><span style="text-autospace:none"><b><span style="font-size:12.0pt">                                                              DELIBERAÇÕES</span></b></span></span></span></p>'+
-    '</div>'
+    '</div>'*/
+    var tblIn = '<div style="border:solid windowtext 1.0pt;  margin-left:0px;" >'+
+    '<p align="center" style="border:none; border-bottom:.5pt solid windowtext; margin-bottom:0cm; text-align:center; padding:0cm; padding-bottom:1.0pt">'+
+       '<span style="">'+
+            '<span style="text-autospace:none">'+
+               '<b><span style="font-size:12.0pt">20ª REUNI&Atilde;O ORDIN&Aacute;RIA DIREX/AM 2023</span></b>'+
+            '</span>'+
+        '</span>'+
+    '</p>'+
+    '<p align="center" style="border-bottom:.5pt solid windowtext; margin-bottom:0cm; text-align:center; padding:0cm; padding-top:1.0pt; padding-bottom:1.0pt">'+
+        '<span style="line-height:normal">'+
+            '<span style="text-autospace:none">'+
+                '<b><span style="font-size:12.0pt">Manaus, 15 de maio de 2023</span></b>'+
+            '</span>'+
+        '</span>'+
+    '</p>'+
+    '<p align="center" style="border:none; margin-bottom:0cm; padding:0cm; ">'+
+        '<span style="line-height:normal">'+
+            '<span style="tab-stops:center 233.85pt right 467.75pt">'+
+                '<span style="text-autospace:none">'+
+                    '<b><span style="font-size:12.0pt">DELIBERA&Ccedil;&Otilde;ES</span></b>'+
+                '</span>'+
+            '</span>'+
+        '</span>'+
+    '</p>'+
+'</div>'
 
     var tblIn = tblIn + iniTxt;
     tblIn = tblIn + finTxt;
@@ -82,9 +107,10 @@ function updatePDF(){
         margin: 5,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { 
-                    scale: 2,
+                    scale: 5,
+                    width: 800
         },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', precision: 50 }
     };
 
     html2pdf().set(opt).from(tblIn).save(); 
