@@ -193,13 +193,14 @@ function updatePDF(){
     
     var opt = {
         filename: 'myfile.pdf',
+        pagebreak: { mode: 'avoid-all' },
         margin: 5,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { 
                     scale: 5,
                     width: 800
         },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', precision: 50 }
+        jsPDF: { unit: 'mm', format: 'government-letter', orientation: 'portrait', precision: 50 }
     };
 
     html2pdf().set(opt).from(objPdf).save(); 
