@@ -110,9 +110,12 @@ function updatePDF(){
         c1 = DatasetFactory.createConstraint("hdn_dir_vinc", "%Pool:Role:DISUP%" , "%Pool:Role:DISUP%",  ConstraintType.MUST, true); 
         c2 = DatasetFactory.createConstraint("hdn_dir_vinc", "%Pool:Role:DITEC%" , "%Pool:Role:DITEC%",  ConstraintType.MUST, true); 
         c3 = DatasetFactory.createConstraint("hdn_dir_vinc", "%Pool:Role:DIRAF%" , "%Pool:Role:DIRAF%",  ConstraintType.MUST, true); 
-        cnst1 = new Array(c1)
-        cnst2 = new Array(c2)
-        cnst3 = new Array(c3)
+
+        cStts = DatasetFactory.createConstraint("hdn_aprvAssr", 26 , 26,  ConstraintType.MUST, true); 
+
+        cnst1 = new Array(c1, cStts)
+        cnst2 = new Array(c2, cStts)
+        cnst3 = new Array(c3, cStts)
         itnsDISUP = DatasetFactory.getDataset('Pauta DIREX', null, cnst1, null).values;
         itnsDITEC = DatasetFactory.getDataset('Pauta DIREX', null, cnst2, null).values;
         itnsDIRAF = DatasetFactory.getDataset('Pauta DIREX', null, cnst3, null).values;
@@ -170,7 +173,7 @@ function updatePDF(){
             dirImedVinc = itnDirNow[j]["hdn_dir_vinc"].split(':')[2]
             if(dirImed != dirImedVinc){
                 dirImed = dirImedVinc;
-                objPdf = objPdf + '<p style="margin-top:0cm; margin-right:-8.85pt; margin-bottom:0cm; margin-left:0cm; text-align:justify">'+
+                objPdf = objPdf + '<p style="margin-top:0.6cm; margin-right:-8.85pt; margin-bottom:0.6cm; margin-left:0cm; text-align:justify">'+
                 '<span style="line-height:normal">'+
                     '<span style="text-autospace:none">'+
                         '<b><u><span style="font-size:12.0pt">PAUTA '+dirImed+': </span></u></b>'+
