@@ -136,14 +136,14 @@ function updatePDF(){
     var objPdf = '<div style="border:solid windowtext 1.0pt;  margin-left:0px;" >'+
         '<p align="center" style="border:none; border-bottom:.5pt solid windowtext; margin-bottom:0cm; text-align:center; padding:0cm; padding-bottom:1.0pt">'+
         '<span style="">'+
-                '<span style="text-autospace:none">'+
+                '<span >'+//style="text-autospace:none"
                 '<b><span style="font-size:12.0pt">20ª REUNI&Atilde;O ORDIN&Aacute;RIA DIREX/AM '+dtPDF[0]+'</span></b>'+
                 '</span>'+
             '</span>'+
         '</p>'+
         '<p align="center" style="border-bottom:.5pt solid windowtext; margin-bottom:0cm; text-align:center; padding:0cm; padding-top:1.0pt; padding-bottom:1.0pt">'+
             '<span style="line-height:normal">'+
-                '<span style="text-autospace:none">'+
+                '<span >'+//style="text-autospace:none"
                     '<b><span style="font-size:12.0pt">Manaus, '+dtPDF[2]+' de '+MonthStr[MonthIn]+' de '+dtPDF[0]+'</span></b>'+
                 '</span>'+
             '</span>'+
@@ -151,7 +151,7 @@ function updatePDF(){
         '<p align="center" style="border:none; margin-bottom:0cm; padding:0cm; ">'+
             '<span style="line-height:normal">'+
                 '<span style="tab-stops:center 233.85pt right 467.75pt">'+
-                    '<span style="text-autospace:none">'+
+                    '<span >'+//style="text-autospace:none"
                         '<b><span style="font-size:12.0pt">DELIBERA&Ccedil;&Otilde;ES</span></b>'+
                     '</span>'+
                 '</span>'+
@@ -160,9 +160,9 @@ function updatePDF(){
     '</div>'
 
     var objPdf = objPdf + iniTxt;
-    objPdf = objPdf + '<p align="center" style="margin-top:0cm; margin-right:-8.85pt; margin-bottom:0cm; margin-left:0cm; text-align:center">'+
+    objPdf = objPdf + '<p align="center" style="margin-top:0cm; margin-bottom:0cm; margin-left:0cm; text-align:center">'+
                 '<span style="line-height:normal">'+
-                    '<span style="text-autospace:none">'+
+                    '<span >'+//style="text-autospace:none"
                         '<b><u><span style="font-size:12.0pt">PROPOSI&Ccedil;&Otilde;ES:</span></u></b>'+
                     '</span></span></p>' 
                     
@@ -170,29 +170,32 @@ function updatePDF(){
         itnDirNow = arrItns_Dir[i];
         dirImed = 0;
         for(j = 0; j < itnDirNow.length; j++){
+            numIten = j + 1
             dirImedVinc = itnDirNow[j]["hdn_dir_vinc"].split(':')[2]
             if(dirImed != dirImedVinc){
                 dirImed = dirImedVinc;
-                objPdf = objPdf + '<p style="margin-top:0.6cm; margin-right:-8.85pt; margin-bottom:0.6cm; margin-left:0cm; text-align:justify">'+
+                objPdf = objPdf + '<p style="margin-top:0.6cm; margin-bottom:0.6cm; text-align:justify">'+
                 '<span style="line-height:normal">'+
-                    '<span style="text-autospace:none">'+
-                        '<b><u><span style="font-size:12.0pt">PAUTA '+dirImed+': </span></u></b>'+
+                    '<span >'+//style="text-autospace:none"
+                        '<b><u><span style="font-size:100%">PAUTA '+dirImed+': </span></u></b>'+
                     '</span>'+
                 '</span>'+
                 '</p>'
             }
+            ///dlbr_now = '<div style="margin-left:0.6cm;">'+itnDirNow[j]["txt_Deliberacao"]+'</div>';
+            objPdf = objPdf + '<p style="margin-top:0.6cm;">'+ numIten + '.' +'</p>';
             dlbr_now = itnDirNow[j]["txt_Deliberacao"];
             objPdf = objPdf + dlbr_now;
         }
     }
 
 
-    objPdf = objPdf + finTxt;
-    objPdf = objPdf + '<p align="center" style="margin-bottom:0cm; text-align:center"><span style="line-height:10%"><b><span style="font-size:12.0pt">Ananda Carvalho Normando Pess&ocirc;a</span></b></span></p>'+
+    objPdf = objPdf + '<p style="margin-top:0.6cm; margin-bottom:1cm; text-align:justify">'+finTxt+'</p>';
+    objPdf = objPdf + '<p align="center" style="text-align:center"><span style="line-height:10%"><b><span style="font-size:12.0pt">Ananda Carvalho Normando Pess&ocirc;a</span></b></span></p>'+
     '<p align="center" style="margin-bottom:0cm; text-align:center"><span style="line-height:normal"><span style="tab-stops:center 0.0pt 0.0pt"><span style="font-size:12.0pt">Diretora Superintendente</span></span></span></p>'+
     '<p style="text-align:justify;line-height:normal"><span style="line-height:normal"><span style="font-size:12.0pt"><span style="line-height:normal"></span></span></span></p>'+
     '<p align="center" style="margin-bottom:0cm; text-align:center"><span style="line-height:10%"><span style="tab-stops:center 108.0pt 360.0pt"><b><span style="font-size:12.0pt">   Lamisse Said da Silva Cavalcanti            Adrianne Antony Gon&ccedil;alves</span></b></span></span></p>'+
-    '<p align="center" style="margin-bottom:0cm; text-align:center"><span style="line-height:normal"><span style="tab-stops:center 108.0pt 360.0pt"><span style="font-size:12.0pt">                    Diretora T&eacute;cnica                        Diretora Administrativa Financeira</span></span></span></p>'
+    '<p align="center" style="text-align:center"><span style="line-height:normal"><span style="tab-stops:center 108.0pt 360.0pt"><span style="font-size:12.0pt">                    Diretora T&eacute;cnica                        Diretora Administrativa Financeira</span></span></span></p>'
     
     var opt = {
         filename: 'myfile.pdf',
@@ -201,7 +204,7 @@ function updatePDF(){
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { 
                     scale: 5,
-                    width: 800
+                    width: 850
         },
         jsPDF: { unit: 'mm', format: 'government-letter', orientation: 'portrait', precision: 50 }
     };
