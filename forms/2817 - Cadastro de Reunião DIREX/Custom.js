@@ -6,6 +6,27 @@ function setDataset(){
 function setValueInpDelibr() {
     document.getElementById('txt_IniDelibr').value = 'Aos cinco dias do mês de dezembro de 2022, às 10h, reuniu-se a Diretoria Executiva do SEBRAE no Amazonas, de forma virtual, com a participação das Diretoras Lamisse Said da Silva Cavalcanti – Diretora Superintendente, Adrianne Antony Gonçalves – Diretora Técnica e Ananda Carvalho Normando Pessôa – Diretora Administrativa e Financeira para deliberarem os seguintes assuntos:'
     document.getElementById('txt_FinDelibr').value = 'A reunião foi encerrada às 11h30, ficando acordado entre as Diretoras a realização da 46ª Reunião Ordinária DIREX 2022 no dia 05/12/2022, conforme previsto em calendário.'
+    var ds_mat_ger_pdf  = colleague
+    var ds_und_ger_pdf  = dsc_Unidades
+    for(var i = 0;i<ds_mat_ger_pdf.values.length;i++){
+        if(mat == ds_mat_ger_pdf.values[i]['colleaguePK.colleagueId']){
+            var und = ds_mat_ger_pdf.values[i]['groupId'];
+            console.log(und)
+            for(var j=0;j<ds_und_ger_pdf.values.length;j++){
+                if(und == ds_und_ger_pdf.values[j]['AntigaSigla']){
+                    console.log("%Pool:Role:"+ds_und_ger_pdf.values[j]['Sigla']+"%")
+                    dirImed = ds_und_ger_pdf.values[j]['Sigla'];
+                    if(ds_und_ger_pdf.values[j]['Sigla'] == 'ATIC'){
+                        dirImed = "DISUP";
+                    }else{
+                        dirImed = ds_und_ger_pdf.values[j]['Sigla'];
+                    }
+                }
+            }
+        }
+    }
+    console.log(document.getElementById('txt_Info'+dirImed))
+    document.getElementById('txt_Info'+dirImed).parentElement.parentElement.style.display = 'block';
 }window.addEventListener('load',setValueInpDelibr)
 
 function definePainelEnabled(){

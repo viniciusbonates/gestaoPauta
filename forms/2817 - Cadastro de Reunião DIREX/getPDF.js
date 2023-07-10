@@ -5,7 +5,7 @@ function determineEditor(){
     arrElemtsTrigger.push(getData);
     arrElemtsTrigger.push(btn1);
     this.buttonReference = arrElemtsTrigger;
-    this.inpIn = ['txt_IniDelibr', 'txt_FinDelibr', 'txt_Deliberacao', 'txt_Justificativa'];
+    this.inpIn = ['txt_IniDelibr', 'txt_FinDelibr', 'txt_Deliberacao', 'txt_Justificativa', 'txt_InfoDISUP', 'txt_InfoDIRAF', 'txt_InfoDITEC'];
     this.arrEdits = [];
     this.setRichEditor();
     this.setFuncbutton();
@@ -71,9 +71,17 @@ determineEditor.prototype.setRichEditor = function () {
 function initEditor(){ myEditor = new determineEditor(); }
 window.addEventListener('load', initEditor)
 
+var myToast =  function (tp, title) {
+    FLUIGC.toast({
+        title: title,   //'Ação realizada com sucesso!',
+        message: '',
+        type: tp        //success, danger, info and warning.
+        });
+}
 
 function updatePDF(){
     document.scrollingElement.scrollTop = 0
+    var state = window.parentOBJ.ECM.workflowView.sequence
     var iniTxt = document.getElementById('txt_IniDelibr').value;
     var finTxt = document.getElementById('txt_FinDelibr').value;
     var objPdf = 0;
@@ -84,132 +92,148 @@ function updatePDF(){
     var dirImed         = 0;
     var mat             = window.parent.params.taskUserId;
     var arrItns_Dir 	= []
-    if(atvd == 8){
-        for(var i = 0;i<ds_mat_ger_pdf.values.length;i++){
-            if(mat == ds_mat_ger_pdf.values[i]['colleaguePK.colleagueId']){
-                var und = ds_mat_ger_pdf.values[i]['groupId'];
-                console.log(und)
-                for(var j=0;j<ds_und_ger_pdf.values.length;j++){
-                    if(und == ds_und_ger_pdf.values[j]['AntigaSigla']){
-                        console.log("%Pool:Role:"+ds_und_ger_pdf.values[j]['Sigla']+"%")
-                        dirImed = ds_und_ger_pdf.values[j]['Sigla'];
-                        if(ds_und_ger_pdf.values[j]['Sigla'] == 'ATIC'){
-                            matDir = "%Pool:Role:DISUP%";
-                        }else{
-                            matDir = "%Pool:Role:"+ds_und_ger_pdf.values[j]['Sigla']+"%";
+    if(state == 8 || state == 10){
+        if(atvd == 8){
+            for(var i = 0;i<ds_mat_ger_pdf.values.length;i++){
+                if(mat == ds_mat_ger_pdf.values[i]['colleaguePK.colleagueId']){
+                    var und = ds_mat_ger_pdf.values[i]['groupId'];
+                    console.log(und)
+                    for(var j=0;j<ds_und_ger_pdf.values.length;j++){
+                        if(und == ds_und_ger_pdf.values[j]['AntigaSigla']){
+                            console.log("%Pool:Role:"+ds_und_ger_pdf.values[j]['Sigla']+"%")
+                            dirImed = ds_und_ger_pdf.values[j]['Sigla'];
+                            if(ds_und_ger_pdf.values[j]['Sigla'] == 'ATIC'){
+                                matDir = "%Pool:Role:DISUP%";
+                            }else{
+                                matDir = "%Pool:Role:"+ds_und_ger_pdf.values[j]['Sigla']+"%";
+                            }
                         }
                     }
                 }
             }
+            c1 = DatasetFactory.createConstraint("hdn_dir_vinc", matDir , matDir,  ConstraintType.MUST, true); 
+            cnst = new Array(c1);
+            itns = DatasetFactory.getDataset('Pauta DIREX', null, cnst, null).values;
+            arrItns_Dir.push(itns)
+        }else{
+            c1 = DatasetFactory.createConstraint("hdn_dir_vinc", "%Pool:Role:DISUP%" , "%Pool:Role:DISUP%",  ConstraintType.MUST, true); 
+            c2 = DatasetFactory.createConstraint("hdn_dir_vinc", "%Pool:Role:DITEC%" , "%Pool:Role:DITEC%",  ConstraintType.MUST, true); 
+            c3 = DatasetFactory.createConstraint("hdn_dir_vinc", "%Pool:Role:DIRAF%" , "%Pool:Role:DIRAF%",  ConstraintType.MUST, true); 
+
+            cStts = DatasetFactory.createConstraint("hdn_aprvAssr", 26 , 26,  ConstraintType.MUST, true); 
+
+            cnst1 = new Array(c1, cStts)
+            cnst2 = new Array(c2, cStts)
+            cnst3 = new Array(c3, cStts)
+            itnsDISUP = DatasetFactory.getDataset('Pauta DIREX', null, cnst1, null).values;
+            itnsDITEC = DatasetFactory.getDataset('Pauta DIREX', null, cnst2, null).values;
+            itnsDIRAF = DatasetFactory.getDataset('Pauta DIREX', null, cnst3, null).values;
+            if(itnsDISUP.length != 0){ arrItns_Dir.push(itnsDISUP) }
+            if(itnsDITEC.length != 0){ arrItns_Dir.push(itnsDITEC) }
+            if(itnsDIRAF.length != 0){ arrItns_Dir.push(itnsDIRAF) }
         }
-        c1 = DatasetFactory.createConstraint("hdn_dir_vinc", matDir , matDir,  ConstraintType.MUST, true); 
-        cnst = new Array(c1);
-        itns = DatasetFactory.getDataset('Pauta DIREX', null, cnst, null).values;
-        arrItns_Dir.push(itns)
-    }else{
-        c1 = DatasetFactory.createConstraint("hdn_dir_vinc", "%Pool:Role:DISUP%" , "%Pool:Role:DISUP%",  ConstraintType.MUST, true); 
-        c2 = DatasetFactory.createConstraint("hdn_dir_vinc", "%Pool:Role:DITEC%" , "%Pool:Role:DITEC%",  ConstraintType.MUST, true); 
-        c3 = DatasetFactory.createConstraint("hdn_dir_vinc", "%Pool:Role:DIRAF%" , "%Pool:Role:DIRAF%",  ConstraintType.MUST, true); 
 
-        cStts = DatasetFactory.createConstraint("hdn_aprvAssr", 26 , 26,  ConstraintType.MUST, true); 
+        console.log(arrItns_Dir)
 
-        cnst1 = new Array(c1, cStts)
-        cnst2 = new Array(c2, cStts)
-        cnst3 = new Array(c3, cStts)
-        itnsDISUP = DatasetFactory.getDataset('Pauta DIREX', null, cnst1, null).values;
-        itnsDITEC = DatasetFactory.getDataset('Pauta DIREX', null, cnst2, null).values;
-        itnsDIRAF = DatasetFactory.getDataset('Pauta DIREX', null, cnst3, null).values;
-        if(itnsDISUP.length != 0){ arrItns_Dir.push(itnsDISUP) }
-        if(itnsDITEC.length != 0){ arrItns_Dir.push(itnsDITEC) }
-        if(itnsDIRAF.length != 0){ arrItns_Dir.push(itnsDIRAF) }
-    }
+        var dt_slc 	= document.getElementById('dt_dataInicio').value;
+        let dtPDF   = dt_slc;
+        dtPDF = dtPDF.split('-');
+        MonthIn     = new Date().getMonth() 
+        MonthStr    = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'] 
+            
 
-    console.log(arrItns_Dir)
-
-    var dt_slc 	= document.getElementById('dt_dataInicio').value;
-    let dtPDF   = dt_slc;
-    dtPDF = dtPDF.split('-');
-    MonthIn     = new Date().getMonth() 
-    MonthStr    = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'] 
-        
-
-    var objPdf = '<div style="border:solid windowtext 1.0pt;  margin-left:0px;" >'+
-        '<p align="center" style="border:none; border-bottom:.5pt solid windowtext; margin-bottom:0cm; text-align:center; padding:0cm; padding-bottom:1.0pt">'+
-        '<span style="">'+
-                '<span >'+//style="text-autospace:none"
-                '<b><span style="font-size:12.0pt">20ª REUNI&Atilde;O ORDIN&Aacute;RIA DIREX/AM '+dtPDF[0]+'</span></b>'+
-                '</span>'+
-            '</span>'+
-        '</p>'+
-        '<p align="center" style="border-bottom:.5pt solid windowtext; margin-bottom:0cm; text-align:center; padding:0cm; padding-top:1.0pt; padding-bottom:1.0pt">'+
-            '<span style="line-height:normal">'+
-                '<span >'+//style="text-autospace:none"
-                    '<b><span style="font-size:12.0pt">Manaus, '+dtPDF[2]+' de '+MonthStr[MonthIn]+' de '+dtPDF[0]+'</span></b>'+
-                '</span>'+
-            '</span>'+
-        '</p>'+
-        '<p align="center" style="border:none; margin-bottom:0cm; padding:0cm; ">'+
-            '<span style="line-height:normal">'+
-                '<span style="tab-stops:center 233.85pt right 467.75pt">'+
+        var objPdf = '<div style="border:solid windowtext 1.0pt;  margin-left:0px;" >'+
+            '<p align="center" style="border:none; border-bottom:.5pt solid windowtext; margin-bottom:0cm; text-align:center; padding:0cm; padding-bottom:1.0pt">'+
+            '<span style="">'+
                     '<span >'+//style="text-autospace:none"
-                        '<b><span style="font-size:12.0pt">DELIBERA&Ccedil;&Otilde;ES</span></b>'+
+                    '<b><span style="font-size:12.0pt">20ª REUNI&Atilde;O ORDIN&Aacute;RIA DIREX/AM '+dtPDF[0]+'</span></b>'+
                     '</span>'+
                 '</span>'+
-            '</span>'+
-        '</p>'+
-    '</div>'
-
-    var objPdf = objPdf + iniTxt;
-    objPdf = objPdf + '<p align="center" style="margin-top:0cm; margin-bottom:0cm; margin-left:0cm; text-align:center">'+
+            '</p>'+
+            '<p align="center" style="border-bottom:.5pt solid windowtext; margin-bottom:0cm; text-align:center; padding:0cm; padding-top:1.0pt; padding-bottom:1.0pt">'+
                 '<span style="line-height:normal">'+
                     '<span >'+//style="text-autospace:none"
-                        '<b><u><span style="font-size:12.0pt">PROPOSI&Ccedil;&Otilde;ES:</span></u></b>'+
-                    '</span></span></p>' 
-                    
-    for(i = 0; i < arrItns_Dir.length; i++){
-        itnDirNow = arrItns_Dir[i];
-        dirImed = 0;
-        for(j = 0; j < itnDirNow.length; j++){
-            numIten = j + 1
-            dirImedVinc = itnDirNow[j]["hdn_dir_vinc"].split(':')[2]
-            if(dirImed != dirImedVinc){
-                dirImed = dirImedVinc;
-                objPdf = objPdf + '<p style="margin-top:0.6cm; margin-bottom:0.6cm; text-align:justify">'+
-                '<span style="line-height:normal">'+
-                    '<span >'+//style="text-autospace:none"
-                        '<b><u><span style="font-size:100%">PAUTA '+dirImed+': </span></u></b>'+
+                        '<b><span style="font-size:12.0pt">Manaus, '+dtPDF[2]+' de '+MonthStr[MonthIn]+' de '+dtPDF[0]+'</span></b>'+
                     '</span>'+
                 '</span>'+
-                '</p>'
+            '</p>'+
+            '<p align="center" style="border:none; margin-bottom:0cm; padding:0cm; ">'+
+                '<span style="line-height:normal">'+
+                    '<span style="tab-stops:center 233.85pt right 467.75pt">'+
+                        '<span >'+//style="text-autospace:none"
+                            '<b><span style="font-size:12.0pt">DELIBERA&Ccedil;&Otilde;ES</span></b>'+
+                        '</span>'+
+                    '</span>'+
+                '</span>'+
+            '</p>'+
+        '</div>'
+
+        var objPdf = objPdf + iniTxt;
+        objPdf = objPdf + '<p align="center" style="margin-top:0cm; margin-bottom:0cm; margin-left:0cm; text-align:center">'+
+                    '<span style="line-height:normal">'+
+                        '<span >'+//style="text-autospace:none"
+                            '<b><u><span style="font-size:12.0pt">PROPOSI&Ccedil;&Otilde;ES:</span></u></b>'+
+                        '</span></span></p>' 
+                        
+        for(i = 0; i < arrItns_Dir.length; i++){
+            itnDirNow = arrItns_Dir[i];
+            dirImed = 0;
+            for(j = 0; j < itnDirNow.length; j++){
+                numIten = j + 1
+                dirImedVinc = itnDirNow[j]["hdn_dir_vinc"].split(':')[2]
+                if(dirImed != dirImedVinc){
+                    dirImed = dirImedVinc;
+                    objPdf = objPdf + '<p style="margin-top:0.6cm; margin-bottom:0.6cm; text-align:justify">'+
+                    '<span style="line-height:normal">'+
+                        '<span >'+//style="text-autospace:none"
+                            '<b><u><span style="font-size:100%">PAUTA '+dirImed+': </span></u></b>'+
+                        '</span>'+
+                    '</span>'+
+                    '</p>'
+                }
+                ///dlbr_now = '<div style="margin-left:0.6cm;">'+itnDirNow[j]["txt_Deliberacao"]+'</div>';
+                objPdf = objPdf + '<p style="margin-top:0.6cm;"><b>'+ numIten + '.' +'</b></p>';
+                dlbr_now = itnDirNow[j]["txt_Deliberacao"];
+                objPdf = objPdf + dlbr_now;
+
+                if(j == itnDirNow.length - 1){
+                    objPdf = objPdf + '<p style="margin-top:0.6cm; margin-bottom:0.6cm; text-align:justify">'+
+                    '<span style="line-height:normal">'+
+                        '<span >'+
+                            '<b><u><span style="font-size:100%">INFORMES '+dirImed+': </span></u></b>'+
+                        '</span>'+
+                    '</span>'+
+                    '</p>' 
+
+                    objPdf = objPdf + document.getElementById('txt_Info'+dirImed).value;
+                }
             }
-            ///dlbr_now = '<div style="margin-left:0.6cm;">'+itnDirNow[j]["txt_Deliberacao"]+'</div>';
-            objPdf = objPdf + '<p style="margin-top:0.6cm;">'+ numIten + '.' +'</p>';
-            dlbr_now = itnDirNow[j]["txt_Deliberacao"];
-            objPdf = objPdf + dlbr_now;
         }
-    }
 
 
-    objPdf = objPdf + '<p style="margin-top:0.6cm; margin-bottom:1cm; text-align:justify">'+finTxt+'</p>';
-    objPdf = objPdf + '<p align="center" style="text-align:center"><span style="line-height:10%"><b><span style="font-size:12.0pt">Ananda Carvalho Normando Pess&ocirc;a</span></b></span></p>'+
-    '<p align="center" style="margin-bottom:0cm; text-align:center"><span style="line-height:normal"><span style="tab-stops:center 0.0pt 0.0pt"><span style="font-size:12.0pt">Diretora Superintendente</span></span></span></p>'+
-    '<p style="text-align:justify;line-height:normal"><span style="line-height:normal"><span style="font-size:12.0pt"><span style="line-height:normal"></span></span></span></p>'+
-    '<p align="center" style="margin-bottom:0cm; text-align:center"><span style="line-height:10%"><span style="tab-stops:center 108.0pt 360.0pt"><b><span style="font-size:12.0pt">   Lamisse Said da Silva Cavalcanti            Adrianne Antony Gon&ccedil;alves</span></b></span></span></p>'+
-    '<p align="center" style="text-align:center"><span style="line-height:normal"><span style="tab-stops:center 108.0pt 360.0pt"><span style="font-size:12.0pt">                    Diretora T&eacute;cnica                        Diretora Administrativa Financeira</span></span></span></p>'
-    
-    var opt = {
-        filename: 'myfile.pdf',
-        pagebreak: { mode: 'avoid-all' },
-        margin: 5,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { 
-                    scale: 5,
-                    width: 850
-        },
-        jsPDF: { unit: 'mm', format: 'government-letter', orientation: 'portrait', precision: 50 }
-    };
+        objPdf = objPdf + '<p style="margin-top:0.6cm; margin-bottom:1cm; text-align:justify">'+finTxt+'</p>';
+        objPdf = objPdf + '<p align="center" style="text-align:center"><span style="line-height:10%"><b><span style="font-size:12.0pt">Ananda Carvalho Normando Pess&ocirc;a</span></b></span></p>'+
+        '<p align="center" style="margin-bottom:0cm; text-align:center"><span style="line-height:normal"><span style="tab-stops:center 0.0pt 0.0pt"><span style="font-size:12.0pt">Diretora Superintendente</span></span></span></p>'+
+        '<p style="text-align:justify;line-height:normal"><span style="line-height:normal"><span style="font-size:12.0pt"><span style="line-height:normal"></span></span></span></p>'+
+        '<p align="center" style="margin-bottom:0cm; text-align:center"><span style="line-height:10%"><span style="tab-stops:center 108.0pt 360.0pt"><b><span style="font-size:12.0pt">   Lamisse Said da Silva Cavalcanti            Adrianne Antony Gon&ccedil;alves</span></b></span></span></p>'+
+        '<p align="center" style="text-align:center"><span style="line-height:normal"><span style="tab-stops:center 108.0pt 360.0pt"><span style="font-size:12.0pt">                    Diretora T&eacute;cnica                        Diretora Administrativa Financeira</span></span></span></p>'
+        
+        var opt = {
+            filename: 'myfile.pdf',
+            pagebreak: { mode: 'avoid-all' },
+            margin: 5,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { 
+                        scale: 5,
+                        width: 800
+            },
+            jsPDF: { unit: 'mm', format: 'government-letter', orientation: 'portrait', precision: 50 }
+        };
 
-    html2pdf().set(opt).from(objPdf).save(); 
+        html2pdf().set(opt).from(objPdf).save();
+    }else{
+        myToast('warning', 'Não a itens de Pauta para Gerar o Arquivo');
+    } 
 }
 function getPDF () { document.getElementById('getData').addEventListener('click', function () { updatePDF() } ) }
 window.addEventListener('load', getPDF)
