@@ -750,64 +750,52 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
     let itens = this.itensBuilt;
     let TableFluig  = this.TableFluig();
     async function hipotesis2() { 
-        var intervdisabledOptions = setInterval(defineOptions, 200);
-        console.log(intervdisabledOptions)
-        function defineOptions(){
-            console.log('******************** aqui')
-            let order           = window.res['order'];
-            let res             = window.res['responseIs'];
-            if(order == 2 && res != {}){
-                let err                 = window.res['err'];
-                if(err != undefined && err.indexOf('Error') == -1){
-                    if(res != undefined && res != '' && res != {}){
-                        let itens = dataTablemi.itensBuilt;
-                        drpDwn  = itens['btnDrpDwn1'];
-                        let lis = drpDwn.getElementsByTagName('li');
-                        let dataSelected = document.getElementById('dataSelected').value;
-                        let States      = [11, 9, 15, 16]
-                        let refEnabled  = [
-                            [11],
-                            [9, 15, 16],
-                            [9, 15, 16],
-                            [9, 15, 16],
-                        ] 
-                        let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", dataSelected, dataSelected, ConstraintType.MUST); 
-                        let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
-                        if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
-                            let assrAp = itenPauta['hdn_aprvAssr'];
-                            for(let k = 0; k < lis.length; k++){ 
-                                if(lis[k].hasAttribute("hidden")){
-                                    lis[k].removeAttribute("hidden");
-                                }
-                            }
-                            if(assrAp == 26){
-                                drpDwnIn = itens['btnDrpDwn1'];
-                                drpDwnIn.getElementsByTagName('button')[0].disabled = true
-                            }
-                            for(let i = 0; i < States.length; i++){
-                                if(States[i] == assrAp){
-                                    let itns = refEnabled[i];
-                                    for(let l = 0; l < lis.length; l++){
-                                        for(let j = 0; j < itns.length; j++){
-                                            if(itns[j] == lis[l].value){
-                                                lis[l].hidden = 'true';
-                                            }
-                                        }
-                                    }
-                                    
-                                }
-                            }
-                            window.res['numIndx'] = 2;
-                            window.res['arrIndx'].push('1');
-                            orderMethodsMi.indexFunctionsX();
-
-                            clearInterval(intervdisabledOptions);  
-                        }else{ clearInterval(intervdisabledOptions); }
+        await defineOptions();
+        async function defineOptions(){
+            let itens = dataTablemi.itensBuilt;
+            drpDwn  = itens['btnDrpDwn1'];
+            let lis = drpDwn.getElementsByTagName('li');
+            let dataSelected = document.getElementById('dataSelected').value;
+            let States      = [11, 9, 15, 16]
+            let refEnabled  = [
+                [11],
+                [9, 15, 16],
+                [9, 15, 16],
+                [9, 15, 16],
+            ] 
+            let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", dataSelected, dataSelected, ConstraintType.MUST); 
+            let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
+            if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
+                let assrAp = itenPauta['hdn_aprvAssr'];
+                for(let k = 0; k < lis.length; k++){ 
+                    if(lis[k].hasAttribute("hidden")){
+                        lis[k].removeAttribute("hidden");
                     }
-                }else{ clearInterval(intervdisabledOptions); }
-            }else{ clearInterval(intervdisabledOptions); }
+                }
+                if(assrAp == 26){
+                    drpDwnIn = itens['btnDrpDwn1'];
+                    drpDwnIn.getElementsByTagName('button')[0].disabled = true
+                }
+                for(let i = 0; i < States.length; i++){
+                    if(States[i] == assrAp){
+                        let itns = refEnabled[i];
+                        for(let l = 0; l < lis.length; l++){
+                            for(let j = 0; j < itns.length; j++){
+                                if(itns[j] == lis[l].value){
+                                    lis[l].hidden = 'true';
+                                }
+                            }
+                        }
+                        
+                    }
+                }
+                window.res['numIndx'] = 2;
+                window.res['arrIndx'].push('1');
+                await orderMethodsMi.indexFunctionsX(); 
+            }
         }
     }
+               
     let itenBuitFunc = {
         fnc: [
                 {'fncName': 'moveItem'},
@@ -1075,20 +1063,26 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                 
                 arrNamesInp = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao', 'txt_Justificativa'];
                 ckY = 0
+                for(y = 0; y < inpsPanel.length; y++){
+                    inpNow = inpsPanel[arrNamesInp[y]];
+                    console.log(inpNow)
+                    if(inpNow.value == '' || inpNow.value == 0 || inpNow.value == '<html>\n<head>\n\t<title></title>\n</head>\n<body></body>\n</html>\n'){
+                        ckY++
+                        console.log(ckY)
+                    }
+                }
                 for(i = 0; i < inpsPanel.length; i++){
                     inpNow = inpsPanel[arrNamesInp[i]]
                     if(inpNow != undefined){
-                        if(inpNow.value == '' && inpNow.value == 0){
-                            ckY++
-                        }
                         if(ckY == 0 && statusDelibr != statusAssr){    
                             await dataTablemi.APImethods.movePOST(inpValue, statusDelibr, DISUP, DIRAF, DITEC, Delibr, Justf); 
-                            var intervmoveItemDelibr = setInterval(defineStatusDelibr, 200);
-                            console.log(intervmoveItemDelibr)
+                            //var intervmoveItemDelibr = setInterval(defineStatusDelibr, 200);
+                            await defineStatusDelibr()
+                            //console.log(intervmoveItemDelibr)
                         }else{ itensTools.myToast('info', 'É necessário preencher todos os campos de Deliberação!'); break; }
                     }                
                 }
-                function defineStatusDelibr () { 
+                async function defineStatusDelibr () { 
                     let colItens = dataTablemi.TableFluig().getCol('Aprov.Assessoria');
                     let colValue = dataTablemi.TableFluig().getCol('N° Solicitação');
                     var itenBtn1 = dataTablemi.itensBuilt['btn1'];
@@ -1098,7 +1092,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                     let stateNow        = itenPauta['hdn_aprvAssr'];
                     console.log(ckX)
                     if(ckX != 3){ ckX++ }
-                    else{ clearInterval(intervmoveItemDelibr) }
+                    //else{ clearInterval(intervmoveItemDelibr) }
                     if(stateNow == statusDelibr){
                         for(let i = 0; i < colValue.length; i++){
                             if(inpValue == colValue[i].innerText){
@@ -1127,18 +1121,19 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                             } 
                             window.res['numIndx'] = 1;
                             window.res['arrIndx'].push('1');
-                            orderMethodsMi.indexFunctionsX();
+                            await orderMethodsMi.indexFunctionsX();
                             itensTools.myToast('success', 'Ação realizada com sucesso!');
-                            console.log('*************************** succs')
+                            /*console.log('*************************** succs')
                             console.log(intervmoveItemDelibr)
                             console.log(myEditor)
+                            */
                             myEditor.setDataInput(document.getElementById('txt_Justificativa'))
                             myEditor.disabledEditor(document.getElementById('txt_Justificativa'))
                             myEditor.setDataInput(document.getElementById('txt_Deliberacao'))
                             myEditor.disabledEditor(document.getElementById('txt_Deliberacao'))
-                            clearInterval(intervmoveItemDelibr)
+                            //clearInterval(intervmoveItemDelibr)
                         }
-                        else{ clearInterval(intervmoveItemDelibr) }
+                        //else{ clearInterval(intervmoveItemDelibr) }
                     }
                 }
             }
