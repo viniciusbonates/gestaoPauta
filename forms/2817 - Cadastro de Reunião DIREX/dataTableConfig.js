@@ -549,7 +549,7 @@ dataTableConfig.prototype.changeEventTable = function () {
             var secIntervalOpenItem = setInterval(pushOpenItem, 20)
             console.log(secIntervalOpenItem)
             function pushOpenItem(){    
-                var url = "http://mywebhm.am.sebrae.com.br/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID="
+                var url = "https://mywebhm.am.sebrae.com.br/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID="
                 var arrColumnsRender = ['N° Solicitação', 'Data Solicitação', 'Nome Solicitante', 'Unidade', 'Assunto', 'Justificativa']
                 var indexLink = []
                 var divIn = document.getElementsByClassName('row fs-no-margin')
@@ -657,7 +657,7 @@ dataTableConfig.prototype.loadEventTable = function () {
                 {'fncName': 'enabledRefresh', 'metodhParam': 'load'}
         ],
         openItem: function () {
-            var url = "http://mywebhm.am.sebrae.com.br/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID="
+            var url = "https://mywebhm.am.sebrae.com.br/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID="
             var arrColumnsRender = ['N° Solicitação', 'Data Solicitação', 'Nome Solicitante', 'Unidade', 'Assunto', 'Justificativa']
             var indexLink = []
             var divIn       = document.getElementsByClassName('row fs-no-margin')
