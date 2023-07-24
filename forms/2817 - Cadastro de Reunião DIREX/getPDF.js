@@ -141,8 +141,8 @@ function updatePDF(){
         MonthIn     = new Date().getMonth() 
         MonthStr    = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'] 
             
-
-        var objPdf = '<div style="border:solid windowtext 1.0pt;  margin-left:0px;" >'+
+        var objPdf  = '<div style="border: 3px solid black; padding: 20px;">' 
+        objPdf      = objPdf + '<div style="border:solid windowtext 1.0pt;  margin-left:0px;" >'+
             '<p align="center" style="border:none; border-bottom:.5pt solid windowtext; margin-bottom:0cm; text-align:center; padding:0cm; padding-bottom:1.0pt">'+
             '<span style="">'+
                     '<span >'+//style="text-autospace:none"
@@ -192,8 +192,8 @@ function updatePDF(){
                     '</p>'
                 }
                 ///dlbr_now = '<div style="margin-left:0.6cm;">'+itnDirNow[j]["txt_Deliberacao"]+'</div>';
-                objPdf = objPdf + '<p style="margin-top:0.6cm;"><b>'+ numIten + '.' +'</b></p>';
-                dlbr_now = itnDirNow[j]["txt_Deliberacao"];
+                dlbr_now = '<div style="margin-left:0.6cm;"><b>'+ numIten + '.  </b>'+itnDirNow[j]["txt_Deliberacao"]+'</div><br></br>';
+                //dlbr_now = itnDirNow[j]["txt_Deliberacao"];
                 objPdf = objPdf + dlbr_now;
 
                 if(j == itnDirNow.length - 1){
@@ -205,32 +205,69 @@ function updatePDF(){
                     '</span>'+
                     '</p>' 
 
-                    objPdf = objPdf + document.getElementById('txt_Info'+dirImed).value;
+                    objPdf = objPdf + '<div style="margin-left:0.6cm;">'+ document.getElementById('txt_Info'+dirImed).value +'</div>';
                 }
             }
         }
 
 
         objPdf = objPdf + '<p style="margin-top:0.6cm; margin-bottom:1cm; text-align:justify">'+finTxt+'</p>';
+        objPdf = objPdf + '<br></br><br></br>'
         objPdf = objPdf + '<p align="center" style="text-align:center"><span style="line-height:10%"><b><span style="font-size:12.0pt">Ananda Carvalho Normando Pess&ocirc;a</span></b></span></p>'+
-        '<p align="center" style="margin-bottom:0cm; text-align:center"><span style="line-height:normal"><span style="tab-stops:center 0.0pt 0.0pt"><span style="font-size:12.0pt">Diretora Superintendente</span></span></span></p>'+
+        '<p align="center" style="margin-bottom:0cm; text-align:center"><span style="line-height:normal"><span style="tab-stops:center 0.0pt 0.0pt"><span style="font-size:12.0pt">Diretora Superintendente</span></span></span></p><br></br>'+
         '<p style="text-align:justify;line-height:normal"><span style="line-height:normal"><span style="font-size:12.0pt"><span style="line-height:normal"></span></span></span></p>'+
         '<p align="center" style="margin-bottom:0cm; text-align:center"><span style="line-height:10%"><span style="tab-stops:center 108.0pt 360.0pt"><b><span style="font-size:12.0pt">   Lamisse Said da Silva Cavalcanti            Adrianne Antony Gon&ccedil;alves</span></b></span></span></p>'+
         '<p align="center" style="text-align:center"><span style="line-height:normal"><span style="tab-stops:center 108.0pt 360.0pt"><span style="font-size:12.0pt">                    Diretora T&eacute;cnica                        Diretora Administrativa Financeira</span></span></span></p>'
         
-        var opt = {
+        objPdf = objPdf + '</div>'
+
+        var win = window.open("#","_blank");
+        elements =  win.document.write(objPdf)
+        win.document.write( '<html>' );
+        
+                  win.document.write(   '<head>');
+        
+                  win.document.write(      '<link rel="stylesheet" href="styles.css"' );
+        
+                  win.document.write(      '<link rel="shortcut icon" href="./assets/images/suframa.ico">' );
+        
+                  win.document.write(      '<link rel="stylesheet" href="assets/styles/main.css">' );
+        
+                  win.document.write(   '</head>');
+        
+                  win.document.write(   '<title> RELATORIO: '+ this._tituloPPB+'</title>');
+        
+                  win.document.write(   '<body onload="window.print();">');
+        
+                  win.document.write(   elements  );
+        
+                  win.document.write(   '<script>'+
+                                    'setTimeout(() => {'+
+                                        'window.print();'+
+                                    '}, 1200);'+
+                                    '</script> ');
+                  
+        
+                  win.document.write(   '</body>');
+        
+                  win.document.write(  '</html>');
+
+
+        /*var opt = {
             filename: 'myfile.pdf',
             pagebreak: { mode: 'avoid-all' },
-            margin: 5,
+            margin: 7,
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { 
                         scale: 5,
-                        width: 800
+                        width: 797
             },
-            jsPDF: { unit: 'mm', format: 'government-letter', orientation: 'portrait', precision: 50 }
+            jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait', precision: 1 }
         };
 
         html2pdf().set(opt).from(objPdf).save();
+    */
+
     }else{
         myToast('warning', 'Não a itens de Pauta para Gerar o Arquivo');
     } 
