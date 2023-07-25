@@ -192,7 +192,15 @@ function updatePDF(){
                     '</p>'
                 }
                 ///dlbr_now = '<div style="margin-left:0.6cm;">'+itnDirNow[j]["txt_Deliberacao"]+'</div>';
-                dlbr_now = '<div style="margin-left:0.6cm;"><b>'+ numIten + '.  </b>'+itnDirNow[j]["txt_Deliberacao"]+'</div><br></br>';
+                var txtDlbr = itnDirNow[j]["txt_Deliberacao"];
+                
+                let result = txtDlbr.search("body");
+                let result2 = txtDlbr.search("/body");
+                fnl = result2 - 1
+                inc = result + 5
+                bd = txtDlbr.substring(inc, fnl)        // Obtem apenas o BODY do HTML salvo no input
+                
+                dlbr_now = '<div style="margin-left:0.6cm;"><b>'+ numIten + '.  </b>'+bd+'</div><br></br>'; //<div style="margin-left:0.6cm;">'
                 //dlbr_now = itnDirNow[j]["txt_Deliberacao"];
                 objPdf = objPdf + dlbr_now;
 
