@@ -84,6 +84,7 @@ function updatePDF(){
     var state = window.parentOBJ.ECM.workflowView.sequence
     var iniTxt = document.getElementById('txt_IniDelibr').value;
     var finTxt = document.getElementById('txt_FinDelibr').value;
+    var dt_slc 	= document.getElementById('dt_dataInicio').value;
     var objPdf = 0;
 
     var ds_mat_ger_pdf  = colleague
@@ -111,8 +112,11 @@ function updatePDF(){
                     }
                 }
             }
+            formatDte = dt_slc.split('-')[2]+'/'+dt_slc.split('-')[1]+'/'+dt_slc.split('-')[0]
+            console.log(formatDte)
             c1 = DatasetFactory.createConstraint("hdn_dir_vinc", matDir , matDir,  ConstraintType.MUST, true); 
-            cnst = new Array(c1);
+            c2 = DatasetFactory.createConstraint("dataSelected", formatDte , formatDte,  ConstraintType.MUST, true); 
+            cnst = new Array(c1, c2);
             itns = DatasetFactory.getDataset('Pauta DIREX', null, cnst, null).values;
             arrItns_Dir.push(itns)
         }else{
@@ -135,7 +139,7 @@ function updatePDF(){
 
         console.log(arrItns_Dir)
 
-        var dt_slc 	= document.getElementById('dt_dataInicio').value;
+        
         let dtPDF   = dt_slc;
         dtPDF = dtPDF.split('-');
         MonthIn     = new Date().getMonth() 
@@ -199,7 +203,7 @@ function updatePDF(){
                 fnl = result2 - 1
                 inc = result + 5
                 bd = txtDlbr.substring(inc, fnl)        // Obtem apenas o BODY do HTML salvo no input
-                
+                console.log(bd)
                 dlbr_now = '<div style="margin-left:0.6cm;"><b>'+ numIten + '.  </b>'+bd+'</div><br></br>'; //<div style="margin-left:0.6cm;">'
                 //dlbr_now = itnDirNow[j]["txt_Deliberacao"];
                 objPdf = objPdf + dlbr_now;
