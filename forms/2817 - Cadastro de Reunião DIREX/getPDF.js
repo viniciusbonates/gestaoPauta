@@ -116,7 +116,9 @@ function updatePDF(){
             console.log(formatDte)
             c1 = DatasetFactory.createConstraint("hdn_dir_vinc", matDir , matDir,  ConstraintType.MUST, true); 
             c2 = DatasetFactory.createConstraint("dataSelected", formatDte , formatDte,  ConstraintType.MUST, true); 
-            cnst = new Array(c1, c2);
+            c3 = DatasetFactory.createConstraint("hdn_aprvAssr", 26 , 26,  ConstraintType.MUST, true); 
+            
+            cnst = new Array(c1, c2, c3);
             itns = DatasetFactory.getDataset('Pauta DIREX', null, cnst, null).values;
             arrItns_Dir.push(itns)
         }else{
