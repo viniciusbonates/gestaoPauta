@@ -972,6 +972,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                 let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
                 let statusAssr      = itenPauta['hdn_aprvAssr'];
 
+                myEditor.setDataInput(document.getElementById('txt_Justificativa'))
                 Justf = inpsPanel['txt_Justificativa'].value;
                 arrNamesInp = ['txt_Justificativa'];
                 
@@ -1055,6 +1056,8 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                 let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
                 let statusAssr      = itenPauta['hdn_aprvAssr'];
 
+                myEditor.setDataInput(document.getElementById('txt_Justificativa'))
+                
                 DISUP = inpsPanel['slc_DISUP_vt'].value;
                 DIRAF = inpsPanel['slc_DIRAF_vt'].value;
                 DITEC = inpsPanel['slc_DITEC_vt'].value;
