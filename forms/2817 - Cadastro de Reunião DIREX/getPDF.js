@@ -199,6 +199,28 @@ function updatePDF(){
                 }
                 ///dlbr_now = '<div style="margin-left:0.6cm;">'+itnDirNow[j]["txt_Deliberacao"]+'</div>';
                 var txtDlbr = itnDirNow[j]["txt_Deliberacao"];
+                var txtJstf = itnDirNow[j]["txt_Justificativa"];
+
+                var resultadoDelbr = ''
+                var DIRAF = itnDirNow[j]["hdn_DIRAF_vt"];
+                var DISUP = itnDirNow[j]["hdn_DISUP_vt"];
+                var DITEC = itnDirNow[j]["hdn_DITEC_vt"];
+                arrVts = [DIRAF, DISUP, DITEC]
+                vt1 = 0;
+                vt2 = 0;
+                if(DIRAF == 1 && DISUP == 1 && DITEC == 1){ resultadoDelbr = 'Aprovado por unanimidade.' }
+                else{
+                    for(t = 0; t < arrVts.length; t++){
+                        ckVt = arrVts[t]
+                        if(ckVt == 1){
+                            vt1++
+                        }else{vt2++ }
+                    }
+                    if(vt1 > vt2){ resultadoDelbr = 'Aprovado.' }
+                    else{ resultadoDelbr = 'Reprovado.' }
+                }
+              
+              
                 
                 let result = txtDlbr.search("body");
                 let result2 = txtDlbr.search("/body");
@@ -206,7 +228,10 @@ function updatePDF(){
                 inc = result + 5
                 bd = txtDlbr.substring(inc, fnl)        // Obtem apenas o BODY do HTML salvo no input
                 console.log(bd)
-                dlbr_now = '<div style="margin-left:0.6cm;"><b>'+ numIten + '.  </b>'+bd+'</div><br></br>'; //<div style="margin-left:0.6cm;">'
+                dlbr_now = '<div style="margin-left:0.6cm;"><b>'+ numIten + '.  </b>'+bd+
+                '<b><u><span style="font-size:12.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif">Justificativa:</span></span></u></b>'+txtJstf+ //<div style="margin-left:0.6cm;">'
+                '<span style="line-height:150%"><b><span style="font-size:12.0pt"><span style="line-height:150%"><span style="color:black">Deliberação:</span></span></span></b>'+
+                '<span style="font-size:12.0pt"><span style="line-height:150%"><span style="color:black"> <b>'+resultadoDelbr+'</b></span></span></span></span>'+'</div><br></br>';
                 //dlbr_now = itnDirNow[j]["txt_Deliberacao"];
                 objPdf = objPdf + dlbr_now;
 
