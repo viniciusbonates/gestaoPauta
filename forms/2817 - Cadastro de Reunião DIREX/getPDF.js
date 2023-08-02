@@ -103,7 +103,7 @@ function updatePDF(){
                         if(und == ds_und_ger_pdf.values[j]['AntigaSigla']){
                             console.log("%Pool:Role:"+ds_und_ger_pdf.values[j]['Sigla']+"%")
                             dirImed = ds_und_ger_pdf.values[j]['Sigla'];
-                            if(ds_und_ger_pdf.values[j]['Sigla'] == 'ATIC'){
+                            if(ds_und_ger_pdf.values[j]['Sigla'] == 'NTIC'){
                                 matDir = "%Pool:Role:DISUP%";
                             }else{
                                 matDir = "%Pool:Role:"+ds_und_ger_pdf.values[j]['Sigla']+"%";
