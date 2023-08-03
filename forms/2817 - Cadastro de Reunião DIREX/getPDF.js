@@ -94,7 +94,8 @@ function updatePDF(){
     var mat             = window.parent.params.taskUserId;
     var arrItns_Dir 	= []
     if(state == 8 || state == 10){
-        if(atvd == 8){
+        console.log(state)
+        if(state == 8){
             for(var i = 0;i<ds_mat_ger_pdf.values.length;i++){
                 if(mat == ds_mat_ger_pdf.values[i]['colleaguePK.colleagueId']){
                     var und = ds_mat_ger_pdf.values[i]['groupId'];
@@ -266,15 +267,15 @@ function updatePDF(){
         
                   win.document.write(   '<head>');
         
-                  win.document.write(      '<link rel="stylesheet" href="styles.css"' );
+                  //win.document.write(      '<link rel="stylesheet" href="styles.css"' );
         
-                  win.document.write(      '<link rel="shortcut icon" href="./assets/images/suframa.ico">' );
+                  //win.document.write(      '<link rel="shortcut icon" href="./assets/images/suframa.ico">' );
         
-                  win.document.write(      '<link rel="stylesheet" href="assets/styles/main.css">' );
+                  //win.document.write(      '<link rel="stylesheet" href="assets/styles/main.css">' );
         
                   win.document.write(   '</head>');
         
-                  win.document.write(   '<title> RELATORIO: '+ this._tituloPPB+'</title>');
+                  //win.document.write(   '<title> RELATORIO: '+ this._tituloPPB+'</title>');
         
                   win.document.write(   '<body onload="window.print();">');
         

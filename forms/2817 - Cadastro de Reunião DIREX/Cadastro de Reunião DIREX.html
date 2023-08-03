@@ -34,6 +34,7 @@
 	<script type="text/javascript" src="html2pdf/jspdf.umd.min.js"></script>
 
 	<script type="text/javascript" src="Custom.js"></script> 
+	<script type="text/javascript" src="sinalAlerta.js"></script>
 	<script type="text/javascript" src="getPDF.js"></script>
 
 	<style type="text/css">
@@ -46,7 +47,9 @@
 <body>
 <div class="fluig-style-guide">
 <form name="form" role="form">
-
+		<div class="paragraph-is-required system-message-information alert alert-info" role="alert" style="display: none">
+			<p>Outras <b>Assessorias estão com Deliberações pendentes</b>, é necessário <b>Transferir</b> a solicitação.</p> 
+	   </div>
 		<input type="hidden" name="hd_numSuperior" id="hd_numSuperior">
 
 		<div class="panel panel-primary" id="CadastroReuniaoDIREX">
@@ -724,6 +727,7 @@ var testDatatable = {
 				btnNav.btnNext = btnNow;
 			}
 		}
+		
 		if(press == null || press == undefined){
 			this.definePage(obj, dirr, itens); 
 			this.reload(myTable, obj.arrItens, objFunc);
@@ -734,7 +738,6 @@ var testDatatable = {
 		if(obj.pageAtual != 0){
 			btnNav.btnPrev.disabled = false
 		}
-		//if(obj.indIten == itens.length || obj.arrItensAll.length == itens.length)
 		if(obj.indIten == itens.length){
 			btnNav.btnNext.disabled = true
 		}

@@ -393,7 +393,7 @@ dataTableConfig.prototype.changeEventInput = function () {
             let States      = [11, 9, 15, 16]
             let refEnabled  = [
                 [11],
-                [9, 15, 16],
+                [9, ,11, 15, 16],
                 [9, 15, 16],
                 [9, 15, 16]
             ] 
@@ -759,7 +759,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
             let States      = [11, 9, 15, 16]
             let refEnabled  = [
                 [11],
-                [9, 15, 16],
+                [9, ,11, 15, 16],
                 [9, 15, 16],
                 [9, 15, 16],
             ] 
@@ -789,6 +789,9 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                         
                     }
                 }
+                console.log('**************************************************************************************************')
+                console.log(myAlertAll)
+                myAlertAll.fixedMoviment(myAlertAll.validate())  
                 window.res['numIndx'] = 2;
                 window.res['arrIndx'].push('1');
                 await orderMethodsMi.indexFunctionsX(); 
@@ -1149,6 +1152,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                 dtIn        = dataTablemi.tableReference.dataInit;
                 objFuncIn   = dataTablemi.tableReference.objFunc;
                 dataTablemi.tableReference.reload(tbIn, dtIn, objFuncIn); 
+                myAlertAll.fixedMoviment(myAlertAll.validate())  
             }); 
         }
     }
