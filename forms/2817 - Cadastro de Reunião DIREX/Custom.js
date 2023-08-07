@@ -4,8 +4,14 @@ function setDataset(){
 }window.addEventListener('load', setDataset)
 
 function setValueInpDelibr() {
-    document.getElementById('txt_IniDelibr').value = 'Aos cinco dias do mês de dezembro de 2022, às 10h, reuniu-se a Diretoria Executiva do SEBRAE no Amazonas, de forma virtual, com a participação das Diretoras Lamisse Said da Silva Cavalcanti – Diretora Superintendente, Adrianne Antony Gonçalves – Diretora Técnica e Ananda Carvalho Normando Pessôa – Diretora Administrativa e Financeira para deliberarem os seguintes assuntos:'
-    document.getElementById('txt_FinDelibr').value = 'A reunião foi encerrada às 11h30, ficando acordado entre as Diretoras a realização da 46ª Reunião Ordinária DIREX 2022 no dia 05/12/2022, conforme previsto em calendário.'
+    let stateNow = window.parentOBJ.ECM.workflowView.stateDescription;
+    if(stateNow == 4 || tateNow == 0){
+        document.getElementById('txt_IniDelibr').value = 'Aos cinco dias do mês de dezembro de 2022, às 10h, reuniu-se a Diretoria Executiva do SEBRAE no Amazonas, de forma virtual, com a participação das Diretoras Lamisse Said da Silva Cavalcanti – Diretora Superintendente, Adrianne Antony Gonçalves – Diretora Técnica e Ananda Carvalho Normando Pessôa – Diretora Administrativa e Financeira para deliberarem os seguintes assuntos:'
+        document.getElementById('txt_FinDelibr').value = 'A reunião foi encerrada às 11h30, ficando acordado entre as Diretoras a realização da 46ª Reunião Ordinária DIREX 2022 no dia 05/12/2022, conforme previsto em calendário.'
+        document.getElementById('txt_tituloReuniao').value = '20ª REUNIÃO ORDINÁRIA DIREX/AM '
+    }
+
+    
     var ds_mat_ger_pdf  = colleague
     var ds_und_ger_pdf  = dsc_Unidades
     for(var i = 0;i<ds_mat_ger_pdf.values.length;i++){
@@ -16,8 +22,8 @@ function setValueInpDelibr() {
                 if(und == ds_und_ger_pdf.values[j]['AntigaSigla']){
                     console.log("%Pool:Role:"+ds_und_ger_pdf.values[j]['Sigla']+"%")
                     dirImed = ds_und_ger_pdf.values[j]['Sigla'];
-                    if(ds_und_ger_pdf.values[j]['Sigla'] == 'ATIC'){
-                        dirImed = "DISUP";
+                    if(ds_und_ger_pdf.values[j]['Sigla'] == 'NTIC'){
+                        dirImed = "DIRAF";
                     }else{
                         dirImed = ds_und_ger_pdf.values[j]['Sigla'];
                     }
@@ -34,7 +40,7 @@ function definePainelEnabled(){
     if(stateNow == 'Detalhes da Solicitação'){ document.getElementById('PainelControle').style.display = 'none'; }
 
     let stts = window.parent.ECM.workflowView.sequence
-    if(stts == 10){
+    if(stts == 10 || stts == 14){
         document.getElementById('PainelControle').style.display = 'none'
     }  
 }window.addEventListener('load', definePainelEnabled)

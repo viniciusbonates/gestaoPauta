@@ -154,7 +154,7 @@
 			</table>
 			</div>-->
 			<div class="row">
-				<div class="col-md-2">
+				<div class="col-md-1">
 				<!--<div class="pull-left">-->
 				<div class="form-group">
 					<label for="dt_dataInicio">Data da Reunião<span class="Obrigatorio"><strong>*</strong></span>:</label>
@@ -162,14 +162,21 @@
 				</div>
 				<!--</div>-->
 				</div>
-				<div class="col-md-2" style="display: none;">
-				<div class="pull-left">
+				<div class="col-md-2">
+			
 				<div class="form-group">
 					<label for="dt_datalimit">Data Limite para Inserção<span class="Obrigatorio"><strong>*</strong></span>:</label>
 					<input type="date" class="form-control" name="dt_datalimit" id="dt_datalimit">														
 				</div>
+			
+				</div>
+				<div class="col-md-3">
+				<div class="form-group">
+					<label for="txt_tituloReuniao">Titulo da Reunião<span class="Obrigatorio"><strong>*</strong></span>:</label>
+					<input type="text" class="form-control" name="txt_tituloReuniao" id="txt_tituloReuniao">														
 				</div>
 				</div>
+
 				<div class="col-md-2" style="display: none;">
 				<div class="custom-checkbox custom-checkbox-danger custom-checkbox-lg">
 					<p class="text-warning"><b>Selecionar essa opção em casos especificos.</b></p>
@@ -197,6 +204,7 @@
 					</div>
 				</div>
 				</div>
+			</div>
 				<div class="col-md-6" style="display: none">
 				<div class="form-group">
 					<label for="txt_InfoDISUP">Informes DISUP<span class="Obrigatorio"><strong>*</strong></span>:</label>
@@ -215,7 +223,7 @@
 					<textarea class="form-control" rows="3" name="txt_InfoDITEC" id="txt_InfoDITEC"></textarea>
 				</div>
 				</div>
-			</div>
+			
 			<div class="col-md-6">
 			<div class="form-group">
 				<label for="txt_IniDelibr">Início da Ata<span class="Obrigatorio"><strong>*</strong></span>:</label>
@@ -326,7 +334,7 @@ if(atvd == 8){
 				if(und == ds_und.values[j]['AntigaSigla']){
 					console.log("%Pool:Role:"+ds_und.values[j]['Sigla']+"%")
 					if(ds_und.values[j]['Sigla'] == 'NTIC'){
-						matDir = "%Pool:Role:DISUP%";
+						matDir = "%Pool:Role:DIRAF%";
 					}else{
 						matDir = "%Pool:Role:"+ds_und.values[j]['Sigla']+"%";
 					}

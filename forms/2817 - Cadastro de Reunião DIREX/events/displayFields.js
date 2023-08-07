@@ -12,6 +12,11 @@ function displayFields(form,customHTML){
                 form.setValue("dt_DataSolicita",data.format(new Date()));
         break;
 
+        case 14:
+            form.setValue("txt_NumProcess",NumProcesso);
+            form.setValue("cmb_NomeSolicita",usuario);
+        break;
+
         case 8:
             form.setValue("cmb_NomeSolicita",usuario);
         break;

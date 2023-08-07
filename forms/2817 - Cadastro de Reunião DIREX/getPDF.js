@@ -105,7 +105,7 @@ function updatePDF(){
                             console.log("%Pool:Role:"+ds_und_ger_pdf.values[j]['Sigla']+"%")
                             dirImed = ds_und_ger_pdf.values[j]['Sigla'];
                             if(ds_und_ger_pdf.values[j]['Sigla'] == 'NTIC'){
-                                matDir = "%Pool:Role:DISUP%";
+                                matDir = "%Pool:Role:DIRAF%";
                             }else{
                                 matDir = "%Pool:Role:"+ds_und_ger_pdf.values[j]['Sigla']+"%";
                             }
@@ -153,7 +153,7 @@ function updatePDF(){
             '<p align="center" style="border:none; border-bottom:.5pt solid windowtext; margin-bottom:0cm; text-align:center; padding:0cm; padding-bottom:1.0pt">'+
             '<span style="">'+
                     '<span >'+//style="text-autospace:none"
-                    '<b><span style="font-size:12.0pt">20ª REUNI&Atilde;O ORDIN&Aacute;RIA DIREX/AM '+dtPDF[0]+'</span></b>'+
+                    '<b><span style="font-size:12.0pt">'+document.getElementById('txt_tituloReuniao').value + dtPDF[0]+'</span></b>'+ //20ª REUNI&Atilde;O ORDIN&Aacute;RIA DIREX/AM '
                     '</span>'+
                 '</span>'+
             '</p>'+
