@@ -229,8 +229,8 @@ function updatePDF(){
                 inc = result + 5
                 bd = txtDlbr.substring(inc, fnl)        // Obtem apenas o BODY do HTML salvo no input
                 console.log(bd)
-                dlbr_now = '<div style="margin-left:0.6cm;"><b>'+ numIten + '.  </b>'+bd+
-                '<b><u><span style="font-size:12.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif">Justificativa:</span></span></u></b>'+txtJstf+ //<div style="margin-left:0.6cm;">'
+                dlbr_now = '<div style="margin-left:0.6cm;"><b>'+ numIten + '.  </b>'+bd+ '<br></br>'+
+                '<b><u><span style="font-size:12.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif">Justificativa:</span></span></u></b>'+txtJstf+'<br></br>'+ //<div style="margin-left:0.6cm;">'
                 '<span style="line-height:150%"><b><span style="font-size:12.0pt"><span style="line-height:150%"><span style="color:black">Deliberação:</span></span></span></b>'+
                 '<span style="font-size:12.0pt"><span style="line-height:150%"><span style="color:black"> <b>'+resultadoDelbr+'</b></span></span></span></span>'+'</div><br></br>';
                 //dlbr_now = itnDirNow[j]["txt_Deliberacao"];
