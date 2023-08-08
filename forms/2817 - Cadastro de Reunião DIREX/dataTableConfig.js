@@ -453,11 +453,18 @@ dataTableConfig.prototype.changeEventInput = function () {
                     document.getElementById('Delibr').style.display = 'block';
                     iten.getElementsByTagName('button')[0].disabled = false;
                     for(let i = 0; i < inps.length; i++){
-                        let nowInp = inps[arrNamesIt[i]];
-                        nowInp.value = '';
-                        nowInp.disabled = false;
-                    } 
-                    inps['txt_Justificativa'].value = itenPauta['txt_Justificativa']; inps['txt_Justificativa'].style.color = 'black'; 
+                        let nowInp = inps[arrNamesIt[i]]
+                        if(nowInp.tagName == 'SELECT'){
+                            for(let j = 0; j < nowInp.options.length; j++){
+                                if(nowInp.options[j].value == itenPauta[arrAlt[i]]){
+                                    nowInp.options[j].selected = true;
+                                    inps[arrNamesIt[i]].value = itenPauta[arrAlt[i]];
+                                }
+                            }
+                            nowInp.style.color = 'black';
+                            //nowInp.disabled = 'disabled';
+                        }else{  inps[arrNamesIt[i]].value = itenPauta[arrNamesIt[i]]; nowInp.style.color = 'black'; }
+                    }
                     console.log(myEditor)
                     myEditor.cleanEditor(document.getElementById('txt_Justificativa'))
                     myEditor.setDataInput(document.getElementById('txt_Justificativa'))
@@ -975,7 +982,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                 let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
                 let statusAssr      = itenPauta['hdn_aprvAssr'];
 
-                myEditor.setDataInput(document.getElementById('txt_Justificativa'))
+                myEditor.setDataInputsParams()
                 Justf = inpsPanel['txt_Justificativa'].value;
                 arrNamesInp = ['txt_Justificativa'];
                 
@@ -1059,7 +1066,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                 let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
                 let statusAssr      = itenPauta['hdn_aprvAssr'];
 
-                myEditor.setDataInput(document.getElementById('txt_Justificativa'))
+                myEditor.setDataInputsParams()
                 
                 DISUP = inpsPanel['slc_DISUP_vt'].value;
                 DIRAF = inpsPanel['slc_DIRAF_vt'].value;
