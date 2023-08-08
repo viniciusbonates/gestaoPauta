@@ -1,6 +1,11 @@
 function determineEditor(){
     arrElemtsTrigger = [];
     getData = document.getElementById('getData');
+    var buttons = window.parentOBJ.document.getElementsByTagName('button');
+    //var uls = window.parentOBJ.document.getElementsByTagName('a');
+    var lis = window.parentOBJ.document.getElementsByTagName('li');
+    this.arrEnv = [buttons, lis];
+    console.log(this.arrEnv)
     btn1 = document.getElementById('btn1').getElementsByTagName('button')[0];
     arrElemtsTrigger.push(getData);
     arrElemtsTrigger.push(btn1);
@@ -56,6 +61,25 @@ determineEditor.prototype.setFuncbutton = function () {
         }
     }else{
         document.getElementById(this.buttonReference).addEventListener('click', function () { myEditor.setDataInputsParams(); }) 
+    }
+    for(let z in this.arrEnv){
+        arrTargetNow = this.arrEnv[z]
+        for (y = 0; y < arrTargetNow.length; y++) {
+            console.log(arrTargetNow[y])
+            var btnSave = arrTargetNow[y].getAttribute('data-save');
+            var btn = arrTargetNow[y].getAttribute('data-send');
+           
+            console.log(y)
+            console.log(btnSave)
+            console.log(btn)
+            if (btn == '' ) {
+                arrTargetNow[y].addEventListener('click', function () { myEditor.setDataInputsParams(); });
+            }
+            if (btnSave == '') {
+                console.log(arrTargetNow[y])
+                arrTargetNow[y].addEventListener('click', function () { myEditor.setDataInputsParams(); });
+            }
+        }
     }
 }
 determineEditor.prototype.setRichEditor = function () {
@@ -127,11 +151,13 @@ function updatePDF(){
             c2 = DatasetFactory.createConstraint("hdn_dir_vinc", "%Pool:Role:DITEC%" , "%Pool:Role:DITEC%",  ConstraintType.MUST, true); 
             c3 = DatasetFactory.createConstraint("hdn_dir_vinc", "%Pool:Role:DIRAF%" , "%Pool:Role:DIRAF%",  ConstraintType.MUST, true); 
 
+            formatDte = dt_slc.split('-')[2]+'/'+dt_slc.split('-')[1]+'/'+dt_slc.split('-')[0]
+            c4 = DatasetFactory.createConstraint("dataSelected", formatDte , formatDte,  ConstraintType.MUST, true);
             cStts = DatasetFactory.createConstraint("hdn_aprvAssr", 26 , 26,  ConstraintType.MUST, true); 
 
-            cnst1 = new Array(c1, cStts)
-            cnst2 = new Array(c2, cStts)
-            cnst3 = new Array(c3, cStts)
+            cnst1 = new Array(c1, cStts, c4)
+            cnst2 = new Array(c2, cStts, c4)
+            cnst3 = new Array(c3, cStts, c4)
             itnsDISUP = DatasetFactory.getDataset('Pauta DIREX', null, cnst1, null).values;
             itnsDITEC = DatasetFactory.getDataset('Pauta DIREX', null, cnst2, null).values;
             itnsDIRAF = DatasetFactory.getDataset('Pauta DIREX', null, cnst3, null).values;
