@@ -54,21 +54,24 @@ alertAll.prototype.fixedMoviment = function (statusIn) {
 }
 
 alertAll.prototype.validate = function (){
-    var dt_slc 	= document.getElementById('dt_dataInicio').value;
-    formatDte   = dt_slc.split('-')[2]+'/'+dt_slc.split('-')[1]+'/'+dt_slc.split('-')[0]
-    c5          = DatasetFactory.createConstraint("dataSelected", formatDte , formatDte,  ConstraintType.MUST, true); 
-    cnst33      = new Array(c5)
-    dsForCheck  = DatasetFactory.getDataset('Pauta DIREX', null, cnst33, null).values;
-    sinalCkin   = 0;
-    for( i = 0; i < dsForCheck.length; i++){
-        inpHdnCk = dsForCheck[i].hdn_aprvAssr
-        console.log(inpHdnCk)
-        if(inpHdnCk != 26){
-            sinalCkin++
+    var dt_slc 	= document.getElementById('dt_dataInicio');
+    if(dt_slc != null && dt_slc != undefined && dt_slc != ''){
+        //dt_slc.value
+        formatDte   = dt_slc.value.split('-')[2]+'/'+dt_slc.value.split('-')[1]+'/'+dt_slc.value.split('-')[0]
+        c5          = DatasetFactory.createConstraint("dataSelected", formatDte , formatDte,  ConstraintType.MUST, true); 
+        cnst33      = new Array(c5)
+        dsForCheck  = DatasetFactory.getDataset('Pauta DIREX', null, cnst33, null).values;
+        sinalCkin   = 0;
+        for( i = 0; i < dsForCheck.length; i++){
+            inpHdnCk = dsForCheck[i].hdn_aprvAssr
+            console.log(inpHdnCk)
+            if(inpHdnCk != 26){
+                sinalCkin++
+            }
         }
-    }
-    if(this.Now != 4 && this.Now != 0 && sinalCkin != 0){
-        return 1
+        if(this.Now != 4 && this.Now != 0 && sinalCkin != 0){
+            return 1
+        }
     }
 }
 function intAlertAll(){ myAlertAll = new alertAll()}

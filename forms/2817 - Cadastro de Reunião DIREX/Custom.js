@@ -5,43 +5,62 @@ function setDataset(){
 
 function setValueInpDelibr() {
     let stateNow = window.parentOBJ.ECM.workflowView.sequence;
+    matDirIn = 0;
     if(stateNow == 4 || stateNow == 0){
         document.getElementById('txt_IniDelibr').value = 'Aos cinco dias do mês de dezembro de 2022, às 10h, reuniu-se a Diretoria Executiva do SEBRAE no Amazonas, de forma virtual, com a participação das Diretoras Lamisse Said da Silva Cavalcanti – Diretora Superintendente, Adrianne Antony Gonçalves – Diretora Técnica e Ananda Carvalho Normando Pessôa – Diretora Administrativa e Financeira para deliberarem os seguintes assuntos:'
         document.getElementById('txt_FinDelibr').value = 'A reunião foi encerrada às 11h30, ficando acordado entre as Diretoras a realização da 46ª Reunião Ordinária DIREX 2022 no dia 05/12/2022, conforme previsto em calendário.'
         document.getElementById('txt_tituloReuniao').value = '20ª REUNIÃO ORDINÁRIA DIREX/AM '
     }
 
-    
+    var mat             = window.parent.WCMAPI.userCode;
     var ds_mat_ger_pdf  = colleague
     var ds_und_ger_pdf  = dsc_Unidades
+    console.log(ds_mat_ger_pdf)
+    console.log(ds_und_ger_pdf)
+    console.log(mat)
     for(var i = 0;i<ds_mat_ger_pdf.values.length;i++){
+        //console.log('***************************************///////////////////////////////////////////')
+        //console.log(ds_und_ger_pdf)
         if(mat == ds_mat_ger_pdf.values[i]['colleaguePK.colleagueId']){
             var und = ds_mat_ger_pdf.values[i]['groupId'];
             console.log(und)
             for(var j=0;j<ds_und_ger_pdf.values.length;j++){
                 if(und == ds_und_ger_pdf.values[j]['AntigaSigla']){
                     console.log("%Pool:Role:"+ds_und_ger_pdf.values[j]['Sigla']+"%")
-                    dirImed = ds_und_ger_pdf.values[j]['Sigla'];
+                    matDirIn = ds_und_ger_pdf.values[j]['Sigla'];
                     if(ds_und_ger_pdf.values[j]['Sigla'] == 'NTIC'){
-                        dirImed = "DIRAF";
+                        matDirIn = "DIRAF";
                     }else{
-                        dirImed = ds_und_ger_pdf.values[j]['Sigla'];
+                        matDirIn = ds_und_ger_pdf.values[j]['Sigla'];
                     }
                 }
             }
         }
     }
-    console.log(document.getElementById('txt_Info'+dirImed))
-    document.getElementById('txt_Info'+dirImed).parentElement.parentElement.style.display = 'block';
+    if(matDirIn != 0){
+        console.log(document.getElementById('txt_Info'+matDirIn))
+        document.getElementById('txt_Info'+matDirIn).parentElement.parentElement.style.display = 'block';
+    }
 }window.addEventListener('load',setValueInpDelibr)
 
 function definePainelEnabled(){
+    console.log('************************************************        **********************************************')
+    console.log(matDirIn)
 /*  Depreciado ->
     let stateNow = window.parentOBJ.ECM.workflowView.stateDescription;
     if(stateNow == 'Detalhes da Solicitação'){ document.getElementById('PainelControle').style.display = 'none'; }
 */
     var ckInpStateDef = document.getElementById('txt_FinDelibr')
-    if(ckInpStateDef.tagName == 'SPAN'){
+    var ckIsmatDirIn = 0;
+    arrdirImed = ['DISUP', 'DIRAF', 'DITEC']
+    for(i = 0; i < arrdirImed.length; i++){
+        if(matDirIn == arrdirImed[i]){
+            ckIsmatDirIn++
+            console.log('************************************************        **********************************************')
+            console.log(ckIsmatDirIn)
+        }
+    }
+    if(ckInpStateDef.tagName == 'SPAN' && ckIsmatDirIn == 0){
         document.getElementById('DadosCadastro').innerHTML = '';
         document.getElementById('PainelControle').innerHTML = '';
     }

@@ -115,6 +115,13 @@ function dataTableConfig(){
     this.itensConfigs       = [configDropdowns, configButton, configButton1];//configButton                                 // Determina os itens criados
     this.orderSuper         = ["dataSelected", "btnDrpDwn1", "btn1", "btn2", "datatable-area-search"];//"btn1"              // Determina a ordem dos elementos no linha superior. Deve ser determinado da esquerda para direita indicando os elementos por 'id'. Ex: ['btn1', 'btnDrpDwn1', ...]
 
+    this.statesWorkflow     = {
+        Ajustes: 9,
+        AnaliseAssr: 11,
+        RealizaReuniao: 15,
+        DespachoDeliber: 26,
+        ItemDescartado: 16
+    }
     this.APImethods         = new orderMethods();                                                                           // se carregado pelo arquivo ServiceAPI: APImethods= window.orderMethodsMi. Construtor iniciado aqui.
     this.resAPI             = window.res
     this.initMyInterval     = true;
@@ -345,6 +352,7 @@ dataTableConfig.prototype.orderLineSuper = function (objConfig, itensConfigs, or
 }
 dataTableConfig.prototype.changeEventInput = function () {
     let itens       = this.itensBuilt;
+    let wrkflw      = this.statesWorkflow
     let objFunc = {
         fnc: ['formatDinamic', 'disabledOptions', 'enabledButton'],
         formatDinamic: function () {
@@ -390,18 +398,18 @@ dataTableConfig.prototype.changeEventInput = function () {
             drpDwn.getElementsByTagName('button')[0].disabled = false
             let lis = drpDwn.getElementsByTagName('li');
             let dataSelected = document.getElementById('dataSelected').value;
-            let States      = [11, 9, 15, 16]
+            let States      = [wrkflw.AnaliseAssr, wrkflw.Ajustes, wrkflw.RealizaReuniao, wrkflw.ItemDescartado]
             let refEnabled  = [
-                [11],
-                [9, ,11, 15, 16],
-                [9, 15, 16],
-                [9, 15, 16]
+                [wrkflw.AnaliseAssr],
+                [wrkflw.Ajustes, ,wrkflw.AnaliseAssr, wrkflw.RealizaReuniao, wrkflw.ItemDescartado],
+                [wrkflw.Ajustes, wrkflw.RealizaReuniao, wrkflw.ItemDescartado],
+                [wrkflw.Ajustes, wrkflw.RealizaReuniao, wrkflw.ItemDescartado]
             ] 
             let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", dataSelected, dataSelected, ConstraintType.MUST); 
             let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
             if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
                 let assrAp = itenPauta['hdn_aprvAssr'];
-                if (assrAp == 26){
+                if (assrAp == wrkflw.DespachoDeliber){
                     drpDwn.getElementsByTagName('button')[0].disabled = 'disabled'
                 } else {
                     for(let k = 0; k < lis.length; k++){ 
@@ -434,7 +442,7 @@ dataTableConfig.prototype.changeEventInput = function () {
                 let inps = document.getElementsByClassName('inpDlbr')
                 arrNamesIt  = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao', 'txt_Justificativa']
                 arrAlt      = ['hdn_DIRAF_vt', 'hdn_DISUP_vt', 'hdn_DITEC_vt']
-                if(11 == assrAp){
+                if(wrkflw.AnaliseAssr == assrAp){
                     document.getElementById('Delibr').style.display = 'block';
                     iten.getElementsByTagName('button')[0].disabled = true;
                     for(let i = 0; i < inps.length; i++){
@@ -449,7 +457,7 @@ dataTableConfig.prototype.changeEventInput = function () {
                     myEditor.setDataInput(document.getElementById('txt_Justificativa'))
                     myEditor.setDataInput(document.getElementById('txt_Deliberacao'))
                     myEditor.disabledEditor(document.getElementById('txt_Deliberacao'))
-                }else if(15 == assrAp){
+                }else if(wrkflw.RealizaReuniao == assrAp){
                     document.getElementById('Delibr').style.display = 'block';
                     iten.getElementsByTagName('button')[0].disabled = false;
                     for(let i = 0; i < inps.length; i++){
@@ -459,6 +467,7 @@ dataTableConfig.prototype.changeEventInput = function () {
                                 if(nowInp.options[j].value == itenPauta[arrAlt[i]]){
                                     nowInp.options[j].selected = true;
                                     inps[arrNamesIt[i]].value = itenPauta[arrAlt[i]];
+                                    nowInp.disabled = false;
                                 }
                             }
                             nowInp.style.color = 'black';
@@ -470,7 +479,7 @@ dataTableConfig.prototype.changeEventInput = function () {
                     myEditor.setDataInput(document.getElementById('txt_Justificativa'))
                     myEditor.cleanEditor(document.getElementById('txt_Deliberacao'))
                     myEditor.setDataInput(document.getElementById('txt_Deliberacao'))
-                }else if(26 == assrAp){
+                }else if(wrkflw.DespachoDeliber == assrAp){
                     for(let i = 0; i < inps.length; i++){
                         let nowInp = inps[arrNamesIt[i]]
                         if(nowInp.tagName == 'SELECT'){
@@ -506,6 +515,7 @@ dataTableConfig.prototype.changeEventInput = function () {
 dataTableConfig.prototype.changeEventTable = function () {
     var TableFluig          = this.TableFluig();
     var constructIcon       = this.constructIcon(); 
+    let wrkflw      = this.statesWorkflow
     let itens = this.itensBuilt;
     let objFunc = {
         fnc: [
@@ -599,32 +609,32 @@ dataTableConfig.prototype.changeEventTable = function () {
                     if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
                         console.log(itenPauta)
                         let assrAp = itenPauta['hdn_aprvAssr'];
-                        if(assrAp == 15){
+                        if(assrAp == wrkflw.RealizaReuniao){
                             let iconChecked     = constructIcon.construct('flaticon flaticon-file-check icon-md');
                             col[i].appendChild(iconChecked);
                             let icn = col[i].innerHTML;                                     //Descrição
                             icn = icn +' <b>Aprovado</b>';
                             col[i].innerHTML = icn;
-                        }else if(assrAp == 11){
+                        }else if(assrAp == wrkflw.AnaliseAssr){
                             let iconEmpty       = constructIcon.construct('fluigicon fluigicon-file-bell-empty icon-md');
                             col[i].appendChild(iconEmpty);
                             let icn = col[i].innerHTML;                                     //Descrição
                             icn = icn +' <b>Análise</b>';
                             col[i].innerHTML = icn;
-                        }else if(assrAp == 16){
+                        }else if(assrAp == wrkflw.ItemDescartado){
                             let iconEmpty       = constructIcon.construct('flaticon flaticon-file-delete icon-md');
                             col[i].appendChild(iconEmpty);
                             let icn = col[i].innerHTML;                                     //Descrição
                             icn = icn +' <b>Excluído</b>';
                             col[i].innerHTML = icn;    
-                        }else if(assrAp == 9){
+                        }else if(assrAp == wrkflw.Ajustes){
                             let iconEmpty       = constructIcon.construct('fluigicon fluigicon-fileedit icon-md');
                             col[i].appendChild(iconEmpty);
                             let icn = col[i].innerHTML;                                     //Descrição
                             icn = icn +' <b>Ajuste</b>';
                             col[i].innerHTML = icn;    
                         }
-                        else if(assrAp == 26){
+                        else if(assrAp == wrkflw.DespachoDeliber){
                             let iconEmpty       = constructIcon.construct('fluigicon fluigicon-checked icon-md');
                             col[i].appendChild(iconEmpty);    
                             let icn = col[i].innerHTML;                                     //Descrição
@@ -656,6 +666,7 @@ dataTableConfig.prototype.loadEventTable = function () {
     var TableFluig          = this.TableFluig();
     var constructIcon       = this.constructIcon(); 
     let itens = this.itensBuilt;
+    let wrkflw      = this.statesWorkflow
     console.log(itens)
     let objFuncload = {
         fnc: [
@@ -696,32 +707,32 @@ dataTableConfig.prototype.loadEventTable = function () {
                     //console.log(itenPauta)
                     let assrAp = itenPauta['hdn_aprvAssr'];
 
-                    if(assrAp == 15){
+                    if(assrAp == wrkflw.RealizaReuniao){
                         let iconChecked     = constructIcon.construct('flaticon flaticon-file-check icon-md');
                         col[i].appendChild(iconChecked);
                         let icn = col[i].innerHTML;                                     //Descrição
                         icn = icn +' <b>Aprovado</b>';
                         col[i].innerHTML = icn;
-                    }else if(assrAp == 11){
+                    }else if(assrAp == wrkflw.AnaliseAssr){
                         let iconEmpty       = constructIcon.construct('fluigicon fluigicon-file-bell-empty icon-md');
                         col[i].appendChild(iconEmpty);
                         let icn = col[i].innerHTML;                                     //Descrição
                         icn = icn +' <b>Análise</b>';
                         col[i].innerHTML = icn;
-                    }else if(assrAp == 16){
+                    }else if(assrAp == wrkflw.ItemDescartado){
                         let iconEmpty       = constructIcon.construct('flaticon flaticon-file-delete icon-md');
                         col[i].appendChild(iconEmpty);
                         let icn = col[i].innerHTML;                                     //Descrição
                         icn = icn +' <b>Excluído</b>';
                         col[i].innerHTML = icn;
-                    }else if(assrAp == 9){
+                    }else if(assrAp == wrkflw.Ajustes){
                         let iconEmpty       = constructIcon.construct('fluigicon fluigicon-fileedit icon-md');
                         col[i].appendChild(iconEmpty);    
                         let icn = col[i].innerHTML;                                     //Descrição
                         icn = icn +' <b>Ajuste</b>';
                         col[i].innerHTML = icn;
                     }
-                    else if(assrAp == 26){
+                    else if(assrAp == wrkflw.DespachoDeliber){
                         let iconEmpty       = constructIcon.construct('fluigicon fluigicon-checked icon-md');
                         col[i].appendChild(iconEmpty);    
                         let icn = col[i].innerHTML;                                     //Descrição
@@ -756,6 +767,7 @@ dataTableConfig.prototype.loadEventTable = function () {
 dataTableConfig.prototype.itensBuiltFunctions = function () {
     let itens = this.itensBuilt;
     let TableFluig  = this.TableFluig();
+    let wrkflw      = this.statesWorkflow
     async function hipotesis2() { 
         await defineOptions();
         async function defineOptions(){
@@ -763,12 +775,12 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
             drpDwn  = itens['btnDrpDwn1'];
             let lis = drpDwn.getElementsByTagName('li');
             let dataSelected = document.getElementById('dataSelected').value;
-            let States      = [11, 9, 15, 16]
+            let States      = [wrkflw.AnaliseAssr, wrkflw.Ajustes, wrkflw.RealizaReuniao, wrkflw.ItemDescartado]
             let refEnabled  = [
-                [11],
-                [9, ,11, 15, 16],
-                [9, 15, 16],
-                [9, 15, 16],
+                [wrkflw.AnaliseAssr],
+                [wrkflw.Ajustes, ,wrkflw.AnaliseAssr, wrkflw.RealizaReuniao, wrkflw.ItemDescartado],
+                [wrkflw.Ajustes, wrkflw.RealizaReuniao, wrkflw.ItemDescartado],
+                [wrkflw.Ajustes, wrkflw.RealizaReuniao, wrkflw.ItemDescartado],
             ] 
             let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", dataSelected, dataSelected, ConstraintType.MUST); 
             let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
@@ -779,7 +791,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                         lis[k].removeAttribute("hidden");
                     }
                 }
-                if(assrAp == 26){
+                if(assrAp == wrkflw.DespachoDeliber){
                     drpDwnIn = itens['btnDrpDwn1'];
                     drpDwnIn.getElementsByTagName('button')[0].disabled = true
                 }
@@ -879,7 +891,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                     } 
                                     clearInterval(interv)
                                 }*/
-                                if(stateNow == 11){
+                                if(stateNow == wrkflw.AnaliseAssr){
                                     //colItem.removeChild(colItem.children[0])
                                     colItem.innerHTML = ''
                                     let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-file-bell-empty icon-md');
@@ -911,7 +923,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                     myEditor.disabledEditor(document.getElementById('txt_Deliberacao'))
                                     clearInterval(interv)
                                 }
-                                else if(stateNow == 16){
+                                else if(stateNow == wrkflw.ItemDescartado){
                                     //colItem.removeChild(colItem.children[0])
                                     colItem.innerHTML = ''
                                     let icon = dataTablemi.constructIcon().construct('flaticon flaticon-file-delete icon-md');
@@ -925,7 +937,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                     itensTools.myToast('success', 'Ação realizada com sucesso!');
                                     clearInterval(interv)
                                 }
-                                else if(stateNow == 9){
+                                else if(stateNow == wrkflw.Ajustes){
                                     //colItem.removeChild(colItem.children[0])
                                     colItem.innerHTML = ''
                                     let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-fileedit icon-md');
@@ -940,7 +952,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                     itensTools.myToast('success', 'Ação realizada com sucesso!');
                                     clearInterval(interv)
                                 }
-                                else if(stateNow == 26){
+                                else if(stateNow == wrkflw.DespachoDeliber){
                                     //colItem.removeChild(colItem.children[0])
                                     colItem.innerHTML = ''
                                     let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-checked icon-md');
@@ -973,7 +985,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
             }
             async function AprovarAssrDefinition(){
                 let nameIten        = 'dataSelected'
-                statusNext          = 15;
+                statusNext          = wrkflw.RealizaReuniao;
                 inpsPanel           = document.getElementsByClassName('inpDlbr')
                 let it              = dataTablemi.itensBuilt[nameIten];
                 inp                 = it.getElementsByTagName('input')[0];
@@ -1016,7 +1028,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                             }
                         } 
                         console.log(stateNow);
-                        if(stateNow == 15){  
+                        if(stateNow == wrkflw.RealizaReuniao){  
                             colItem.innerHTML = ''
                             let icon = dataTablemi.constructIcon().construct('flaticon flaticon-file-check icon-md');
                             colItem.appendChild(icon);
@@ -1056,7 +1068,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
             btn.addEventListener('click', async function() { await moveDelibrDefinition(); await hipotesis2();}); 
             async function moveDelibrDefinition(){
                 let nameIten    = 'dataSelected'
-                statusDelibr    = 26;
+                statusDelibr    = wrkflw.DespachoDeliber;
                 ckX             = 0
                 inpsPanel       = document.getElementsByClassName('inpDlbr')
                 let it = dataTablemi.itensBuilt[nameIten];
@@ -1113,7 +1125,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                             }
                         } 
                         console.log(stateNow);
-                        if(stateNow == 26){  
+                        if(stateNow == wrkflw.DespachoDeliber){  
                             colItem.innerHTML = ''
                             let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-checked icon-md');
                             colItem.appendChild(icon);
