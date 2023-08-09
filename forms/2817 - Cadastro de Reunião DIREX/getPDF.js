@@ -108,14 +108,21 @@ function updatePDF(){
     var state = window.parentOBJ.ECM.workflowView.sequence
     var iniTxt = document.getElementById('txt_IniDelibr').value;
     var finTxt = document.getElementById('txt_FinDelibr').value;
-    var dt_slc 	= document.getElementById('dt_dataInicio').value;
+    //var dt_slc 	= document.getElementById('dt_dataInicio').value;
+
+    var WKNumProces = window.WKNumProces
+    ct1DT           = DatasetFactory.createConstraint("txt_NumProcess", WKNumProces , WKNumProces,  ConstraintType.MUST);
+    cnstDt          = new Array(ct1DT)
+    dataDtIn        = DatasetFactory.getDataset('Cadastro de Reunião DIREX', null, cnstDt, null);
+    var dt_slc      = dataDtIn.values[0]['dt_dataInicio']
+
     var objPdf = 0;
 
     var ds_mat_ger_pdf  = colleague
     var ds_und_ger_pdf  = dsc_Unidades
     var matDir          = 0
     var dirImed         = 0;
-    var mat             = window.parent.params.taskUserId;
+    var mat             = window.parent.WCMAPI.userCode;
     var arrItns_Dir 	= []
     if(state == 8 || state == 10){
         console.log(state)
