@@ -36,6 +36,7 @@
 	<script type="text/javascript" src="Custom.js"></script> 
 	<script type="text/javascript" src="sinalAlerta.js"></script>
 	<script type="text/javascript" src="getPDF.js"></script>
+	<script type="text/javascript" src="getPDF_ptd.js"></script>
 
 	<style type="text/css">
 		.Obrigatorio{
@@ -185,13 +186,13 @@
 					<label for="checkbox1">Reunião DIREX Extraordinária</label>
 				</div>
 				</div>
-				<div class="col-md-4">
+				<div class="col-md-2">
 				<div class="form-group" id="CodContratacao">
 					<div class="card" style="color: black">
 					<div class="card-body">
 						<h3 class="card-title"><i class="flaticon flaticon-add-branch icon-thumbnail-md" aria-hidden="true"></i> Gerar ATA</h3>
 						<p class="card-text">O documento será gerado Automáticamente</p>
-						<div class="col-md-3" >
+						<div class="col-md-6" >
 						<div class="input-group">
 							<!--<input type="text" class="form-control" name="txt_CodContratacao" id="txt_CodContratacao" placeholder="Exemplo: AM0820220063">
 							-->
@@ -199,6 +200,26 @@
 						</div>
 						</div>
 						<sup data-toggle="tooltip" data-placement="right" title="O documento será gerado em PDF, somente com os itens Deliberados.">
+						<i class="fluigicon fluigicon-info-sign icon-sm" aria-hidden="true"></i></sup>
+						
+					</div>
+					</div>
+				</div>
+				</div>
+				<div class="col-md-2">
+				<div class="form-group">
+					<div class="card" style="color: black">
+					<div class="card-body">
+						<h3 class="card-title"><i class="flaticon flaticon-add-branch icon-thumbnail-md" aria-hidden="true"></i> Gerar itens de Pauta</h3>
+						<p class="card-text">O documento será gerado Automáticamente</p>
+						<div class="col-md-6" >
+						<div class="input-group">
+							<!--<input type="text" class="form-control" name="txt_CodContratacao" id="txt_CodContratacao" placeholder="Exemplo: AM0820220063">
+							-->
+								<button type="button" class="btn btn-primary" id="getData_ptd">Obter PDF</button>
+						</div>
+						</div>
+						<sup data-toggle="tooltip" data-placement="right" title="O documento será gerado em PDF, somente com os itens aprovados para Deliberação.">
 						<i class="fluigicon fluigicon-info-sign icon-sm" aria-hidden="true"></i></sup>
 						
 					</div>
