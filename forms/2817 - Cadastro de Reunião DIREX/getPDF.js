@@ -242,16 +242,43 @@ function updatePDF(){
                 arrVts = [DIRAF, DISUP, DITEC]
                 vt1 = 0;
                 vt2 = 0;
+                arrDefnDirAprv = []
+                arrDefnDirReprov = []
                 if(DIRAF == 1 && DISUP == 1 && DITEC == 1){ resultadoDelbr = 'Aprovado por unanimidade.' }
+                if(DIRAF == 2 && DISUP == 2 && DITEC == 2){ resultadoDelbr = 'Reprovado por unanimidade.' }
                 else{
                     for(t = 0; t < arrVts.length; t++){
                         ckVt = arrVts[t]
                         if(ckVt == 1){
                             vt1++
-                        }else{vt2++ }
+                            arrDefnDirAprv.push(t)
+                        }else{ 
+                            vt2++ 
+                            arrDefnDirReprov.push(t)
+                        }
                     }
-                    if(vt1 > vt2){ resultadoDelbr = 'Aprovado.' }
-                    else{ resultadoDelbr = 'Reprovado.' }
+                    if(vt1 > vt2){ 
+                        var arrDefDirN = [];
+                        for(t = 0; t < arrDefnDirAprv.length; t++){
+
+                                if(arrDefnDirAprv[t] == 0) {        arrDefDirN.push('DIRAF') }
+                                else if(arrDefnDirAprv[t] == 1) {   arrDefDirN.push('DISUP') }
+                                if(arrDefnDirAprv[t] == 2 ){        arrDefDirN.push('DITEC') }
+                                 
+                        }
+                        resultadoDelbr = 'Aprovado por '+arrDefDirN[0]+' e '+arrDefDirN[1]
+                    }
+                    else if (vt1 < vt2) { 
+                        var arrDefDirN = [];
+                        for(t = 0; t < arrDefnDirReprov.length; t++){
+
+                                if(arrDefnDirReprov[t] == 0) {        arrDefDirN.push('DIRAF') }
+                                else if(arrDefnDirReprov[t] == 1) {   arrDefDirN.push('DISUP') }
+                                if(arrDefnDirReprov[t] == 2 ){        arrDefDirN.push('DITEC') }
+                                 
+                        }
+                        resultadoDelbr = 'Reprovado por '+arrDefDirN[0]+' e '+arrDefDirN[1]
+                    }
                 }
               
               
