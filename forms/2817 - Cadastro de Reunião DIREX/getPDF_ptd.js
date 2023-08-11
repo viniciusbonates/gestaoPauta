@@ -104,7 +104,7 @@ var myToast_ptd =  function (tp, title) {
 }
 
 function updatePDF_ptd(){
-    document.scrollingElement.scrollTop = 0
+    //document.scrollingElement.scrollTop = 0
     var state = window.parentOBJ.ECM.workflowView.sequence
     var iniTxt = document.getElementById('txt_IniDelibr').value;
     var finTxt = document.getElementById('txt_FinDelibr').value;
@@ -159,8 +159,12 @@ function updatePDF_ptd(){
 
         console.log(arrItns_Dir)
         
-        let dtPDF   = dt_slc;
-        dtPDF = dtPDF.split('-');
+        var dtPDF   = new Date();   
+        diaPtd_dir = ''
+        if(dtPDF.getDate() < 10){ diaPtd_dir = '0'+dtPDF.getDate() }
+        else{ diaPtd_dir = dtPDF.getDate() }
+        anoPtd_dir = dtPDF.getFullYear()
+
         MonthIn     = new Date().getMonth() 
         HoursIn     = new Date().getHours()
         MonthStr    = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'] 
@@ -174,7 +178,7 @@ function updatePDF_ptd(){
             '<p align="center">'+
             '<span>'+
                     '<span >'+
-                    '<b><span style="font-size:12.0pt">'+document.getElementById('txt_tituloReuniao').value + dtPDF[0]+'</span></b>'+ 
+                    '<b><span style="font-size:12.0pt">'+document.getElementById('txt_tituloReuniao').value +anoPtd_dir+'</span></b>'+ 
                     '</span>'+
                 '</span>'+
             '</p>'+
@@ -189,7 +193,7 @@ function updatePDF_ptd(){
             '</p>'+
         '</div>'
 
-        objPdf      = objPdf +'<p style="margin-left:0.6cm;"><b>Data: '+dtPDF[2]+' de '+MonthStr[MonthIn]+' de '+dtPDF[0]+'.</b>'+
+        objPdf      = objPdf +'<p style="margin-left:0.6cm;"><b>Data: '+diaPtd_dir+' de '+MonthStr[MonthIn]+' de '+anoPtd_dir+'.</b>'+
         '<p style="margin-left:0.6cm;"><b>Hora: '+HoursIn+'h</b></p>'+
         '</p>'
                         
@@ -211,6 +215,7 @@ function updatePDF_ptd(){
                 }
 
                 var txtDlbr = itnDirNow[j]["txt_titulo"];
+                txtDlbr = txtDlbr.toLowerCase();
                 var txtJstf = itnDirNow[j]["txt_Justificativa"];
 
                 var resultadoDelbr = ''
@@ -221,18 +226,20 @@ function updatePDF_ptd(){
                 bd = txtDlbr.substring(inc, fnl)        // Obtem apenas o BODY do HTML salvo no input
                 console.log(bd)
                 */
-                dlbr_now = '<div style="margin-left:0.6cm;"><b>'+ numIten + '.  </b>'+txtDlbr+ '<br></br>'+
+                dlbr_now = '<div style="margin-left:0.6cm;"><b>'+ numIten + '.  </b>Deliberação acerca  '+txtDlbr+ '<br></br>'+
+                '<div style="margin-left:0.6cm;">'+
                 '<b><u><span style="font-size:12.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif">Justificativa:</span></span></u></b>'+txtJstf+'<br></br>'+ //<div style="margin-left:0.6cm;">'
                 '<span style="line-height:150%"><b><span style="font-size:12.0pt"><span style="line-height:150%"><span style="color:black">Deliberação:</span></span></span></b>'+
-                '<span style="font-size:12.0pt"><span style="line-height:150%"><span style="color:black"> <b>'+resultadoDelbr+'</b></span></span></span></span>'+'</div><br></br>';
+                '<span style="font-size:12.0pt"><span style="line-height:150%"><span style="color:black"> <b>'+resultadoDelbr+'</b></span></span></span></span>'+
+                '</div></div><br></br>';
                 //dlbr_now = itnDirNow[j]["txt_Deliberacao"];
                 objPdf = objPdf + dlbr_now;
 
                 if(j == itnDirNow.length - 1){
-                    objPdf = objPdf + '<p style="margin-top:0.6cm; margin-bottom:0.6cm; text-align:justify">'+
+                    objPdf = objPdf + '<p style="margin-left:0.6cm; font-size:11.0pt">'+
                     '<span style="line-height:normal">'+
                         '<span >'+
-                            '<b><u><span style="font-size:100%">INFORMES '+dirImed+': </span></u></b>'+
+                            '<b><u><span>INFORMES '+dirImed+': </span></u></b>'+
                         '</span>'+
                     '</span>'+
                     '</p>' 
