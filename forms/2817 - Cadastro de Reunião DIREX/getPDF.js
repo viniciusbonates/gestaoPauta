@@ -10,7 +10,7 @@ function determineEditor(){
     arrElemtsTrigger.push(getData);
     arrElemtsTrigger.push(btn1);
     this.buttonReference = arrElemtsTrigger;
-    this.inpIn = ['txt_IniDelibr', 'txt_FinDelibr', 'txt_Deliberacao', 'txt_Justificativa', 'txt_InfoDISUP', 'txt_InfoDIRAF', 'txt_InfoDITEC'];
+    this.inpIn = ['txt_IniDelibr', 'txt_FinDelibr', 'txt_Deliberacao', 'txt_Justificativa', 'txt_InfoDISUP', 'txt_InfoDIRAF', 'txt_InfoDITEC', 'txt_obsDlbrDISUP', 'txt_obsDlbrDIRAF', 'txt_obsDlbrDITEC'];
     this.arrEdits = [];
     this.setRichEditor();
     this.setFuncbutton();
@@ -104,7 +104,7 @@ var myToast =  function (tp, title) {
 }
 
 function updatePDF(){
-    document.scrollingElement.scrollTop = 0
+    //document.scrollingElement.scrollTop = 0
     var state = window.parentOBJ.ECM.workflowView.sequence
     var iniTxt = document.getElementById('txt_IniDelibr').value;
     var finTxt = document.getElementById('txt_FinDelibr').value;
@@ -181,7 +181,7 @@ function updatePDF(){
         MonthIn     = new Date().getMonth() 
         MonthStr    = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'] 
             
-        var objPdf  = '<div style="border: 3px solid black; padding: 20px;">' 
+        var objPdf  = '<div style="">' 
         objPdf      = objPdf + '<div style="border:solid windowtext 1.0pt;  margin-left:0px;" >'+
             '<p align="center" style="border:none; border-bottom:.5pt solid windowtext; margin-bottom:0cm; text-align:center; padding:0cm; padding-bottom:1.0pt">'+
             '<span style="">'+
@@ -280,27 +280,57 @@ function updatePDF(){
                         resultadoDelbr = 'Reprovado por '+arrDefDirN[0]+' e '+arrDefDirN[1]
                     }
                 }
-              
-              
-                
+
                 let result = txtDlbr.search("body");
                 let result2 = txtDlbr.search("/body");
                 fnl = result2 - 1
                 inc = result + 5
                 bd = txtDlbr.substring(inc, fnl)        // Obtem apenas o BODY do HTML salvo no input
                 console.log(bd)
+
+                
+
                 dlbr_now = '<div style="margin-left:0.6cm;"><b>'+ numIten + '.  </b>'+bd+ '<br></br>'+
-                '<b><u><span style="font-size:12.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif">Justificativa:</span></span></u></b>'+txtJstf+'<br></br>'+ //<div style="margin-left:0.6cm;">'
-                '<span style="line-height:150%"><b><span style="font-size:12.0pt"><span style="line-height:150%"><span style="color:black">Deliberação:</span></span></span></b>'+
-                '<span style="font-size:12.0pt"><span style="line-height:150%"><span style="color:black"> <b>'+resultadoDelbr+'</b></span></span></span></span>'+'</div><br></br>';
+                '<b><u><span style="font-size:12.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif">Justificativa:</span></span></u></b>'+txtJstf+'<br></br>'//<div style="margin-left:0.6cm;">'
+
+                var obsDISUPIsN = itnDirNow[j]["txt_obsDlbrDISUP"];
+                var obsDIRAFIsN = itnDirNow[j]["txt_obsDlbrDIRAF"];
+                var obsDITECIsN = itnDirNow[j]["txt_obsDlbrDITEC"];
+                asdx = 0;
+                ObsDlbrIs = '';
+                obsResultIs = '';
+                arrObsDlbrIs = [obsDISUPIsN, obsDIRAFIsN, obsDITECIsN]
+                /*obsObjIs    = {
+                    txt_obsDlbrDISUP: '',
+                    txt_obsDlbrDIRAF: '',
+                    txt_obsDlbrDITEC: ''
+                }*/
+                for(f = 0; f < arrObsDlbrIs.length; f++){
+                    vleObsDlbrNow = arrObsDlbrIs[f]
+                    if(vleObsDlbrNow != "<html>\n<head>\n\t<title></title>\n</head>\n<body></body>\n</html>\n" && vleObsDlbrNow != null && vleObsDlbrNow != undefined && vleObsDlbrNow != ''){
+                        obsResultIs = obsResultIs + vleObsDlbrNow + '<br></br';
+                        asdx++
+                    }
+                }
+                //console.log(obsObjIs)
+                if(asdx != 0){
+                    ObsDlbrIs = ObsDlbrIs + '<span style="line-height:150%"><b><span style="font-size:12.0pt"><span style="line-height:150%"><u><span style="color:black">Observação:</span></u></span></span></b>'+
+                    '<span style="font-size:12.0pt"><span style="line-height:150%"><span style="color:black"> <b>'+obsResultIs+'</b></span></span></span></span>';
+                    dlbr_now = dlbr_now + ObsDlbrIs + '<span style="line-height:150%"><b><span style="font-size:12.0pt"><span style="line-height:150%"><span style="color:black">Deliberação:</span></span></span></b>'+
+                    '<span style="font-size:12.0pt"><span style="line-height:150%"><span style="color:black"> <b>'+resultadoDelbr+'</b></span></span></span></span>'+'</div><br></br>';
+                }else{
+                    dlbr_now = dlbr_now + '<span style="line-height:150%"><b><span style="font-size:12.0pt"><span style="line-height:150%"><span style="color:black">Deliberação:</span></span></span></b>'+
+                    '<span style="font-size:12.0pt"><span style="line-height:150%"><span style="color:black"> <b>'+resultadoDelbr+'</b></span></span></span></span>'+'</div><br></br>';
+                }
+
                 //dlbr_now = itnDirNow[j]["txt_Deliberacao"];
                 objPdf = objPdf + dlbr_now;
 
                 if(j == itnDirNow.length - 1){
-                    objPdf = objPdf + '<p style="margin-top:0.6cm; margin-bottom:0.6cm; text-align:justify">'+
+                    objPdf = objPdf + '<p style="margin-left:0.6cm; margin-bottom:0.6cm; text-align:justify; font-size:11.0pt">'+
                     '<span style="line-height:normal">'+
                         '<span >'+
-                            '<b><u><span style="font-size:100%">INFORMES '+dirImed+': </span></u></b>'+
+                            '<b><u><span>INFORMES '+dirImed+': </span></u></b>'+
                         '</span>'+
                     '</span>'+
                     '</p>' 

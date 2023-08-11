@@ -439,8 +439,8 @@ dataTableConfig.prototype.changeEventInput = function () {
             let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
             if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
                 let assrAp = itenPauta['hdn_aprvAssr'];
-                let inps = document.getElementsByClassName('inpDlbr')
-                arrNamesIt  = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao', 'txt_Justificativa']
+                let inps = document.getElementsByClassName('inpDlbr') // < ------------- OBTEM OS INPUTS NO HTML 
+                arrNamesIt  = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao', 'txt_Justificativa', 'txt_obsDlbrDIRAF', 'txt_obsDlbrDITEC', 'txt_obsDlbrDISUP'] 
                 arrAlt      = ['hdn_DIRAF_vt', 'hdn_DISUP_vt', 'hdn_DITEC_vt']
                 if(wrkflw.AnaliseAssr == assrAp){
                     document.getElementById('Delibr').style.display = 'block';
@@ -457,6 +457,16 @@ dataTableConfig.prototype.changeEventInput = function () {
                     myEditor.setDataInput(document.getElementById('txt_Justificativa'))
                     myEditor.setDataInput(document.getElementById('txt_Deliberacao'))
                     myEditor.disabledEditor(document.getElementById('txt_Deliberacao'))
+
+                   
+                    myEditor.setDataInput(document.getElementById('txt_obsDlbrDIRAF'))
+                    myEditor.disabledEditor(document.getElementById('txt_obsDlbrDIRAF'))
+                    myEditor.setDataInput(document.getElementById('txt_obsDlbrDITEC'))
+                    myEditor.disabledEditor(document.getElementById('txt_obsDlbrDITEC'))
+                    myEditor.setDataInput(document.getElementById('txt_obsDlbrDISUP'))
+                    myEditor.disabledEditor(document.getElementById('txt_obsDlbrDISUP'))
+
+
                 }else if(wrkflw.RealizaReuniao == assrAp){
                     document.getElementById('Delibr').style.display = 'block';
                     iten.getElementsByTagName('button')[0].disabled = false;
@@ -464,21 +474,36 @@ dataTableConfig.prototype.changeEventInput = function () {
                         let nowInp = inps[arrNamesIt[i]]
                         if(nowInp.tagName == 'SELECT'){
                             for(let j = 0; j < nowInp.options.length; j++){
+                                console.log(nowInp.options[j].value)
+                                console.log(itenPauta[arrAlt[i]])
                                 if(nowInp.options[j].value == itenPauta[arrAlt[i]]){
                                     nowInp.options[j].selected = true;
                                     inps[arrNamesIt[i]].value = itenPauta[arrAlt[i]];
                                     nowInp.disabled = false;
                                 }
+                                if(itenPauta[arrAlt[i]] == ''){
+                                    nowInp.options[0].selected = true;
+                                    inps[arrNamesIt[i]].value = itenPauta[arrAlt[i]];
+                                    nowInp.disabled = false;
+                                }
                             }
                             nowInp.style.color = 'black';
-                            //nowInp.disabled = 'disabled';
-                        }else{  inps[arrNamesIt[i]].value = itenPauta[arrNamesIt[i]]; nowInp.style.color = 'black'; }
+                            nowInp.disabled = false;
+                        }else{  console.log(itenPauta[arrNamesIt[i]]); inps[arrNamesIt[i]].value = itenPauta[arrNamesIt[i]]; nowInp.style.color = 'black'; }
                     }
                     console.log(myEditor)
                     myEditor.cleanEditor(document.getElementById('txt_Justificativa'))
                     myEditor.setDataInput(document.getElementById('txt_Justificativa'))
                     myEditor.cleanEditor(document.getElementById('txt_Deliberacao'))
                     myEditor.setDataInput(document.getElementById('txt_Deliberacao'))
+
+                    myEditor.cleanEditor(document.getElementById('txt_obsDlbrDIRAF'))
+                    myEditor.setDataInput(document.getElementById('txt_obsDlbrDIRAF'))
+                    myEditor.cleanEditor(document.getElementById('txt_obsDlbrDITEC'))
+                    myEditor.setDataInput(document.getElementById('txt_obsDlbrDITEC'))
+                    myEditor.cleanEditor(document.getElementById('txt_obsDlbrDISUP'))
+                    myEditor.setDataInput(document.getElementById('txt_obsDlbrDISUP'))
+
                 }else if(wrkflw.DespachoDeliber == assrAp){
                     for(let i = 0; i < inps.length; i++){
                         let nowInp = inps[arrNamesIt[i]]
@@ -496,10 +521,19 @@ dataTableConfig.prototype.changeEventInput = function () {
                     document.getElementById('Delibr').style.display = 'block'
                     iten.getElementsByTagName('button')[0].disabled = true 
                     console.log(myEditor)
+
                     myEditor.setDataInput(document.getElementById('txt_Justificativa'))
                     myEditor.disabledEditor(document.getElementById('txt_Justificativa'))
                     myEditor.setDataInput(document.getElementById('txt_Deliberacao'))
                     myEditor.disabledEditor(document.getElementById('txt_Deliberacao'))
+                    
+                    myEditor.setDataInput(document.getElementById('txt_obsDlbrDIRAF'))
+                    myEditor.disabledEditor(document.getElementById('txt_obsDlbrDIRAF'))
+                    myEditor.setDataInput(document.getElementById('txt_obsDlbrDITEC'))
+                    myEditor.disabledEditor(document.getElementById('txt_obsDlbrDITEC'))
+                    myEditor.setDataInput(document.getElementById('txt_obsDlbrDISUP'))
+                    myEditor.disabledEditor(document.getElementById('txt_obsDlbrDISUP'))
+
                 }else{
                     document.getElementById('Delibr').style.display = 'none'
                     iten.getElementsByTagName('button')[0].disabled = true 
@@ -905,7 +939,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                     itensTools.myToast('success', 'Ação realizada com sucesso!');
 
                                     let inps = document.getElementsByClassName('inpDlbr')
-                                    arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao']
+                                    arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao', 'txt_obsDlbrDIRAF', 'txt_obsDlbrDITEC', 'txt_obsDlbrDISUP',]
                                     document.getElementById('Delibr').style.display = 'block';
                                     iten.getElementsByTagName('button')[0].disabled = true 
                                     for(let i = 0; i < inps.length; i++){
@@ -921,6 +955,14 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                     myEditor.setDataInput(document.getElementById('txt_Justificativa'))
                                     myEditor.setDataInput(document.getElementById('txt_Deliberacao'))
                                     myEditor.disabledEditor(document.getElementById('txt_Deliberacao'))
+
+                                    myEditor.setDataInput(document.getElementById('txt_obsDlbrDIRAF'))
+                                    myEditor.disabledEditor(document.getElementById('txt_obsDlbrDIRAF'))
+                                    myEditor.setDataInput(document.getElementById('txt_obsDlbrDITEC'))
+                                    myEditor.disabledEditor(document.getElementById('txt_obsDlbrDITEC'))
+                                    myEditor.setDataInput(document.getElementById('txt_obsDlbrDISUP'))
+                                    myEditor.disabledEditor(document.getElementById('txt_obsDlbrDISUP'))
+
                                     clearInterval(interv)
                                 }
                                 else if(stateNow == wrkflw.ItemDescartado){
@@ -1040,7 +1082,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                             orderMethodsMi.indexFunctionsX();
                             itensTools.myToast('success', 'Ação realizada com sucesso!');
                             let inps = document.getElementsByClassName('inpDlbr')
-                            arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao']
+                            arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao', 'txt_obsDlbrDIRAF', 'txt_obsDlbrDITEC', 'txt_obsDlbrDISUP',]
                             document.getElementById('Delibr').style.display = 'block';
                             itenBtn1.getElementsByTagName('button')[0].disabled = false;
                             for(let i = 0; i < inps.length; i++){
@@ -1056,6 +1098,14 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                             myEditor.setDataInput(document.getElementById('txt_Justificativa'))
                             myEditor.cleanEditor(document.getElementById('txt_Deliberacao'))
                             myEditor.setDataInput(document.getElementById('txt_Deliberacao'))
+
+                            myEditor.cleanEditor(document.getElementById('txt_obsDlbrDIRAF'))
+                            myEditor.setDataInput(document.getElementById('txt_obsDlbrDIRAF'))
+                            myEditor.cleanEditor(document.getElementById('txt_obsDlbrDITEC'))
+                            myEditor.setDataInput(document.getElementById('txt_obsDlbrDITEC'))
+                            myEditor.cleanEditor(document.getElementById('txt_obsDlbrDISUP'))
+                            myEditor.setDataInput(document.getElementById('txt_obsDlbrDISUP'))
+                            
                             clearInterval(intervmoveItemAprov)
                         }
                         else{ clearInterval(intervmoveItemAprov) }
@@ -1083,24 +1133,31 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                 DISUP = inpsPanel['slc_DISUP_vt'].value;
                 DIRAF = inpsPanel['slc_DIRAF_vt'].value;
                 DITEC = inpsPanel['slc_DITEC_vt'].value;
-                Delibr = inpsPanel['txt_Deliberacao'].value;
-                Justf = inpsPanel['txt_Justificativa'].value;
+                Delibr  = inpsPanel['txt_Deliberacao'].value;
+                Justf   = inpsPanel['txt_Justificativa'].value;
+                obsDISUP = inpsPanel['txt_obsDlbrDISUP'].value;
+                obsDIRAF = inpsPanel['txt_obsDlbrDIRAF'].value;
+                obsDITEC = inpsPanel['txt_obsDlbrDITEC'].value;
                 
                 arrNamesInp = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao', 'txt_Justificativa'];
                 ckY = 0
                 for(y = 0; y < inpsPanel.length; y++){
-                    inpNow = inpsPanel[arrNamesInp[y]];
+                    inpNow = inpsPanel[0];
                     console.log(inpNow)
-                    if(inpNow.value == '' || inpNow.value == 0 || inpNow.value == '<html>\n<head>\n\t<title></title>\n</head>\n<body></body>\n</html>\n'){
-                        ckY++
-                        console.log(ckY)
+                    for(z = 0; z < arrNamesInp.length; z++){
+                        if(inpNow.id == arrNamesInp[z]){
+                            if(inpNow.value == '' || inpNow.value == 0 || inpNow.value == '<html>\n<head>\n\t<title></title>\n</head>\n<body></body>\n</html>\n'){
+                                ckY++
+                                console.log(ckY)
+                            }
+                        }
                     }
                 }
                 for(i = 0; i < inpsPanel.length; i++){
                     inpNow = inpsPanel[arrNamesInp[i]]
                     if(inpNow != undefined){
                         if(ckY == 0 && statusDelibr != statusAssr){    
-                            await dataTablemi.APImethods.movePOST(inpValue, statusDelibr, DISUP, DIRAF, DITEC, Delibr, Justf); 
+                            await dataTablemi.APImethods.movePOST(inpValue, statusDelibr, DISUP, DIRAF, DITEC, Delibr, Justf, obsDIRAF, obsDITEC, obsDISUP); 
                             //var intervmoveItemDelibr = setInterval(defineStatusDelibr, 200);
                             await defineStatusDelibr()
                             //console.log(intervmoveItemDelibr)
@@ -1156,6 +1213,13 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                             myEditor.disabledEditor(document.getElementById('txt_Justificativa'))
                             myEditor.setDataInput(document.getElementById('txt_Deliberacao'))
                             myEditor.disabledEditor(document.getElementById('txt_Deliberacao'))
+
+                            myEditor.setDataInput(document.getElementById('txt_obsDlbrDIRAF'))
+                            myEditor.disabledEditor(document.getElementById('txt_obsDlbrDIRAF'))
+                            myEditor.setDataInput(document.getElementById('txt_obsDlbrDITEC'))
+                            myEditor.disabledEditor(document.getElementById('txt_obsDlbrDITEC'))
+                            myEditor.setDataInput(document.getElementById('txt_obsDlbrDISUP'))
+                            myEditor.disabledEditor(document.getElementById('txt_obsDlbrDISUP'))
                             //clearInterval(intervmoveItemDelibr)
                         }
                         //else{ clearInterval(intervmoveItemDelibr) }

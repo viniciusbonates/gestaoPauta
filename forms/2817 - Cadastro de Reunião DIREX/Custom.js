@@ -40,6 +40,7 @@ function setValueInpDelibr() {
     if(matDirIn != 0){
         console.log(document.getElementById('txt_Info'+matDirIn))
         document.getElementById('txt_Info'+matDirIn).parentElement.parentElement.style.display = 'block';
+        document.getElementById('txt_obsDlbr'+matDirIn).parentElement.parentElement.style.display = 'block';
     }
 }window.addEventListener('load',setValueInpDelibr)
 

@@ -18,7 +18,7 @@ function orderMethods(){
     this.targetAssignee         = document.getElementById('cmb_NomeSolicita').value
     resMethods();
 }
-orderMethods.prototype.movePOST = async function (NumSolicitacao, acao, vtDISUP, vtDIRAF, vtDITEC, dlbr, justf) { 
+orderMethods.prototype.movePOST = async function (NumSolicitacao, acao, vtDISUP, vtDIRAF, vtDITEC, dlbr, justf, obsDIRAF, obsDITEC, obsDISUP) { 
     var Nsolicitacao                = NumSolicitacao;           // Para este escopo
     orderMethodsMi.Nsolicitacao     = NumSolicitacao;           // Para o .done do ajax
     var acao                        = acao
@@ -52,7 +52,10 @@ orderMethods.prototype.movePOST = async function (NumSolicitacao, acao, vtDISUP,
                         "hdn_DIRAF_vt":     vtDIRAF,
                         "hdn_DITEC_vt":     vtDITEC,
                         "txt_Deliberacao":  dlbr,
-                        "txt_Justificativa":  justf
+                        "txt_Justificativa":  justf,
+                        "txt_obsDlbrDISUP":  obsDISUP,
+                        "txt_obsDlbrDIRAF":  obsDIRAF,
+                        "txt_obsDlbrDITEC":  obsDITEC
                     }
                 }else if(justf != undefined || justf != ''){
                         var setFields = {
