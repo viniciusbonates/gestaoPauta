@@ -86,7 +86,13 @@ function dataTableConfig(){
                 id: 'AprovarAssr',
                 innerText: 'Aprovar Inserção de Item',
                 value: '15',
-                icon: 'fluigicon fluigicon-checked icon-sm'        
+                icon: 'flaticon flaticon-file-check icon-sm'//'fluigicon fluigicon-checked icon-sm'        
+            },
+            {
+                id: 'ReprovarAssr',
+                innerText: 'Reprovar Inserção de Item',
+                value: '26',
+                icon: 'flaticon flaticon-file-delete icon-sm'        
             },
             {
                 id: 'ReverterAssr',
@@ -107,7 +113,7 @@ function dataTableConfig(){
                 id: 'ExcluirAssr',
                 innerText: 'Excluir Item',
                 value: '16',
-                icon: 'flaticon flaticon-file-delete icon-sm'        
+                icon: 'fluigicon fluigicon-trash icon-sm'        
             }
         ]
     }
@@ -699,8 +705,9 @@ dataTableConfig.prototype.changeEventTable = function () {
 dataTableConfig.prototype.loadEventTable = function () {
     var TableFluig          = this.TableFluig();
     var constructIcon       = this.constructIcon(); 
-    let itens = this.itensBuilt;
-    let wrkflw      = this.statesWorkflow
+    let itens               = this.itensBuilt;
+    let wrkflw              = this.statesWorkflow
+    let itensConfigsUpd     = this.itensConfigs
     console.log(itens)
     let objFuncload = {
         fnc: [
@@ -732,6 +739,25 @@ dataTableConfig.prototype.loadEventTable = function () {
         statusAsr: function () {
             let col         = TableFluig.getCol('Aprov.Assessoria');
             let colNumSol   = TableFluig.getCol('Solicitação');
+            itensConfigsH   = itensConfigsUpd;
+            objHandleIcons =  {};
+            for(z = 0; z < itensConfigsH.length; z++){
+                itnHnow = itensConfigsH[z]
+                if(itnHnow.id == 'btnDrpDwn1'){
+                    ulsHnow = itnHnow.ul
+                    for(b = 0; b < ulsHnow.length; b++){
+                        id = ulsHnow[b].id
+                        icon = ulsHnow[b].icon
+                        console.log(ulsHnow[b])
+                        objHandleIcons[id] = icon
+                    }
+                }else if(itnHnow.id == 'btn1'){
+                    objHandleIcons[itnHnow.id] = itnHnow.setIcon
+                }
+            }
+            console.log(objHandleIcons)
+            
+
             //console.log(colNumSol[3].children[0].innerText)
             for(let i = 0; i < col.length; i++){
                 let numSlct         = colNumSol[i].children[0].innerText;
@@ -740,37 +766,58 @@ dataTableConfig.prototype.loadEventTable = function () {
                 if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
                     //console.log(itenPauta)
                     let assrAp = itenPauta['hdn_aprvAssr'];
-
+                    let resAnalis = itenPauta['txt_resultAnalis'];
+                    console.log(resAnalis)
                     if(assrAp == wrkflw.RealizaReuniao){
-                        let iconChecked     = constructIcon.construct('flaticon flaticon-file-check icon-md');
+                        iconThis = objHandleIcons["AprovarAssr"]
+                        iconThis = iconThis.replace('sm', 'md')
+                        let iconChecked     = constructIcon.construct(iconThis);//'flaticon flaticon-file-check icon-md'
                         col[i].appendChild(iconChecked);
                         let icn = col[i].innerHTML;                                     //Descrição
                         icn = icn +' <b>Aprovado</b>';
                         col[i].innerHTML = icn;
                     }else if(assrAp == wrkflw.AnaliseAssr){
-                        let iconEmpty       = constructIcon.construct('fluigicon fluigicon-file-bell-empty icon-md');
+                        iconThis = objHandleIcons["ReverterAssr"]
+                        iconThis = iconThis.replace('sm', 'md')
+                        let iconEmpty       = constructIcon.construct(iconThis);//'fluigicon fluigicon-file-bell-empty icon-md'
                         col[i].appendChild(iconEmpty);
                         let icn = col[i].innerHTML;                                     //Descrição
                         icn = icn +' <b>Análise</b>';
                         col[i].innerHTML = icn;
                     }else if(assrAp == wrkflw.ItemDescartado){
-                        let iconEmpty       = constructIcon.construct('flaticon flaticon-file-delete icon-md');
+                        iconThis = objHandleIcons["ExcluirAssr"]
+                        iconThis = iconThis.replace('sm', 'md')
+                        let iconEmpty       = constructIcon.con
+                        struct('fluigicon fluigicon-trash icon-md');
                         col[i].appendChild(iconEmpty);
                         let icn = col[i].innerHTML;                                     //Descrição
                         icn = icn +' <b>Excluído</b>';
                         col[i].innerHTML = icn;
                     }else if(assrAp == wrkflw.Ajustes){
-                        let iconEmpty       = constructIcon.construct('fluigicon fluigicon-fileedit icon-md');
+                        iconThis = objHandleIcons["AjusteAssr"]
+                        iconThis = iconThis.replace('sm', 'md')
+                        let iconEmpty       = constructIcon.construct(iconThis);//'fluigicon fluigicon-fileedit icon-md'
                         col[i].appendChild(iconEmpty);    
                         let icn = col[i].innerHTML;                                     //Descrição
                         icn = icn +' <b>Ajuste</b>';
                         col[i].innerHTML = icn;
                     }
-                    else if(assrAp == wrkflw.DespachoDeliber){
-                        let iconEmpty       = constructIcon.construct('fluigicon fluigicon-checked icon-md');
+                    else if(assrAp == wrkflw.DespachoDeliber && resAnalis == null || assrAp == wrkflw.DespachoDeliber && resAnalis == undefined || assrAp == wrkflw.DespachoDeliber && resAnalis == '' || assrAp == wrkflw.DespachoDeliber && resAnalis == 0){
+                        iconThis = objHandleIcons['btn1']
+                        iconThis = iconThis.replace('sm', 'md')
+                        let iconEmpty       = constructIcon.construct(iconThis);//'fluigicon fluigicon-checked icon-md'
                         col[i].appendChild(iconEmpty);    
                         let icn = col[i].innerHTML;                                     //Descrição
                         icn = icn +' <b>Deliberado</b>';
+                        col[i].innerHTML = icn;
+                    }
+                    else if(assrAp == wrkflw.DespachoDeliber && resAnalis != null || assrAp == wrkflw.DespachoDeliber && resAnalis != undefined || assrAp == wrkflw.DespachoDeliber && resAnalis != '' || assrAp == wrkflw.DespachoDeliber && resAnalis != 0){
+                        iconThis = objHandleIcons["ReprovarAssr"]
+                        iconThis = iconThis.replace('sm', 'md')
+                        let iconEmpty       = constructIcon.construct(iconThis);//'flaticon flaticon-file-delete icon-md'
+                        col[i].appendChild(iconEmpty);    
+                        let icn = col[i].innerHTML;                                     //Descrição
+                        icn = icn +' <b>Reprovado</b>';
                         col[i].innerHTML = icn;
                     }
 
