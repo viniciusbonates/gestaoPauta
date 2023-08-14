@@ -45,7 +45,7 @@ orderMethods.prototype.movePOST = async function (NumSolicitacao, acao, dlbr, ju
                  *                  15  = Incluir
                  *                  16  = Excluir
                 */
-                if(votes.DISUP != undefined && votes.DISUP != ''){
+               if(votes != undefined && votes != '' && votes != null){
                     var setFields = {
                         "hdn_aprvAssr":     aprvAssr,
                         "hdn_DISUP_vt":     votes.DISUP,
@@ -55,7 +55,8 @@ orderMethods.prototype.movePOST = async function (NumSolicitacao, acao, dlbr, ju
                         "txt_Justificativa":  justf,
                         "txt_obsDlbrDISUP":  obsThis.DISUP,
                         "txt_obsDlbrDIRAF":  obsThis.DIRAF,
-                        "txt_obsDlbrDITEC":  obsThis.DITEC
+                        "txt_obsDlbrDITEC":  obsThis.DITEC,
+                        "txt_resultAnalis": resultAnalis
                     }
                 }else if(justf != undefined || justf != ''){
                         var setFields = {
