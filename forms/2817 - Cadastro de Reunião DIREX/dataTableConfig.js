@@ -407,9 +407,9 @@ dataTableConfig.prototype.changeEventInput = function () {
             let States      = [wrkflw.AnaliseAssr, wrkflw.Ajustes, wrkflw.RealizaReuniao, wrkflw.ItemDescartado]
             let refEnabled  = [
                 [wrkflw.AnaliseAssr],
-                [wrkflw.Ajustes, ,wrkflw.AnaliseAssr, wrkflw.RealizaReuniao, wrkflw.ItemDescartado],
-                [wrkflw.Ajustes, wrkflw.RealizaReuniao, wrkflw.ItemDescartado],
-                [wrkflw.Ajustes, wrkflw.RealizaReuniao, wrkflw.ItemDescartado]
+                [wrkflw.Ajustes, ,wrkflw.AnaliseAssr, wrkflw.RealizaReuniao, wrkflw.ItemDescartado, 26],
+                [wrkflw.Ajustes, wrkflw.RealizaReuniao, wrkflw.ItemDescartado, 26],
+                [wrkflw.Ajustes, wrkflw.RealizaReuniao, wrkflw.ItemDescartado, 26]
             ] 
             let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", dataSelected, dataSelected, ConstraintType.MUST); 
             let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
@@ -1084,15 +1084,16 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                 let statusAssr      = itenPauta['hdn_aprvAssr'];
 
                 myEditor.setDataInputsParams()
-                Justf = inpsPanel['txt_Justificativa'].value;
+                Justf = inpsPanel['txt_Justificativa'].value; 
+                resultAnalis = 2; 
                 arrNamesInp = ['txt_Justificativa'];
                 
                 for(i = 0; i < inpsPanel.length; i++){
                     inpNow = inpsPanel[arrNamesInp[i]]
                     if(inpNow != undefined){
                         if(inpNow.value != '' && inpNow.value != 0){
-                            if(statusNext != statusAssr){    
-                                await dataTablemi.APImethods.movePOST(inpValue, statusNext, '', '', '', '', Justf); 
+                            if(statusNext != statusAssr){           
+                                await dataTablemi.APImethods.movePOST(inpValue, statusNext, '', Justf, '', '', resultAnalis); 
                                 var intervmoveItemAprov = setInterval(defineStatusDelibrAprov, 100); 
                                 console.log(intervmoveItemAprov)
                             }
@@ -1180,12 +1181,21 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                 DISUP = inpsPanel['slc_DISUP_vt'].value;
                 DIRAF = inpsPanel['slc_DIRAF_vt'].value;
                 DITEC = inpsPanel['slc_DITEC_vt'].value;
+                votesThisItnNow = {
+                    DISUP: DISUP,
+                    DIRAF: DIRAF,
+                    DITEC: DITEC
+                }
                 Delibr  = inpsPanel['txt_Deliberacao'].value;
                 Justf   = inpsPanel['txt_Justificativa'].value;
                 obsDISUP = inpsPanel['txt_obsDlbrDISUP'].value;
                 obsDIRAF = inpsPanel['txt_obsDlbrDIRAF'].value;
                 obsDITEC = inpsPanel['txt_obsDlbrDITEC'].value;
-                
+                obsThisItnNow = {
+                    DISUP: obsDISUP,
+                    DIRAF: obsDIRAF,
+                    DITEC: obsDITEC
+                }
                 arrNamesInp = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao', 'txt_Justificativa'];
                 ckY = 0
                 for(y = 0; y < inpsPanel.length; y++){
@@ -1204,7 +1214,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                     inpNow = inpsPanel[arrNamesInp[i]]
                     if(inpNow != undefined){
                         if(ckY == 0 && statusDelibr != statusAssr){    
-                            await dataTablemi.APImethods.movePOST(inpValue, statusDelibr, DISUP, DIRAF, DITEC, Delibr, Justf, obsDIRAF, obsDITEC, obsDISUP); 
+                            await dataTablemi.APImethods.movePOST(inpValue, statusDelibr, Delibr, Justf, votesThisItnNow, obsThisItnNow); 
                             //var intervmoveItemDelibr = setInterval(defineStatusDelibr, 200);
                             await defineStatusDelibr()
                             //console.log(intervmoveItemDelibr)

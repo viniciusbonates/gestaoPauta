@@ -18,7 +18,7 @@ function orderMethods(){
     this.targetAssignee         = document.getElementById('cmb_NomeSolicita').value
     resMethods();
 }
-orderMethods.prototype.movePOST = async function (NumSolicitacao, acao, vtDISUP, vtDIRAF, vtDITEC, dlbr, justf, obsDIRAF, obsDITEC, obsDISUP) { 
+orderMethods.prototype.movePOST = async function (NumSolicitacao, acao, dlbr, justf, votes, obsThis, resultAnalis) { 
     var Nsolicitacao                = NumSolicitacao;           // Para este escopo
     orderMethodsMi.Nsolicitacao     = NumSolicitacao;           // Para o .done do ajax
     var acao                        = acao
@@ -45,22 +45,23 @@ orderMethods.prototype.movePOST = async function (NumSolicitacao, acao, vtDISUP,
                  *                  15  = Incluir
                  *                  16  = Excluir
                 */
-                if(vtDISUP != undefined && vtDISUP != ''){
+                if(votes.DISUP != undefined && votes.DISUP != ''){
                     var setFields = {
                         "hdn_aprvAssr":     aprvAssr,
-                        "hdn_DISUP_vt":     vtDISUP,
-                        "hdn_DIRAF_vt":     vtDIRAF,
-                        "hdn_DITEC_vt":     vtDITEC,
+                        "hdn_DISUP_vt":     votes.DISUP,
+                        "hdn_DIRAF_vt":     votes.DIRAF,
+                        "hdn_DITEC_vt":     votes.DITEC,
                         "txt_Deliberacao":  dlbr,
                         "txt_Justificativa":  justf,
-                        "txt_obsDlbrDISUP":  obsDISUP,
-                        "txt_obsDlbrDIRAF":  obsDIRAF,
-                        "txt_obsDlbrDITEC":  obsDITEC
+                        "txt_obsDlbrDISUP":  obsThis.DISUP,
+                        "txt_obsDlbrDIRAF":  obsThis.DIRAF,
+                        "txt_obsDlbrDITEC":  obsThis.DITEC
                     }
                 }else if(justf != undefined || justf != ''){
                         var setFields = {
                             "hdn_aprvAssr":     aprvAssr,
-                            "txt_Justificativa":  justf
+                            "txt_Justificativa":  justf,
+                            "txt_resultAnalis": resultAnalis
                         }
                 }else{
                         var setFields = { "hdn_aprvAssr": aprvAssr }
