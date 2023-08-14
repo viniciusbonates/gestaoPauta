@@ -60,7 +60,7 @@ function dataTableConfig(){
         type: 'button',
         id: 'btn1',
         innerText: 'Enviar Deliberação',
-        setIcon: 'flaticon flaticon-document-check icon-sm', 
+        setIcon: 'fluigicon fluigicon-checked icon-sm', 
         col: 'col-md-1'
     }
     var configButton1 = {
@@ -445,6 +445,7 @@ dataTableConfig.prototype.changeEventInput = function () {
             let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
             if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
                 let assrAp = itenPauta['hdn_aprvAssr'];
+                let resAnalis = itenPauta['txt_resultAnalis'];              // <---- Campo resultado da Analise assessoria defini o Se foi para status 26 devido Deliberação ou devido Reprovação 
                 let inps = document.getElementsByClassName('inpDlbr') // < ------------- OBTEM OS INPUTS NO HTML 
                 arrNamesIt  = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao', 'txt_Justificativa', 'txt_obsDlbrDIRAF', 'txt_obsDlbrDITEC', 'txt_obsDlbrDISUP'] 
                 arrAlt      = ['hdn_DIRAF_vt', 'hdn_DISUP_vt', 'hdn_DITEC_vt']
@@ -510,7 +511,7 @@ dataTableConfig.prototype.changeEventInput = function () {
                     myEditor.cleanEditor(document.getElementById('txt_obsDlbrDISUP'))
                     myEditor.setDataInput(document.getElementById('txt_obsDlbrDISUP'))
 
-                }else if(wrkflw.DespachoDeliber == assrAp){
+                }else if(wrkflw.DespachoDeliber == assrAp && resAnalis == 2){
                     for(let i = 0; i < inps.length; i++){
                         let nowInp = inps[arrNamesIt[i]]
                         if(nowInp.tagName == 'SELECT'){
@@ -521,6 +522,32 @@ dataTableConfig.prototype.changeEventInput = function () {
                                 }
                             }
                             nowInp.style.color = 'black';
+                            nowInp.disabled = 'disabled';
+                        }else{  inps[arrNamesIt[i]].value = itenPauta[arrNamesIt[i]]; nowInp.style.color = 'black'; nowInp.disabled = 'disabled'; }
+                    }
+                    document.getElementById('Delibr').style.display = 'block'
+                    iten.getElementsByTagName('button')[0].disabled = true 
+                    console.log(myEditor)
+
+                    myEditor.setDataInput(document.getElementById('txt_Justificativa'))
+                    myEditor.disabledEditor(document.getElementById('txt_Justificativa'))
+                    myEditor.setDataInput(document.getElementById('txt_Deliberacao'))
+                    myEditor.disabledEditor(document.getElementById('txt_Deliberacao'))
+                    
+                    myEditor.setDataInput(document.getElementById('txt_obsDlbrDIRAF'))
+                    myEditor.disabledEditor(document.getElementById('txt_obsDlbrDIRAF'))
+                    myEditor.setDataInput(document.getElementById('txt_obsDlbrDITEC'))
+                    myEditor.disabledEditor(document.getElementById('txt_obsDlbrDITEC'))
+                    myEditor.setDataInput(document.getElementById('txt_obsDlbrDISUP'))
+                    myEditor.disabledEditor(document.getElementById('txt_obsDlbrDISUP'))
+
+                }else if(wrkflw.DespachoDeliber == assrAp && resAnalis == 1){
+                    for(let i = 0; i < inps.length; i++){
+                        let nowInp = inps[arrNamesIt[i]]
+                        if(nowInp.tagName == 'SELECT'){
+                            for(let j = 0; j < nowInp.options.length; j++){
+                                inps[arrNamesIt[i]].value = ''; 
+                            }
                             nowInp.disabled = 'disabled';
                         }else{  inps[arrNamesIt[i]].value = itenPauta[arrNamesIt[i]]; nowInp.style.color = 'black'; nowInp.disabled = 'disabled'; }
                     }
@@ -649,36 +676,58 @@ dataTableConfig.prototype.changeEventTable = function () {
                     if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
                         console.log(itenPauta)
                         let assrAp = itenPauta['hdn_aprvAssr'];
+                        let resAnalis = itenPauta['txt_resultAnalis'];              // <---- Campo resultado da Analise assessoria defini o Se foi para status 26 devido Deliberação ou devido Reprovação 
+                        console.log(resAnalis)
                         if(assrAp == wrkflw.RealizaReuniao){
-                            let iconChecked     = constructIcon.construct('flaticon flaticon-file-check icon-md');
+                            iconThis = objHandleIcons["AprovarAssr"]
+                            iconThis = iconThis.replace('sm', 'md')
+                            let iconChecked     = constructIcon.construct(iconThis);//'flaticon flaticon-file-check icon-md'
                             col[i].appendChild(iconChecked);
                             let icn = col[i].innerHTML;                                     //Descrição
                             icn = icn +' <b>Aprovado</b>';
                             col[i].innerHTML = icn;
                         }else if(assrAp == wrkflw.AnaliseAssr){
-                            let iconEmpty       = constructIcon.construct('fluigicon fluigicon-file-bell-empty icon-md');
+                            iconThis = objHandleIcons["ReverterAssr"]
+                            iconThis = iconThis.replace('sm', 'md')
+                            let iconEmpty       = constructIcon.construct(iconThis);//'fluigicon fluigicon-file-bell-empty icon-md'
                             col[i].appendChild(iconEmpty);
                             let icn = col[i].innerHTML;                                     //Descrição
                             icn = icn +' <b>Análise</b>';
                             col[i].innerHTML = icn;
                         }else if(assrAp == wrkflw.ItemDescartado){
-                            let iconEmpty       = constructIcon.construct('flaticon flaticon-file-delete icon-md');
+                            iconThis = objHandleIcons["ExcluirAssr"]
+                            iconThis = iconThis.replace('sm', 'md')
+                            let iconEmpty       = constructIcon.con
+                            struct('fluigicon fluigicon-trash icon-md');
                             col[i].appendChild(iconEmpty);
                             let icn = col[i].innerHTML;                                     //Descrição
                             icn = icn +' <b>Excluído</b>';
-                            col[i].innerHTML = icn;    
+                            col[i].innerHTML = icn;
                         }else if(assrAp == wrkflw.Ajustes){
-                            let iconEmpty       = constructIcon.construct('fluigicon fluigicon-fileedit icon-md');
-                            col[i].appendChild(iconEmpty);
+                            iconThis = objHandleIcons["AjusteAssr"]
+                            iconThis = iconThis.replace('sm', 'md')
+                            let iconEmpty       = constructIcon.construct(iconThis);//'fluigicon fluigicon-fileedit icon-md'
+                            col[i].appendChild(iconEmpty);    
                             let icn = col[i].innerHTML;                                     //Descrição
                             icn = icn +' <b>Ajuste</b>';
-                            col[i].innerHTML = icn;    
+                            col[i].innerHTML = icn;
                         }
-                        else if(assrAp == wrkflw.DespachoDeliber){
-                            let iconEmpty       = constructIcon.construct('fluigicon fluigicon-checked icon-md');
+                        else if(assrAp == wrkflw.DespachoDeliber && resAnalis == 2){
+                            iconThis = objHandleIcons['btn1']
+                            iconThis = iconThis.replace('sm', 'md')
+                            let iconEmpty       = constructIcon.construct(iconThis);//'fluigicon fluigicon-checked icon-md'
                             col[i].appendChild(iconEmpty);    
                             let icn = col[i].innerHTML;                                     //Descrição
                             icn = icn +' <b>Deliberado</b>';
+                            col[i].innerHTML = icn;
+                        }
+                        else if(assrAp == wrkflw.DespachoDeliber && resAnalis == 1){
+                            iconThis = objHandleIcons["ReprovarAssr"]
+                            iconThis = iconThis.replace('sm', 'md')
+                            let iconEmpty       = constructIcon.construct(iconThis);//'flaticon flaticon-file-delete icon-md'
+                            col[i].appendChild(iconEmpty);    
+                            let icn = col[i].innerHTML;                                     //Descrição
+                            icn = icn +' <b>Reprovado</b>';
                             col[i].innerHTML = icn;
                         }
 
@@ -766,7 +815,7 @@ dataTableConfig.prototype.loadEventTable = function () {
                 if(itenPauta['hdn_aprvAssr'] != null || itenPauta['hdn_aprvAssr'] != undefined){
                     //console.log(itenPauta)
                     let assrAp = itenPauta['hdn_aprvAssr'];
-                    let resAnalis = itenPauta['txt_resultAnalis'];
+                    let resAnalis = itenPauta['txt_resultAnalis'];              // <---- Campo resultado da Analise assessoria defini o Se foi para status 26 devido Deliberação ou devido Reprovação 
                     console.log(resAnalis)
                     if(assrAp == wrkflw.RealizaReuniao){
                         iconThis = objHandleIcons["AprovarAssr"]
@@ -787,8 +836,7 @@ dataTableConfig.prototype.loadEventTable = function () {
                     }else if(assrAp == wrkflw.ItemDescartado){
                         iconThis = objHandleIcons["ExcluirAssr"]
                         iconThis = iconThis.replace('sm', 'md')
-                        let iconEmpty       = constructIcon.con
-                        struct('fluigicon fluigicon-trash icon-md');
+                        let iconEmpty       = constructIcon.construct('fluigicon fluigicon-trash icon-md');
                         col[i].appendChild(iconEmpty);
                         let icn = col[i].innerHTML;                                     //Descrição
                         icn = icn +' <b>Excluído</b>';
@@ -802,7 +850,7 @@ dataTableConfig.prototype.loadEventTable = function () {
                         icn = icn +' <b>Ajuste</b>';
                         col[i].innerHTML = icn;
                     }
-                    else if(assrAp == wrkflw.DespachoDeliber && resAnalis == null || assrAp == wrkflw.DespachoDeliber && resAnalis == undefined || assrAp == wrkflw.DespachoDeliber && resAnalis == '' || assrAp == wrkflw.DespachoDeliber && resAnalis == 0){
+                    else if(assrAp == wrkflw.DespachoDeliber && resAnalis == 2){
                         iconThis = objHandleIcons['btn1']
                         iconThis = iconThis.replace('sm', 'md')
                         let iconEmpty       = constructIcon.construct(iconThis);//'fluigicon fluigicon-checked icon-md'
@@ -811,7 +859,7 @@ dataTableConfig.prototype.loadEventTable = function () {
                         icn = icn +' <b>Deliberado</b>';
                         col[i].innerHTML = icn;
                     }
-                    else if(assrAp == wrkflw.DespachoDeliber && resAnalis != null || assrAp == wrkflw.DespachoDeliber && resAnalis != undefined || assrAp == wrkflw.DespachoDeliber && resAnalis != '' || assrAp == wrkflw.DespachoDeliber && resAnalis != 0){
+                    else if(assrAp == wrkflw.DespachoDeliber && resAnalis == 1){
                         iconThis = objHandleIcons["ReprovarAssr"]
                         iconThis = iconThis.replace('sm', 'md')
                         let iconEmpty       = constructIcon.construct(iconThis);//'flaticon flaticon-file-delete icon-md'
@@ -846,9 +894,11 @@ dataTableConfig.prototype.loadEventTable = function () {
     }
 }
 dataTableConfig.prototype.itensBuiltFunctions = function () {
-    let itens = this.itensBuilt;
-    let TableFluig  = this.TableFluig();
-    let wrkflw      = this.statesWorkflow
+    let itens               = this.itensBuilt;
+    let TableFluig          = this.TableFluig();
+    let wrkflw              = this.statesWorkflow;
+    let itensConfigsUpd     = this.itensConfigs;
+    var constructIcon       = this.constructIcon(); 
     async function hipotesis2() { 
         await defineOptions();
         async function defineOptions(){
@@ -859,9 +909,9 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
             let States      = [wrkflw.AnaliseAssr, wrkflw.Ajustes, wrkflw.RealizaReuniao, wrkflw.ItemDescartado]
             let refEnabled  = [
                 [wrkflw.AnaliseAssr],
-                [wrkflw.Ajustes, ,wrkflw.AnaliseAssr, wrkflw.RealizaReuniao, wrkflw.ItemDescartado],
-                [wrkflw.Ajustes, wrkflw.RealizaReuniao, wrkflw.ItemDescartado],
-                [wrkflw.Ajustes, wrkflw.RealizaReuniao, wrkflw.ItemDescartado],
+                [wrkflw.Ajustes, ,wrkflw.AnaliseAssr, wrkflw.RealizaReuniao, wrkflw.ItemDescartado, 26],
+                [wrkflw.Ajustes, wrkflw.RealizaReuniao, wrkflw.ItemDescartado, 26],
+                [wrkflw.Ajustes, wrkflw.RealizaReuniao, wrkflw.ItemDescartado, 26],
             ] 
             let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", dataSelected, dataSelected, ConstraintType.MUST); 
             let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
@@ -904,27 +954,44 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                 {'fncName': 'moveItem'},
                 {'fncName': 'moveItemDelibr'},
                 {'fncName': 'refreshTable'},
-                {'fncName': 'moveItemAprov'}
+                {'fncName': 'moveItemAprov'},
+                {'fncName': 'moveItemReprov'}
         ],
         moveItem: async function () {
             drpDwn  = itens['btnDrpDwn1'];
-            let lis = drpDwn.getElementsByTagName('li')
+            itensConfigsH   = itensConfigsUpd;
+            objHandleIcons =  {};
+            for(z = 0; z < itensConfigsH.length; z++){
+                itnHnow = itensConfigsH[z]
+                if(itnHnow.id == 'btnDrpDwn1'){
+                    ulsHnow = itnHnow.ul
+                    for(b = 0; b < ulsHnow.length; b++){
+                        id = ulsHnow[b].id
+                        icon = ulsHnow[b].icon
+                        console.log(ulsHnow[b])
+                        objHandleIcons[id] = icon
+                    }
+                }else if(itnHnow.id == 'btn1'){
+                    objHandleIcons[itnHnow.id] = itnHnow.setIcon
+                }
+            }
+            console.log(objHandleIcons)
+            
+            let lis = drpDwn.getElementsByTagName('li');
             for(let i = 0; i < lis.length; i++){
                 let liNow = lis[i];
-                if(liNow.id && liNow.id != 'AprovarAssr'){
+                if(liNow.id && liNow.id != 'AprovarAssr' && liNow.id != 'ReprovarAssr'){
                     await liNow.addEventListener('click', async function() { await hipotesis(this); await hipotesis2(); }); /******************************** */
                     async function hipotesis(elem){
-                        let nameIten = 'dataSelected'
-                        console.log(itens)
-                        let it = dataTablemi.itensBuilt[nameIten];
-                        var iten = dataTablemi.itensBuilt['btn1'];
-                        inp = it.getElementsByTagName('input')[0];
-                        inpValue = inp.value;  
+                        console.log(objHandleIcons)
+                        let nameIten        = 'dataSelected'
+                        let it              = dataTablemi.itensBuilt[nameIten];
+                        var iten            = dataTablemi.itensBuilt['btn1'];
+                        inp                 = it.getElementsByTagName('input')[0];
+                        inpValue            = inp.value;  
                         let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", inpValue, inpValue, ConstraintType.MUST); 
                         let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
                         let statusAssr      = itenPauta['hdn_aprvAssr'];
-                        
-                        //console.log(itensTools.myModal())
 
                         if(elem.value != statusAssr){    
                             await dataTablemi.APImethods.movePOST(inpValue, elem.value); /******** */
@@ -932,13 +999,14 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                             console.log(interv)
                         }
                         function defineStatus () { 
+                            console.log(objHandleIcons)
                             let colItens = dataTablemi.TableFluig().getCol('Aprov.Assessoria');
                             let colValue = dataTablemi.TableFluig().getCol('N° Solicitação');
 
                             let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", inpValue, inpValue, ConstraintType.MUST); 
                             let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
                             stateNow      = itenPauta['hdn_aprvAssr'];                                            
-                           
+                            let resAnalis = itenPauta['txt_resultAnalis'];              // <---- Campo resultado da Analise assessoria defini o Se foi para status 26 devido Deliberação ou devido Reprovação 
                             if(stateNow == elem.value){
                                 var colItem = 0;
                                 for(let i = 0; i < colValue.length; i++){
@@ -947,35 +1015,14 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                     }
                                 } 
                                 console.log(stateNow);
-
-                                /* if(stateNow == 15){ 
-                                    //colItem.removeChild(colItem.children[0]); 
-                                    colItem.innerHTML = ''
-                                    let icon = dataTablemi.constructIcon().construct('flaticon flaticon-file-check icon-md');
-                                    colItem.appendChild(icon);
-                                    let icn             = colItem.innerHTML;                                     //Descrição
-                                    icn                 = icn +' <b>Aprovado</b>';
-                                    colItem.innerHTML    = icn;
-                                    dataTablemi.resAPI = {};
-                                    window.res['arrIndx'].push('1');
-                                    orderMethodsMi.indexFunctionsX();
-                                    itensTools.myToast('success', 'Ação realizada com sucesso!');
-                                    let inps = document.getElementsByClassName('inpDlbr')
-                                    arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao']
-                                    document.getElementById('Delibr').style.display = 'block';
-                                    iten.getElementsByTagName('button')[0].disabled = false;
-                                    console.log('************** * ** * * * ** * *** **'+ iten)
-                                    for(let i = 0; i < inps.length; i++){
-                                        let nowInp = inps[arrNamesIt[i]];
-                                        nowInp.value = '';
-                                        nowInp.disabled = false;
-                                    } 
-                                    clearInterval(interv)
-                                }*/
                                 if(stateNow == wrkflw.AnaliseAssr){
                                     //colItem.removeChild(colItem.children[0])
                                     colItem.innerHTML = ''
-                                    let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-file-bell-empty icon-md');
+                                    iconThis = objHandleIcons["ReverterAssr"]
+                                    iconThis = iconThis.replace('sm', 'md')
+                                    let icon = constructIcon.construct(iconThis);
+                                    //colItem.innerHTML = ''
+                                    //let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-file-bell-empty icon-md');
                                     colItem.appendChild(icon);
                                     let icn             = colItem.innerHTML;                                     //Descrição
                                     icn                 = icn +' <b>Análise</b>';
@@ -1015,7 +1062,11 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                 else if(stateNow == wrkflw.ItemDescartado){
                                     //colItem.removeChild(colItem.children[0])
                                     colItem.innerHTML = ''
-                                    let icon = dataTablemi.constructIcon().construct('flaticon flaticon-file-delete icon-md');
+                                    iconThis = objHandleIcons["ExcluirAssr"]
+                                    iconThis = iconThis.replace('sm', 'md')
+                                    let icon = constructIcon.construct(iconThis);
+                                    //colItem.innerHTML = ''
+                                    //let icon = dataTablemi.constructIcon().construct('flaticon flaticon-file-delete icon-md');
                                     colItem.appendChild(icon);
                                     let icn             = colItem.innerHTML;                                     //Descrição
                                     icn                 = icn +' <b>Excluído</b>';
@@ -1029,7 +1080,11 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                 else if(stateNow == wrkflw.Ajustes){
                                     //colItem.removeChild(colItem.children[0])
                                     colItem.innerHTML = ''
-                                    let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-fileedit icon-md');
+                                    iconThis = objHandleIcons["AjusteAssr"]
+                                    iconThis = iconThis.replace('sm', 'md')
+                                    let icon = constructIcon.construct(iconThis);
+                                    //colItem.innerHTML = ''
+                                    //let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-fileedit icon-md');
                                     colItem.appendChild(icon);
                                     let icn             = colItem.innerHTML;                                     //Descrição
                                     icn                 = icn +' <b>Ajuste</b>';
@@ -1041,10 +1096,33 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                     itensTools.myToast('success', 'Ação realizada com sucesso!');
                                     clearInterval(interv)
                                 }
-                                else if(stateNow == wrkflw.DespachoDeliber){
+                                /*else if(stateNow == wrkflw.DespachoDeliber && resAnalis == null || stateNow == wrkflw.DespachoDeliber && resAnalis == undefined || stateNow == wrkflw.DespachoDeliber && resAnalis == '' || stateNow == wrkflw.DespachoDeliber && resAnalis == 0){
                                     //colItem.removeChild(colItem.children[0])
                                     colItem.innerHTML = ''
-                                    let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-checked icon-md');
+                                    iconThis = objHandleIcons["btn1"]
+                                    iconThis = iconThis.replace('sm', 'md')
+                                    let icon = constructIcon.construct(iconThis);
+                                    //colItem.innerHTML = ''
+                                    //let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-checked icon-md');
+                                    colItem.appendChild(icon);
+                                    let icn             = colItem.innerHTML;                                     //Descrição
+                                    icn                 = icn +' <b>Deliberado</b>';
+                                    colItem.innerHTML    = icn;
+                                    dataTablemi.resAPI = {};
+                                    window.res['numIndx'] = 2;
+                                    window.res['arrIndx'].push('1');
+                                    orderMethodsMi.indexFunctionsX();
+                                    itensTools.myToast('success', 'Ação realizada com sucesso!');
+                                    clearInterval(interv)
+                                }*/
+                                else if(stateNow == wrkflw.DespachoDeliber && resAnalis != null || stateNow == wrkflw.DespachoDeliber && resAnalis != undefined || stateNow == wrkflw.DespachoDeliber && resAnalis != '' || stateNow == wrkflw.DespachoDeliber && resAnalis != 0){
+                                    //colItem.removeChild(colItem.children[0])
+                                    colItem.innerHTML = ''
+                                    iconThis = objHandleIcons["ReprovarAssr"]
+                                    iconThis = iconThis.replace('sm', 'md')
+                                    let icon = constructIcon.construct(iconThis);
+                                    //colItem.innerHTML = ''
+                                    //let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-checked icon-md');
                                     colItem.appendChild(icon);
                                     let icn             = colItem.innerHTML;                                     //Descrição
                                     icn                 = icn +' <b>Deliberado</b>';
@@ -1062,6 +1140,124 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                     }
                 }
             }
+        },moveItemReprov: function () {
+            drpDwn  = itens['btnDrpDwn1'];
+            itensConfigsH   = itensConfigsUpd;
+            objHandleIcons =  {};
+            for(z = 0; z < itensConfigsH.length; z++){
+                itnHnow = itensConfigsH[z]
+                if(itnHnow.id == 'btnDrpDwn1'){
+                    ulsHnow = itnHnow.ul
+                    for(b = 0; b < ulsHnow.length; b++){
+                        id = ulsHnow[b].id
+                        icon = ulsHnow[b].icon
+                        console.log(ulsHnow[b])
+                        objHandleIcons[id] = icon
+                    }
+                }else if(itnHnow.id == 'btn1'){
+                    objHandleIcons[itnHnow.id] = itnHnow.setIcon
+                }
+            }
+            console.log(objHandleIcons)
+            drpDwn  = itens['btnDrpDwn1'];
+            let lis = drpDwn.getElementsByTagName('li')
+            console.log(lis)
+            for(let i = 0; i < lis.length; i++){
+                let liNow = lis[i];
+                console.log(liNow)
+                if(liNow.id == 'ReprovarAssr'){
+                    liNow.addEventListener('click', async function() { await ReprovarAssrDefinition(); await hipotesis2();})
+                    break
+                }
+            }
+            async function ReprovarAssrDefinition(){
+                let nameIten        = 'dataSelected'
+                statusNext          = wrkflw.DespachoDeliber;
+                inpsPanel           = document.getElementsByClassName('inpDlbr')
+                let it              = dataTablemi.itensBuilt[nameIten];
+                inp                 = it.getElementsByTagName('input')[0];
+                inpValue            = inp.value;  
+                let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", inpValue, inpValue, ConstraintType.MUST); 
+                let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
+                let statusAssr      = itenPauta['hdn_aprvAssr'];
+
+                myEditor.setDataInputsParams()
+                Justf = inpsPanel['txt_Justificativa'].value; 
+                resultAnalis = 1; 
+                arrNamesInp = ['txt_Justificativa'];
+                
+                for(i = 0; i < inpsPanel.length; i++){
+                    inpNow = inpsPanel[arrNamesInp[i]]
+                    if(inpNow != undefined){
+                        if(inpNow.value != '' && inpNow.value != 0){
+                            if(statusNext != statusAssr){           
+                                await dataTablemi.APImethods.movePOST(inpValue, statusNext, '', Justf, '', '', resultAnalis); 
+                                var intervmoveItemReprov = setInterval(defineStatusReprovAssessor, 100); 
+                            }
+                        }else{ itensTools.myToast('info', 'É necessário preencher o campo Justificativa do Demandante!'); break; }
+                    }
+                }                
+
+                function defineStatusReprovAssessor () { 
+                    let colItens        = dataTablemi.TableFluig().getCol('Aprov.Assessoria');
+                    let colValue        = dataTablemi.TableFluig().getCol('N° Solicitação');
+                    var itenBtn1        = dataTablemi.itensBuilt['btn1'];
+                  
+                    let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", inpValue, inpValue, ConstraintType.MUST); 
+                    let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
+                    let stateNow        = itenPauta['hdn_aprvAssr'];
+
+                    if(stateNow == statusNext){
+                        var colItem = 0;
+                        for(let i = 0; i < colValue.length; i++){
+                            if(inpValue == colValue[i].innerText){
+                                colItem = colItens[i]
+                            }
+                        } 
+                        console.log(stateNow);
+                        if(stateNow == wrkflw.DespachoDeliber){  
+                            colItem.innerHTML = ''
+                            iconThis = objHandleIcons["ReprovarAssr"]
+                            iconThis = iconThis.replace('sm', 'md')
+                            let icon       = constructIcon.construct(iconThis);//'fluigicon fluigicon-fileedit icon-md'
+                            //let icon = dataTablemi.constructIcon().construct('flaticon flaticon-file-check icon-md');
+                            colItem.appendChild(icon);
+                            let icn                 = colItem.innerHTML;                                     //Descrição
+                            icn                     = icn +' <b>Reprovado</b>';
+                            colItem.innerHTML       = icn;
+                            dataTablemi.resAPI = {};
+                            window.res['arrIndx'].push('1');
+                            orderMethodsMi.indexFunctionsX();
+                            itensTools.myToast('success', 'Ação realizada com sucesso!');
+                            let inps = document.getElementsByClassName('inpDlbr')
+                            arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao', 'txt_obsDlbrDIRAF', 'txt_obsDlbrDITEC', 'txt_obsDlbrDISUP',]
+                            document.getElementById('Delibr').style.display = 'block';
+                            itenBtn1.getElementsByTagName('button')[0].disabled = false;
+                            for(let i = 0; i < inps.length; i++){
+                                var nowInp = inps[arrNamesIt[i]];
+                                if(nowInp != undefined){
+                                    nowInp.value = '';
+                                    nowInp.disabled = false;
+                                }
+                            } 
+                            console.log(intervmoveItemReprov)
+                            console.log(myEditor)
+                            myEditor.setDataInput(document.getElementById('txt_Justificativa'))
+                            myEditor.disabledEditor(document.getElementById('txt_Justificativa'))
+                            myEditor.setDataInput(document.getElementById('txt_Deliberacao'))
+                            myEditor.disabledEditor(document.getElementById('txt_Deliberacao'))
+                            myEditor.setDataInput(document.getElementById('txt_obsDlbrDIRAF'))
+                            myEditor.setDataInput(document.getElementById('txt_obsDlbrDITEC'))
+                            myEditor.disabledEditor(document.getElementById('txt_obsDlbrDITEC'))
+                            myEditor.setDataInput(document.getElementById('txt_obsDlbrDISUP'))
+                            myEditor.disabledEditor(document.getElementById('txt_obsDlbrDISUP'))
+                            
+                            clearInterval(intervmoveItemReprov)
+                        }
+                        else{ clearInterval(intervmoveItemReprov) }
+                    }
+                }
+            }
         },moveItemAprov: function () {
             drpDwn  = itens['btnDrpDwn1'];
             let lis = drpDwn.getElementsByTagName('li')
@@ -1069,8 +1265,8 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                 let liNow = lis[i];
                 if(liNow.id == 'AprovarAssr'){
                     liNow.addEventListener('click', async function() { await AprovarAssrDefinition(); await hipotesis2();})
+                    break
                 }
-                break
             }
             async function AprovarAssrDefinition(){
                 let nameIten        = 'dataSelected'
@@ -1177,7 +1373,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                 let statusAssr      = itenPauta['hdn_aprvAssr'];
 
                 myEditor.setDataInputsParams()
-                
+                resultAnalis = 2;
                 DISUP = inpsPanel['slc_DISUP_vt'].value;
                 DIRAF = inpsPanel['slc_DIRAF_vt'].value;
                 DITEC = inpsPanel['slc_DITEC_vt'].value;
@@ -1214,7 +1410,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                     inpNow = inpsPanel[arrNamesInp[i]]
                     if(inpNow != undefined){
                         if(ckY == 0 && statusDelibr != statusAssr){    
-                            await dataTablemi.APImethods.movePOST(inpValue, statusDelibr, Delibr, Justf, votesThisItnNow, obsThisItnNow); 
+                            await dataTablemi.APImethods.movePOST(inpValue, statusDelibr, Delibr, Justf, votesThisItnNow, obsThisItnNow, resultAnalis); 
                             //var intervmoveItemDelibr = setInterval(defineStatusDelibr, 200);
                             await defineStatusDelibr()
                             //console.log(intervmoveItemDelibr)
@@ -1272,7 +1468,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                             myEditor.disabledEditor(document.getElementById('txt_Deliberacao'))
 
                             myEditor.setDataInput(document.getElementById('txt_obsDlbrDIRAF'))
-                            myEditor.disabledEditor(document.getElementById('txt_obsDlbrDIRAF'))
+               
                             myEditor.setDataInput(document.getElementById('txt_obsDlbrDITEC'))
                             myEditor.disabledEditor(document.getElementById('txt_obsDlbrDITEC'))
                             myEditor.setDataInput(document.getElementById('txt_obsDlbrDISUP'))
