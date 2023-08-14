@@ -458,12 +458,14 @@ dataTableConfig.prototype.changeEventInput = function () {
                         nowInp.disabled = true;
                     } 
                     inps['txt_Justificativa'].disabled = false
+                    inps['txt_Deliberacao'].disabled = false
                     inps['txt_Justificativa'].value = itenPauta['txt_Justificativa']; inps['txt_Justificativa'].style.color = 'black';
+                    inps['txt_Deliberacao'].value = itenPauta['txt_Deliberacao']; inps['txt_Deliberacao'].style.color = 'black';
                     console.log(myEditor)
                     myEditor.cleanEditor(document.getElementById('txt_Justificativa'))
                     myEditor.setDataInput(document.getElementById('txt_Justificativa'))
                     myEditor.setDataInput(document.getElementById('txt_Deliberacao'))
-                    myEditor.disabledEditor(document.getElementById('txt_Deliberacao'))
+                    //myEditor.disabledEditor(document.getElementById('txt_Deliberacao'))
 
                    
                     myEditor.setDataInput(document.getElementById('txt_obsDlbrDIRAF'))
@@ -1048,7 +1050,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                     
                                     myEditor.setDataInput(document.getElementById('txt_Justificativa'))
                                     myEditor.setDataInput(document.getElementById('txt_Deliberacao'))
-                                    myEditor.disabledEditor(document.getElementById('txt_Deliberacao'))
+                                    //myEditor.disabledEditor(document.getElementById('txt_Deliberacao'))
 
                                     myEditor.setDataInput(document.getElementById('txt_obsDlbrDIRAF'))
                                     myEditor.disabledEditor(document.getElementById('txt_obsDlbrDIRAF'))
@@ -1088,44 +1090,6 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                     colItem.appendChild(icon);
                                     let icn             = colItem.innerHTML;                                     //Descrição
                                     icn                 = icn +' <b>Ajuste</b>';
-                                    colItem.innerHTML    = icn;
-                                    dataTablemi.resAPI = {};
-                                    window.res['numIndx'] = 2;
-                                    window.res['arrIndx'].push('1');
-                                    orderMethodsMi.indexFunctionsX();
-                                    itensTools.myToast('success', 'Ação realizada com sucesso!');
-                                    clearInterval(interv)
-                                }
-                                /*else if(stateNow == wrkflw.DespachoDeliber && resAnalis == null || stateNow == wrkflw.DespachoDeliber && resAnalis == undefined || stateNow == wrkflw.DespachoDeliber && resAnalis == '' || stateNow == wrkflw.DespachoDeliber && resAnalis == 0){
-                                    //colItem.removeChild(colItem.children[0])
-                                    colItem.innerHTML = ''
-                                    iconThis = objHandleIcons["btn1"]
-                                    iconThis = iconThis.replace('sm', 'md')
-                                    let icon = constructIcon.construct(iconThis);
-                                    //colItem.innerHTML = ''
-                                    //let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-checked icon-md');
-                                    colItem.appendChild(icon);
-                                    let icn             = colItem.innerHTML;                                     //Descrição
-                                    icn                 = icn +' <b>Deliberado</b>';
-                                    colItem.innerHTML    = icn;
-                                    dataTablemi.resAPI = {};
-                                    window.res['numIndx'] = 2;
-                                    window.res['arrIndx'].push('1');
-                                    orderMethodsMi.indexFunctionsX();
-                                    itensTools.myToast('success', 'Ação realizada com sucesso!');
-                                    clearInterval(interv)
-                                }*/
-                                else if(stateNow == wrkflw.DespachoDeliber && resAnalis != null || stateNow == wrkflw.DespachoDeliber && resAnalis != undefined || stateNow == wrkflw.DespachoDeliber && resAnalis != '' || stateNow == wrkflw.DespachoDeliber && resAnalis != 0){
-                                    //colItem.removeChild(colItem.children[0])
-                                    colItem.innerHTML = ''
-                                    iconThis = objHandleIcons["ReprovarAssr"]
-                                    iconThis = iconThis.replace('sm', 'md')
-                                    let icon = constructIcon.construct(iconThis);
-                                    //colItem.innerHTML = ''
-                                    //let icon = dataTablemi.constructIcon().construct('fluigicon fluigicon-checked icon-md');
-                                    colItem.appendChild(icon);
-                                    let icn             = colItem.innerHTML;                                     //Descrição
-                                    icn                 = icn +' <b>Deliberado</b>';
                                     colItem.innerHTML    = icn;
                                     dataTablemi.resAPI = {};
                                     window.res['numIndx'] = 2;
