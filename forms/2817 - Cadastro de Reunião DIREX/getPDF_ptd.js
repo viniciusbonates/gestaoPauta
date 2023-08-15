@@ -148,11 +148,14 @@ function updatePDF_ptd(){
             }
             formatDte = dt_slc.split('-')[2]+'/'+dt_slc.split('-')[1]+'/'+dt_slc.split('-')[0]
             console.log(formatDte)
-            c1 = DatasetFactory.createConstraint("hdn_dir_vinc", matDir , matDir,  ConstraintType.MUST, true); 
+            c1 = DatasetFactory.createConstraint("hdn_dir_vinc", '%Pool:Role:DIRAF%', '%Pool:Role:DIRAF%',  ConstraintType.MUST, true); 
             c2 = DatasetFactory.createConstraint("dataSelected", formatDte , formatDte,  ConstraintType.MUST, true); 
-            c3 = DatasetFactory.createConstraint("hdn_aprvAssr", stateParamIs , stateParamIs,  ConstraintType.MUST, true); 
+            //c3 = DatasetFactory.createConstraint("hdn_aprvAssr", stateParamIs , stateParamIs,  ConstraintType.MUST, true); 
+            c3 = DatasetFactory.createConstraint("txt_resultAnalis", 0 , 0,  ConstraintType.MUST_NOT); 
+            c4 = DatasetFactory.createConstraint("txt_resultAnalis", null, null,  ConstraintType.MUST_NOT);
             
-            cnst = new Array(c1, c2, c3);
+            
+            cnst = new Array(c1, c2, c3, c4);
             itns = DatasetFactory.getDataset('Pauta DIREX', null, cnst, null).values;
             arrItns_Dir.push(itns)
         }
@@ -214,7 +217,7 @@ function updatePDF_ptd(){
                     '</p>'+'<br></br>'
                 }
 
-                var txtDlbr = itnDirNow[j]["txt_titulo"];
+                var txtDlbr = itnDirNow[j]["txt_Deliberacao"];
                 txtDlbr = txtDlbr.toLowerCase();
                 var txtJstf = itnDirNow[j]["txt_Justificativa"];
 
@@ -226,9 +229,14 @@ function updatePDF_ptd(){
                 bd = txtDlbr.substring(inc, fnl)        // Obtem apenas o BODY do HTML salvo no input
                 console.log(bd)
                 */
-                dlbr_now = '<div style="margin-left:0.6cm;"><b>'+ numIten + '.  </b>Deliberação acerca  '+txtDlbr+ '<br></br>'+
+                /*dlbr_now = '<div style="margin-left:0.6cm;"><b>'+ numIten + '.  </b>Deliberação acerca  '+txtDlbr+ '<br></br>'+
                 '<div style="margin-left:0.6cm;">'+
                 '<b><u><span style="font-size:12.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif">Justificativa:</span></span></u></b>'+txtJstf+'<br></br>'+ //<div style="margin-left:0.6cm;">'
+                '<span style="line-height:150%"><b><span style="font-size:12.0pt"><span style="line-height:150%"><span style="color:black">Deliberação:</span></span></span></b>'+
+                */
+                dlbr_now = '<div style="margin-left:0.6cm;"><b>'+ numIten + '.   '+
+                '<div style="margin-left:0.6cm;">'+
+                txtDlbr+'<br></br>'+
                 '<span style="line-height:150%"><b><span style="font-size:12.0pt"><span style="line-height:150%"><span style="color:black">Deliberação:</span></span></span></b>'+
                 '<span style="font-size:12.0pt"><span style="line-height:150%"><span style="color:black"> <b>'+resultadoDelbr+'</b></span></span></span></span>'+
                 '</div></div><br></br>';
