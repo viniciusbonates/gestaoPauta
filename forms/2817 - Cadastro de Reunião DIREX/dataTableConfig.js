@@ -994,9 +994,10 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                         let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", inpValue, inpValue, ConstraintType.MUST); 
                         let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
                         let statusAssr      = itenPauta['hdn_aprvAssr'];
+                        let resultAnalis    = 0;              
 
-                        if(elem.value != statusAssr){    
-                            await dataTablemi.APImethods.movePOST(inpValue, elem.value); /******** */
+                        if(elem.value != statusAssr){        
+                            await dataTablemi.APImethods.movePOST(inpValue, elem.value, '', '', '', '', resultAnalis); /******** */
                             var interv = setInterval(defineStatus, 200);
                             console.log(interv)
                         }
@@ -1008,7 +1009,6 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                             let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", inpValue, inpValue, ConstraintType.MUST); 
                             let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
                             stateNow      = itenPauta['hdn_aprvAssr'];                                            
-                            let resAnalis = itenPauta['txt_resultAnalis'];              // <---- Campo resultado da Analise assessoria defini o Se foi para status 26 devido Deliberação ou devido Reprovação 
                             if(stateNow == elem.value){
                                 var colItem = 0;
                                 for(let i = 0; i < colValue.length; i++){
