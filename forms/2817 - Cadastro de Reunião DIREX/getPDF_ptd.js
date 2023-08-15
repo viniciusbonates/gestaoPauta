@@ -234,7 +234,7 @@ function updatePDF_ptd(){
                 '<b><u><span style="font-size:12.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif">Justificativa:</span></span></u></b>'+txtJstf+'<br></br>'+ //<div style="margin-left:0.6cm;">'
                 '<span style="line-height:150%"><b><span style="font-size:12.0pt"><span style="line-height:150%"><span style="color:black">Deliberação:</span></span></span></b>'+
                 */
-                dlbr_now = '<div style="margin-left:0.6cm;"><b>'+ numIten + '.   '+
+                dlbr_now = '<div style="margin-left:0.6cm;"><b>'+ numIten + '.   </b>'+
                 '<div style="margin-left:0.6cm;">'+
                 txtDlbr+'<br></br>'+
                 '<span style="line-height:150%"><b><span style="font-size:12.0pt"><span style="line-height:150%"><span style="color:black">Deliberação:</span></span></span></b>'+

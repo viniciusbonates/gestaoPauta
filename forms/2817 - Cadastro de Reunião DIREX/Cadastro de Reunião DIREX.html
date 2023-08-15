@@ -92,7 +92,7 @@
 		</div>
 		<div class="col-md-4" id="Numero_Process_Atual">
 			<label for="txt_NumProcess">N° Processo / Reunião:</label>
-			<input type="text" class="form-control" name="txt_NumProcess" id="txt_NumProcess" readonly>
+			<input type="text" class="form-control" name="txt_NumProcess" id="txt_NumProcess" style="color: black;" readonly>
 		</div>
 		</div>
 		</div>
@@ -290,6 +290,17 @@
 			<input  type="text" class="form-control" name="dataSelected" id="dataSelected" style="display: block;" readonly>
 		</div>
 		<div class="panel-body" id="Delibr" style="display: none;">
+		<div class="col-md-4">
+		<div class="form-group">
+			<label for="slc_demandante">Demandante<span class="Obrigatorio"><strong>*</strong></span></label>
+			<select class="form-control inpDlbr" name="slc_demandante" id="slc_demandante">
+				<option value="0"></option>
+			</select>
+		</div>
+		</div>
+		<sup data-toggle="tooltip" data-placement="right" data-original-title="Modifique caso o item deva ser recebido em nome de outra pessoa ou para indicar o responsável pela demanda."><i class="fluigicon fluigicon-info-sign icon-sm" aria-hidden="true"></i></sup>
+		<div class="row">	
+		</div>
 		<div class="col-md-4">
 		<div class="form-group">
 			<label for="slc_DISUP_vt">DISUP</label>
