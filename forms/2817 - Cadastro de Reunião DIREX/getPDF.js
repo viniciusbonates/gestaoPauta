@@ -149,9 +149,12 @@ function updatePDF(){
             c1 = DatasetFactory.createConstraint("hdn_dir_vinc", matDir , matDir,  ConstraintType.MUST, true); 
             c2 = DatasetFactory.createConstraint("dataSelected", formatDte , formatDte,  ConstraintType.MUST, true); 
             c3 = DatasetFactory.createConstraint("hdn_aprvAssr", 26 , 26,  ConstraintType.MUST, true); 
-            
-            cnst = new Array(c1, c2, c3);
+            c4 = DatasetFactory.createConstraint("txt_resultAnalis", 2, 2,  ConstraintType.MUST);
+            c5 = DatasetFactory.createConstraint("txt_resultAnalis", null, null,  ConstraintType.MUST_NOT); 
+
+            cnst = new Array(c1, c2, c3, c4, c5);
             itns = DatasetFactory.getDataset('Pauta DIREX', null, cnst, null).values;
+            console.log(itns)
             arrItns_Dir.push(itns)
         }else{
             c1 = DatasetFactory.createConstraint("hdn_dir_vinc", "%Pool:Role:DISUP%" , "%Pool:Role:DISUP%",  ConstraintType.MUST, true); 
@@ -159,12 +162,15 @@ function updatePDF(){
             c3 = DatasetFactory.createConstraint("hdn_dir_vinc", "%Pool:Role:DIRAF%" , "%Pool:Role:DIRAF%",  ConstraintType.MUST, true); 
 
             formatDte = dt_slc.split('-')[2]+'/'+dt_slc.split('-')[1]+'/'+dt_slc.split('-')[0]
-            c4 = DatasetFactory.createConstraint("dataSelected", formatDte , formatDte,  ConstraintType.MUST, true);
-            cStts = DatasetFactory.createConstraint("hdn_aprvAssr", 26 , 26,  ConstraintType.MUST, true); 
+            c4 = DatasetFactory.createConstraint("dataSelected", formatDte, formatDte,  ConstraintType.MUST, true);
+            cStts = DatasetFactory.createConstraint("hdn_aprvAssr", 26, 26,  ConstraintType.MUST, true); 
+            c5 = DatasetFactory.createConstraint("txt_resultAnalis", 2, 2,  ConstraintType.MUST);
+            c6 = DatasetFactory.createConstraint("txt_resultAnalis", null, null,  ConstraintType.MUST_NOT); 
 
-            cnst1 = new Array(c1, cStts, c4)
-            cnst2 = new Array(c2, cStts, c4)
-            cnst3 = new Array(c3, cStts, c4)
+
+            cnst1 = new Array(c1, cStts, c4, c5, c6)
+            cnst2 = new Array(c2, cStts, c4, c5, c6)
+            cnst3 = new Array(c3, cStts, c4, c5, c6)
             itnsDISUP = DatasetFactory.getDataset('Pauta DIREX', null, cnst1, null).values;
             itnsDITEC = DatasetFactory.getDataset('Pauta DIREX', null, cnst2, null).values;
             itnsDIRAF = DatasetFactory.getDataset('Pauta DIREX', null, cnst3, null).values;
@@ -290,8 +296,8 @@ function updatePDF(){
 
                 
 
-                dlbr_now = '<div style="margin-left:0.6cm;"><b>'+ numIten + '.  </b>'+bd+ '<br></br>'+
-                '<b><u><span style="font-size:12.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif">Justificativa:</span></span></u></b>'+txtJstf+'<br></br>'//<div style="margin-left:0.6cm;">'
+                dlbr_now = '<div style="margin-left:0.6cm;"><b>'+ numIten + '.  </b>'+bd+ '<br></br><br></br>';
+                //'<b><u><span style="font-size:12.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif">Justificativa:</span></span></u></b>'+txtJstf+'<br></br>'//<div style="margin-left:0.6cm;">'
 
                 var obsDISUPIsN = itnDirNow[j]["txt_obsDlbrDISUP"];
                 var obsDIRAFIsN = itnDirNow[j]["txt_obsDlbrDIRAF"];
@@ -308,16 +314,17 @@ function updatePDF(){
                 for(f = 0; f < arrObsDlbrIs.length; f++){
                     vleObsDlbrNow = arrObsDlbrIs[f]
                     if(vleObsDlbrNow != "<html>\n<head>\n\t<title></title>\n</head>\n<body></body>\n</html>\n" && vleObsDlbrNow != null && vleObsDlbrNow != undefined && vleObsDlbrNow != ''){
-                        obsResultIs = obsResultIs + vleObsDlbrNow + '<br></br';
+                        obsResultIs = obsResultIs + vleObsDlbrNow + '<br></br>';
                         asdx++
                     }
                 }
                 //console.log(obsObjIs)
                 if(asdx != 0){
-                    ObsDlbrIs = ObsDlbrIs + '<span style="line-height:150%"><b><span style="font-size:12.0pt"><span style="line-height:150%"><u><span style="color:black">Observação:</span></u></span></span></b>'+
+                    /*ObsDlbrIs = ObsDlbrIs + '<span style="line-height:150%"><b><span style="font-size:12.0pt"><span style="line-height:150%"><u><span style="color:black">Observação:</span></u></span></span></b>'+
                     '<span style="font-size:12.0pt"><span style="line-height:150%"><span style="color:black"> <b>'+obsResultIs+'</b></span></span></span></span>';
+                    */
                     dlbr_now = dlbr_now + ObsDlbrIs + '<span style="line-height:150%"><b><span style="font-size:12.0pt"><span style="line-height:150%"><span style="color:black">Deliberação:</span></span></span></b>'+
-                    '<span style="font-size:12.0pt"><span style="line-height:150%"><span style="color:black"> <b>'+resultadoDelbr+'</b></span></span></span></span>'+'</div><br></br>';
+                    '<span style="font-size:12.0pt"><span style="line-height:150%"><span style="color:black"> <b>'+resultadoDelbr+' '+obsResultIs+'</b></span></span></span></span>'+'</div><br></br>';
                 }else{
                     dlbr_now = dlbr_now + '<span style="line-height:150%"><b><span style="font-size:12.0pt"><span style="line-height:150%"><span style="color:black">Deliberação:</span></span></span></b>'+
                     '<span style="font-size:12.0pt"><span style="line-height:150%"><span style="color:black"> <b>'+resultadoDelbr+'</b></span></span></span></span>'+'</div><br></br>';
