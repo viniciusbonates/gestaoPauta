@@ -1,7 +1,31 @@
 function setDataset(){
     colleague = DatasetFactory.getDataset("colleague",null,null,null);
     dsc_Unidades = DatasetFactory.getDataset("dsc_Unidades",null,null,null);
+    colleagueGroup = DatasetFactory.getDataset("colleagueGroup", null, null, null)
 }window.addEventListener('load', setDataset)
+
+function DemandResp() {
+    cll     = colleague;
+    c5      = DatasetFactory.createConstraint("groupId", 'UsuarioInc', 'UsuarioInc',  ConstraintType.MUST_NOT); 
+    cnst    = new Array(c5);
+    dsCllFinal = DatasetFactory.getDataset("colleague",null,cnst,null);
+    elemSelc = document.getElementById('slc_demandante')
+    for(z = 0; z < dsCllFinal.values.length; z++){
+        nameCll     = dsCllFinal.values[z]['colleagueName']
+        idCll       = dsCllFinal.values[z]['colleaguePK.colleagueId']
+        console.log(nameCll)
+        console.log(idCll)
+        var node = document.createElement("option");
+        var att = document.createAttribute("value");
+        att.value = idCll
+        node.setAttributeNode(att)
+        node.innerText = nameCll
+        elemSelc.appendChild(node);
+    }
+    console.log(dsCllFinal)
+
+}
+window.addEventListener('load', DemandResp)
 
 function setValueInpDelibr() {
     let stateNow = window.parentOBJ.ECM.workflowView.sequence;

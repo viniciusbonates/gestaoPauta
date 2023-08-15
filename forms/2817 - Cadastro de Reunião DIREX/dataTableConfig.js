@@ -447,15 +447,34 @@ dataTableConfig.prototype.changeEventInput = function () {
                 let assrAp = itenPauta['hdn_aprvAssr'];
                 let resAnalis = itenPauta['txt_resultAnalis'];              // <---- Campo resultado da Analise assessoria defini o Se foi para status 26 devido Deliberação ou devido Reprovação 
                 let inps = document.getElementsByClassName('inpDlbr') // < ------------- OBTEM OS INPUTS NO HTML 
-                arrNamesIt  = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao', 'txt_Justificativa', 'txt_obsDlbrDIRAF', 'txt_obsDlbrDITEC', 'txt_obsDlbrDISUP'] 
-                arrAlt      = ['hdn_DIRAF_vt', 'hdn_DISUP_vt', 'hdn_DITEC_vt']
+                arrNamesIt  = ['slc_demandante', 'slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao', 'txt_Justificativa', 'txt_obsDlbrDIRAF', 'txt_obsDlbrDITEC', 'txt_obsDlbrDISUP'] 
+                arrAlt      = ['hdn_DIRAF_vt', 'hdn_DISUP_vt', 'hdn_DITEC_vt', 'slc_demandante']
                 if(wrkflw.AnaliseAssr == assrAp){
                     document.getElementById('Delibr').style.display = 'block';
                     iten.getElementsByTagName('button')[0].disabled = true;
                     for(let i = 0; i < inps.length; i++){
                         let nowInp = inps[arrNamesIt[i]];
-                        nowInp.value = '';
-                        nowInp.disabled = true;
+                        /**************************************************************************************** */
+                        if(nowInp.tagName == 'SELECT' && nowInp.id == 'slc_demandante'){ // < ---- especialmente para slc_demandante
+                            for(let j = 0; j < nowInp.options.length; j++){
+                                if(nowInp.options[j].value == itenPauta['slc_demandante']){
+                                    nowInp.options[j].selected = true;
+                                    inps[arrNamesIt[i]].value = itenPauta['slc_demandante'];
+                                    nowInp.disabled = false;
+                                }
+                                if(itenPauta['slc_demandante'] == ''){
+                                    nowInp.options[0].selected = true;
+                                    inps[arrNamesIt[i]].value = itenPauta[arrAlt[i]];
+                                    nowInp.disabled = false;
+                                }
+                            }
+                            nowInp.style.color = 'black';
+                            nowInp.disabled = false;
+                            /**************************************************************************************** */
+                        }else{
+                            nowInp.value = '';
+                            nowInp.disabled = true;
+                        }
                     } 
                     inps['txt_Justificativa'].disabled = false
                     inps['txt_Deliberacao'].disabled = false
