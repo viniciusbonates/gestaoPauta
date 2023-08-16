@@ -18,7 +18,7 @@ function orderMethods(){
     this.targetAssignee         = document.getElementById('cmb_NomeSolicita').value
     resMethods();
 }
-orderMethods.prototype.movePOST = async function (NumSolicitacao, acao, dlbr, justf, votes, obsThis, resultAnalis) { 
+orderMethods.prototype.movePOST = async function (NumSolicitacao, acao, dlbr, justf, votes, obsThis, resultAnalis, demandRsp) { 
     var Nsolicitacao                = NumSolicitacao;           // Para este escopo
     orderMethodsMi.Nsolicitacao     = NumSolicitacao;           // Para o .done do ajax
     var acao                        = acao
@@ -56,13 +56,17 @@ orderMethods.prototype.movePOST = async function (NumSolicitacao, acao, dlbr, ju
                         "txt_obsDlbrDISUP":  obsThis.DISUP,
                         "txt_obsDlbrDIRAF":  obsThis.DIRAF,
                         "txt_obsDlbrDITEC":  obsThis.DITEC,
-                        "txt_resultAnalis": resultAnalis
+                        "txt_resultAnalis": resultAnalis,
+                        "slc_demandante": demandRsp
                     }
                 }else if(justf != undefined || justf != ''){
-                        var setFields = {
+                        console.log('  /* * /* / * / */ * * / */ * / */ * /* /* //* / * / /* / * /* / * / * /')    
+                    var setFields = {
                             "hdn_aprvAssr":     aprvAssr,
                             "txt_Justificativa":  justf,
-                            "txt_resultAnalis": resultAnalis
+                            "txt_resultAnalis": resultAnalis,
+                            "slc_demandante": demandRsp,
+                            "txt_Deliberacao":  dlbr
                         }
                 }else{
                         var setFields = { "hdn_aprvAssr": aprvAssr }

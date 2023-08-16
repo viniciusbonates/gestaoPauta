@@ -476,6 +476,7 @@ dataTableConfig.prototype.changeEventInput = function () {
                             nowInp.disabled = true;
                         }
                     } 
+                    console.log(itenPauta)
                     inps['txt_Justificativa'].disabled = false
                     inps['txt_Deliberacao'].disabled = false
                     inps['txt_Justificativa'].value = itenPauta['txt_Justificativa']; inps['txt_Justificativa'].style.color = 'black';
@@ -483,6 +484,7 @@ dataTableConfig.prototype.changeEventInput = function () {
                     console.log(myEditor)
                     myEditor.cleanEditor(document.getElementById('txt_Justificativa'))
                     myEditor.setDataInput(document.getElementById('txt_Justificativa'))
+                    myEditor.cleanEditor(document.getElementById('txt_Deliberacao'))
                     myEditor.setDataInput(document.getElementById('txt_Deliberacao'))
                     //myEditor.disabledEditor(document.getElementById('txt_Deliberacao'))
 
@@ -493,27 +495,67 @@ dataTableConfig.prototype.changeEventInput = function () {
                     myEditor.disabledEditor(document.getElementById('txt_obsDlbrDITEC'))
                     myEditor.setDataInput(document.getElementById('txt_obsDlbrDISUP'))
                     myEditor.disabledEditor(document.getElementById('txt_obsDlbrDISUP'))
+                    
 
+                }else if(wrkflw.ItemDescartado == assrAp){
+                    document.getElementById('Delibr').style.display = 'block';
+                    iten.getElementsByTagName('button')[0].disabled = true;
+                    for(let i = 0; i < inps.length; i++){
+                        let nowInp = inps[arrNamesIt[i]]
+                        ckSlcN = 0;
+                        if(nowInp.tagName == 'SELECT'){
+                            for(let j = 0; j < nowInp.options.length; j++){
+                                for(k = 0; k < arrAlt.length; k++){
+                                    if(nowInp.options[j].value == itenPauta[arrAlt[k]]){
+                                        nowInp.options[j].selected = true;
+                                        inps[arrNamesIt[i]].value = itenPauta[arrAlt[k]];
+                                        ckSlcN++
+                                        break;
+                                    }
+                                }
+                                if(ckSlcN != 0){ break }
+                            }
+                            nowInp.disabled = 'disabled';
+                        }else{  inps[arrNamesIt[i]].value = itenPauta[arrNamesIt[i]]; nowInp.style.color = 'black'; nowInp.disabled = 'disabled'; }
+                    }
+                    console.log(myEditor)
+                    myEditor.setDataInput(document.getElementById('txt_Justificativa'))
+                    myEditor.disabledEditor(document.getElementById('txt_Justificativa'))
+                    myEditor.setDataInput(document.getElementById('txt_Deliberacao'))
+                    myEditor.disabledEditor(document.getElementById('txt_Deliberacao'))
+                    
+                    myEditor.setDataInput(document.getElementById('txt_obsDlbrDIRAF'))
+                    myEditor.disabledEditor(document.getElementById('txt_obsDlbrDIRAF'))
+                    myEditor.setDataInput(document.getElementById('txt_obsDlbrDITEC'))
+                    myEditor.disabledEditor(document.getElementById('txt_obsDlbrDITEC'))
+                    myEditor.setDataInput(document.getElementById('txt_obsDlbrDISUP'))
+                    myEditor.disabledEditor(document.getElementById('txt_obsDlbrDISUP'))
 
                 }else if(wrkflw.RealizaReuniao == assrAp){
                     document.getElementById('Delibr').style.display = 'block';
                     iten.getElementsByTagName('button')[0].disabled = false;
                     for(let i = 0; i < inps.length; i++){
-                        let nowInp = inps[arrNamesIt[i]]
+                        let nowInp = inps[arrNamesIt[i]];
+                        ckSlcN = 0;
                         if(nowInp.tagName == 'SELECT'){
                             for(let j = 0; j < nowInp.options.length; j++){
-                                console.log(nowInp.options[j].value)
-                                console.log(itenPauta[arrAlt[i]])
-                                if(nowInp.options[j].value == itenPauta[arrAlt[i]]){
-                                    nowInp.options[j].selected = true;
-                                    inps[arrNamesIt[i]].value = itenPauta[arrAlt[i]];
-                                    nowInp.disabled = false;
+                                for(k = 0; k < arrAlt.length; k++){
+                                    console.log(nowInp.options[j].value)
+                                    console.log(itenPauta[arrAlt[k]])
+                                    if(nowInp.options[j].value == itenPauta[arrAlt[k]]){
+                                        nowInp.options[j].selected = true;
+                                        inps[arrNamesIt[k]].value = itenPauta[arrAlt[k]];
+                                        nowInp.disabled = false;
+                                        ckSlcN++
+                                        break;
+                                    }
+                                    if(itenPauta[arrAlt[k]] == ''){
+                                        nowInp.options[0].selected = true;
+                                        inps[arrNamesIt[i]].value = itenPauta[arrAlt[k]];
+                                        nowInp.disabled = false;
+                                    }
                                 }
-                                if(itenPauta[arrAlt[i]] == ''){
-                                    nowInp.options[0].selected = true;
-                                    inps[arrNamesIt[i]].value = itenPauta[arrAlt[i]];
-                                    nowInp.disabled = false;
-                                }
+                                if(ckSlcN != 0){ break }
                             }
                             nowInp.style.color = 'black';
                             nowInp.disabled = false;
@@ -535,12 +577,18 @@ dataTableConfig.prototype.changeEventInput = function () {
                 }else if(wrkflw.DespachoDeliber == assrAp && resAnalis == 2){
                     for(let i = 0; i < inps.length; i++){
                         let nowInp = inps[arrNamesIt[i]]
+                        ckSlcN = 0;
                         if(nowInp.tagName == 'SELECT'){
                             for(let j = 0; j < nowInp.options.length; j++){
-                                if(nowInp.options[j].value == itenPauta[arrAlt[i]]){
-                                    nowInp.options[j].selected = true;
-                                    inps[arrNamesIt[i]].value = itenPauta[arrAlt[i]];
+                                for(k = 0; k < arrAlt.length; k++){
+                                    if(nowInp.options[j].value == itenPauta[arrAlt[k]]){
+                                        nowInp.options[j].selected = true;
+                                        inps[arrNamesIt[i]].value = itenPauta[arrAlt[k]];
+                                        ckSlcN++
+                                        break;
+                                    }
                                 }
+                                if(ckSlcN != 0){ break }
                             }
                             nowInp.style.color = 'black';
                             nowInp.disabled = 'disabled';
@@ -565,9 +613,18 @@ dataTableConfig.prototype.changeEventInput = function () {
                 }else if(wrkflw.DespachoDeliber == assrAp && resAnalis == 1){
                     for(let i = 0; i < inps.length; i++){
                         let nowInp = inps[arrNamesIt[i]]
+                        ckSlcN = 0;
                         if(nowInp.tagName == 'SELECT'){
                             for(let j = 0; j < nowInp.options.length; j++){
-                                inps[arrNamesIt[i]].value = ''; 
+                                for(k = 0; k < arrAlt.length; k++){
+                                    if(nowInp.options[j].value == itenPauta[arrAlt[k]]){
+                                        nowInp.options[j].selected = true;
+                                        inps[arrNamesIt[i]].value = itenPauta[arrAlt[k]];
+                                        ckSlcN++
+                                        break;
+                                    }
+                                }
+                                if(ckSlcN != 0){ break }
                             }
                             nowInp.disabled = 'disabled';
                         }else{  inps[arrNamesIt[i]].value = itenPauta[arrNamesIt[i]]; nowInp.style.color = 'black'; nowInp.disabled = 'disabled'; }
@@ -589,6 +646,7 @@ dataTableConfig.prototype.changeEventInput = function () {
                     myEditor.disabledEditor(document.getElementById('txt_obsDlbrDISUP'))
 
                 }else{
+                    console.log('* / * * /* /*/ */ * /* /* /* /* /* / */ */ * /* / * /*/ * /* /* /* /*/')
                     document.getElementById('Delibr').style.display = 'none'
                     iten.getElementsByTagName('button')[0].disabled = true 
                 }
@@ -1006,6 +1064,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                     async function hipotesis(elem){
                         console.log(objHandleIcons)
                         let nameIten        = 'dataSelected'
+                        inpsPanel           = document.getElementsByClassName('inpDlbr')
                         let it              = dataTablemi.itensBuilt[nameIten];
                         var iten            = dataTablemi.itensBuilt['btn1'];
                         inp                 = it.getElementsByTagName('input')[0];
@@ -1013,10 +1072,13 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                         let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", inpValue, inpValue, ConstraintType.MUST); 
                         let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
                         let statusAssr      = itenPauta['hdn_aprvAssr'];
-                        let resultAnalis    = 0;              
+                        let resultAnalis    = 0;     
+                        demandRsp = inpsPanel['slc_demandante'].value;     
+                        Justf = inpsPanel['txt_Justificativa'].value; 
+                        Delibr  = inpsPanel['txt_Deliberacao'].value;
 
-                        if(elem.value != statusAssr){        
-                            await dataTablemi.APImethods.movePOST(inpValue, elem.value, '', '', '', '', resultAnalis); /******** */
+                        if(elem.value != statusAssr){     
+                            await dataTablemi.APImethods.movePOST(inpValue, elem.value, Delibr, Justf, '', '', resultAnalis, demandRsp); /******** */
                             var interv = setInterval(defineStatus, 200);
                             console.log(interv)
                         }
@@ -1054,7 +1116,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                     itensTools.myToast('success', 'Ação realizada com sucesso!');
 
                                     let inps = document.getElementsByClassName('inpDlbr')
-                                    arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao', 'txt_obsDlbrDIRAF', 'txt_obsDlbrDITEC', 'txt_obsDlbrDISUP',]
+                                    arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_obsDlbrDIRAF', 'txt_obsDlbrDITEC', 'txt_obsDlbrDISUP',] //'txt_Deliberacao'
                                     document.getElementById('Delibr').style.display = 'block';
                                     iten.getElementsByTagName('button')[0].disabled = true 
                                     for(let i = 0; i < inps.length; i++){
@@ -1066,8 +1128,10 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                     } 
                                     document.getElementById('txt_Justificativa').disabled = false
                                     console.log(myEditor)
-                                    
+
+                                    myEditor.cleanEditor(document.getElementById('txt_Justificativa'))
                                     myEditor.setDataInput(document.getElementById('txt_Justificativa'))
+                                    myEditor.cleanEditor(document.getElementById('txt_Deliberacao'))
                                     myEditor.setDataInput(document.getElementById('txt_Deliberacao'))
                                     //myEditor.disabledEditor(document.getElementById('txt_Deliberacao'))
 
@@ -1092,6 +1156,18 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                     let icn             = colItem.innerHTML;                                     //Descrição
                                     icn                 = icn +' <b>Excluído</b>';
                                     colItem.innerHTML    = icn;
+
+                                    myEditor.setDataInput(document.getElementById('txt_Justificativa'))
+                                    myEditor.disabledEditor(document.getElementById('txt_Justificativa'))
+                                    myEditor.setDataInput(document.getElementById('txt_Deliberacao'))
+                                    myEditor.disabledEditor(document.getElementById('txt_Deliberacao'))
+                                    myEditor.setDataInput(document.getElementById('txt_obsDlbrDIRAF'))
+                                    myEditor.disabledEditor(document.getElementById('txt_obsDlbrDIRAF'))
+                                    myEditor.setDataInput(document.getElementById('txt_obsDlbrDITEC'))
+                                    myEditor.disabledEditor(document.getElementById('txt_obsDlbrDITEC'))
+                                    myEditor.setDataInput(document.getElementById('txt_obsDlbrDISUP'))
+                                    myEditor.disabledEditor(document.getElementById('txt_obsDlbrDISUP'))
+
                                     dataTablemi.resAPI = {};
                                     window.res['arrIndx'].push('1');
                                     orderMethodsMi.indexFunctionsX();
@@ -1110,6 +1186,18 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                                     let icn             = colItem.innerHTML;                                     //Descrição
                                     icn                 = icn +' <b>Ajuste</b>';
                                     colItem.innerHTML    = icn;
+
+                                    myEditor.setDataInput(document.getElementById('txt_Justificativa'))
+                                    myEditor.disabledEditor(document.getElementById('txt_Justificativa'))
+                                    myEditor.setDataInput(document.getElementById('txt_Deliberacao'))
+                                    myEditor.disabledEditor(document.getElementById('txt_Deliberacao'))
+                                    myEditor.setDataInput(document.getElementById('txt_obsDlbrDIRAF'))
+                                    myEditor.disabledEditor(document.getElementById('txt_obsDlbrDIRAF'))
+                                    myEditor.setDataInput(document.getElementById('txt_obsDlbrDITEC'))
+                                    myEditor.disabledEditor(document.getElementById('txt_obsDlbrDITEC'))
+                                    myEditor.setDataInput(document.getElementById('txt_obsDlbrDISUP'))
+                                    myEditor.disabledEditor(document.getElementById('txt_obsDlbrDISUP'))
+
                                     dataTablemi.resAPI = {};
                                     window.res['numIndx'] = 2;
                                     window.res['arrIndx'].push('1');
@@ -1167,14 +1255,16 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                 myEditor.setDataInputsParams()
                 Justf = inpsPanel['txt_Justificativa'].value; 
                 resultAnalis = 1; 
+                demandRsp = inpsPanel['slc_demandante'].value; 
                 arrNamesInp = ['txt_Justificativa'];
+                Delibr  = inpsPanel['txt_Deliberacao'].value;
                 
                 for(i = 0; i < inpsPanel.length; i++){
                     inpNow = inpsPanel[arrNamesInp[i]]
                     if(inpNow != undefined){
                         if(inpNow.value != '' && inpNow.value != 0){
-                            if(statusNext != statusAssr){           
-                                await dataTablemi.APImethods.movePOST(inpValue, statusNext, '', Justf, '', '', resultAnalis); 
+                            if(statusNext != statusAssr){          
+                                await dataTablemi.APImethods.movePOST(inpValue, statusNext, Delibr, Justf, '', '', resultAnalis, demandRsp); 
                                 var intervmoveItemReprov = setInterval(defineStatusReprovAssessor, 100); 
                             }
                         }else{ itensTools.myToast('info', 'É necessário preencher o campo Justificativa do Demandante!'); break; }
@@ -1265,14 +1355,16 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                 myEditor.setDataInputsParams()
                 Justf = inpsPanel['txt_Justificativa'].value; 
                 resultAnalis = 2; 
+                demandRsp = inpsPanel['slc_demandante'].value; 
                 arrNamesInp = ['txt_Justificativa'];
+                Delibr  = inpsPanel['txt_Deliberacao'].value;
                 
                 for(i = 0; i < inpsPanel.length; i++){
                     inpNow = inpsPanel[arrNamesInp[i]]
                     if(inpNow != undefined){
                         if(inpNow.value != '' && inpNow.value != 0){
                             if(statusNext != statusAssr){           
-                                await dataTablemi.APImethods.movePOST(inpValue, statusNext, '', Justf, '', '', resultAnalis); 
+                                await dataTablemi.APImethods.movePOST(inpValue, statusNext, Delibr, Justf, '', '', resultAnalis, demandRsp); 
                                 var intervmoveItemAprov = setInterval(defineStatusDelibrAprov, 100); 
                                 console.log(intervmoveItemAprov)
                             }
@@ -1309,7 +1401,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                             orderMethodsMi.indexFunctionsX();
                             itensTools.myToast('success', 'Ação realizada com sucesso!');
                             let inps = document.getElementsByClassName('inpDlbr')
-                            arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao', 'txt_obsDlbrDIRAF', 'txt_obsDlbrDITEC', 'txt_obsDlbrDISUP',]
+                            arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_obsDlbrDIRAF', 'txt_obsDlbrDITEC', 'txt_obsDlbrDISUP',] //'txt_Deliberacao',
                             document.getElementById('Delibr').style.display = 'block';
                             itenBtn1.getElementsByTagName('button')[0].disabled = false;
                             for(let i = 0; i < inps.length; i++){
@@ -1357,6 +1449,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
 
                 myEditor.setDataInputsParams()
                 resultAnalis = 2;
+                demandRsp = inpsPanel['slc_demandante'].value; 
                 DISUP = inpsPanel['slc_DISUP_vt'].value;
                 DIRAF = inpsPanel['slc_DIRAF_vt'].value;
                 DITEC = inpsPanel['slc_DITEC_vt'].value;
@@ -1378,7 +1471,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                 arrNamesInp = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao', 'txt_Justificativa'];
                 ckY = 0
                 for(y = 0; y < inpsPanel.length; y++){
-                    inpNow = inpsPanel[0];
+                    inpNow = inpsPanel[y];
                     console.log(inpNow)
                     for(z = 0; z < arrNamesInp.length; z++){
                         if(inpNow.id == arrNamesInp[z]){
@@ -1393,7 +1486,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                     inpNow = inpsPanel[arrNamesInp[i]]
                     if(inpNow != undefined){
                         if(ckY == 0 && statusDelibr != statusAssr){    
-                            await dataTablemi.APImethods.movePOST(inpValue, statusDelibr, Delibr, Justf, votesThisItnNow, obsThisItnNow, resultAnalis); 
+                            await dataTablemi.APImethods.movePOST(inpValue, statusDelibr, Delibr, Justf, votesThisItnNow, obsThisItnNow, resultAnalis, demandRsp); 
                             //var intervmoveItemDelibr = setInterval(defineStatusDelibr, 200);
                             await defineStatusDelibr()
                             //console.log(intervmoveItemDelibr)
@@ -1427,7 +1520,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                             colItem.innerHTML   = icn;
                             dataTablemi.resAPI  = {};
                             let inps = document.getElementsByClassName('inpDlbr')
-                            arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao', 'txt_Justificativa']
+                            arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao', 'txt_Justificativa', 'slc_demandante']
                             document.getElementById('Delibr').style.display = 'block';
                             itenBtn1.getElementsByTagName('button')[0].disabled = true;
                             for(let i = 0; i < inps.length; i++){
@@ -1451,7 +1544,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                             myEditor.disabledEditor(document.getElementById('txt_Deliberacao'))
 
                             myEditor.setDataInput(document.getElementById('txt_obsDlbrDIRAF'))
-               
+                            myEditor.disabledEditor(document.getElementById('txt_obsDlbrDIRAF'))
                             myEditor.setDataInput(document.getElementById('txt_obsDlbrDITEC'))
                             myEditor.disabledEditor(document.getElementById('txt_obsDlbrDITEC'))
                             myEditor.setDataInput(document.getElementById('txt_obsDlbrDISUP'))
