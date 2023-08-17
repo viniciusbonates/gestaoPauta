@@ -1303,14 +1303,14 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                             orderMethodsMi.indexFunctionsX();
                             itensTools.myToast('success', 'Ação realizada com sucesso!');
                             let inps = document.getElementsByClassName('inpDlbr')
-                            arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao', 'txt_obsDlbrDIRAF', 'txt_obsDlbrDITEC', 'txt_obsDlbrDISUP',]
+                            arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'slc_demandante', 'txt_obsDlbrDIRAF', 'txt_obsDlbrDITEC', 'txt_obsDlbrDISUP',]
                             document.getElementById('Delibr').style.display = 'block';
                             itenBtn1.getElementsByTagName('button')[0].disabled = false;
                             for(let i = 0; i < inps.length; i++){
                                 var nowInp = inps[arrNamesIt[i]];
                                 if(nowInp != undefined){
                                     nowInp.value = '';
-                                    nowInp.disabled = false;
+                                    nowInp.disabled = true;
                                 }
                             } 
                             console.log(intervmoveItemReprov)

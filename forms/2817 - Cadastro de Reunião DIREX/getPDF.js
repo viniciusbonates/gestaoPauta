@@ -251,7 +251,7 @@ function updatePDF(){
                 arrDefnDirAprv = []
                 arrDefnDirReprov = []
                 if(DIRAF == 1 && DISUP == 1 && DITEC == 1){ resultadoDelbr = 'Aprovado por unanimidade.' }
-                if(DIRAF == 2 && DISUP == 2 && DITEC == 2){ resultadoDelbr = 'Reprovado por unanimidade.' }
+                else if(DIRAF == 2 && DISUP == 2 && DITEC == 2){ resultadoDelbr = 'Reprovado por unanimidade.' }
                 else{
                     for(t = 0; t < arrVts.length; t++){
                         ckVt = arrVts[t]
