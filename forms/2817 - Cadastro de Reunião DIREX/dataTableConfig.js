@@ -502,11 +502,12 @@ dataTableConfig.prototype.changeEventInput = function () {
                     iten.getElementsByTagName('button')[0].disabled = true;
                     for(let i = 0; i < inps.length; i++){
                         let nowInp = inps[arrNamesIt[i]]
+                        nck = nowInp.id.split('_')[1]
                         ckSlcN = 0;
                         if(nowInp.tagName == 'SELECT'){
                             for(let j = 0; j < nowInp.options.length; j++){
                                 for(k = 0; k < arrAlt.length; k++){
-                                    if(nowInp.options[j].value == itenPauta[arrAlt[k]]){
+                                    if(nowInp.options[j].value == itenPauta[arrAlt[k]] && arrAlt[k].indexOf(nck) != -1){
                                         nowInp.options[j].selected = true;
                                         inps[arrNamesIt[i]].value = itenPauta[arrAlt[k]];
                                         ckSlcN++
@@ -536,13 +537,12 @@ dataTableConfig.prototype.changeEventInput = function () {
                     iten.getElementsByTagName('button')[0].disabled = false;
                     for(let i = 0; i < inps.length; i++){
                         let nowInp = inps[arrNamesIt[i]];
+                        nck = nowInp.id.split('_')[1]
                         ckSlcN = 0;
                         if(nowInp.tagName == 'SELECT'){
                             for(let j = 0; j < nowInp.options.length; j++){
                                 for(k = 0; k < arrAlt.length; k++){
-                                    console.log(nowInp.options[j].value)
-                                    console.log(itenPauta[arrAlt[k]])
-                                    if(nowInp.options[j].value == itenPauta[arrAlt[k]]){
+                                    if(nowInp.options[j].value == itenPauta[arrAlt[k]] && arrAlt[k].indexOf(nck) != -1){
                                         nowInp.options[j].selected = true;
                                         inps[arrNamesIt[k]].value = itenPauta[arrAlt[k]];
                                         nowInp.disabled = false;
@@ -575,13 +575,15 @@ dataTableConfig.prototype.changeEventInput = function () {
                     myEditor.setDataInput(document.getElementById('txt_obsDlbrDISUP'))
 
                 }else if(wrkflw.DespachoDeliber == assrAp && resAnalis == 2){
+                    console.log(itenPauta)
                     for(let i = 0; i < inps.length; i++){
                         let nowInp = inps[arrNamesIt[i]]
+                        nck = nowInp.id.split('_')[1]
                         ckSlcN = 0;
                         if(nowInp.tagName == 'SELECT'){
                             for(let j = 0; j < nowInp.options.length; j++){
                                 for(k = 0; k < arrAlt.length; k++){
-                                    if(nowInp.options[j].value == itenPauta[arrAlt[k]]){
+                                    if(nowInp.options[j].value == itenPauta[arrAlt[k]] && arrAlt[k].indexOf(nck) != -1){
                                         nowInp.options[j].selected = true;
                                         inps[arrNamesIt[i]].value = itenPauta[arrAlt[k]];
                                         ckSlcN++
@@ -612,12 +614,13 @@ dataTableConfig.prototype.changeEventInput = function () {
 
                 }else if(wrkflw.DespachoDeliber == assrAp && resAnalis == 1){
                     for(let i = 0; i < inps.length; i++){
-                        let nowInp = inps[arrNamesIt[i]]
+                        let nowInp = inps[arrNamesIt[i]];
+                        nck = nowInp.id.split('_')[1]
                         ckSlcN = 0;
                         if(nowInp.tagName == 'SELECT'){
                             for(let j = 0; j < nowInp.options.length; j++){
                                 for(k = 0; k < arrAlt.length; k++){
-                                    if(nowInp.options[j].value == itenPauta[arrAlt[k]]){
+                                    if(nowInp.options[j].value == itenPauta[arrAlt[k]] && arrAlt[k].indexOf(nck) != -1){
                                         nowInp.options[j].selected = true;
                                         inps[arrNamesIt[i]].value = itenPauta[arrAlt[k]];
                                         ckSlcN++
@@ -776,8 +779,7 @@ dataTableConfig.prototype.changeEventTable = function () {
                         }else if(assrAp == wrkflw.ItemDescartado){
                             iconThis = objHandleIcons["ExcluirAssr"]
                             iconThis = iconThis.replace('sm', 'md')
-                            let iconEmpty       = constructIcon.con
-                            struct('fluigicon fluigicon-trash icon-md');
+                            let iconEmpty       = constructIcon.construct('fluigicon fluigicon-trash icon-md');
                             col[i].appendChild(iconEmpty);
                             let icn = col[i].innerHTML;                                     //Descrição
                             icn = icn +' <b>Excluído</b>';
@@ -1256,25 +1258,40 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                 Justf = inpsPanel['txt_Justificativa'].value; 
                 resultAnalis = 1; 
                 demandRsp = inpsPanel['slc_demandante'].value; 
-                arrNamesInp = ['txt_Justificativa'];
+                //arrNamesInp = ['txt_Justificativa'];
                 Delibr  = inpsPanel['txt_Deliberacao'].value;
                 
-                for(i = 0; i < inpsPanel.length; i++){
-                    inpNow = inpsPanel[arrNamesInp[i]]
-                    if(inpNow != undefined){
-                        if(inpNow.value != '' && inpNow.value != 0){
-                            if(statusNext != statusAssr){          
+                arrNamesInp = ['txt_Deliberacao', 'txt_Justificativa', 'slc_demandante'];
+                ckY = 0
+                for(y = 0; y < inpsPanel.length; y++){
+                    inpNow = inpsPanel[y];
+                    console.log(inpNow)
+                    for(z = 0; z < arrNamesInp.length; z++){
+                        if(inpNow.id == arrNamesInp[z]){
+                            if(inpNow.value == '' || inpNow.value == 0 || inpNow.value == '<html>\n<head>\n\t<title></title>\n</head>\n<body></body>\n</html>\n'){
+                                ckY++
+                                console.log(ckY)
+                            }
+                        }
+                    }
+                }
+
+                //for(i = 0; i < inpsPanel.length; i++){
+                    //inpNow = inpsPanel[arrNamesInp[i]]
+                    //if(inpNow != undefined){
+                        //if(inpNow.value != '' && inpNow.value != 0){
+                            if(ckY == 0 && statusNext != statusAssr){          
                                 await dataTablemi.APImethods.movePOST(inpValue, statusNext, Delibr, Justf, '', '', resultAnalis, demandRsp); 
                                 var intervmoveItemReprov = setInterval(defineStatusReprovAssessor, 100); 
-                            }
-                        }else{ itensTools.myToast('info', 'É necessário preencher o campo Justificativa do Demandante!'); break; }
-                    }
-                }                
+                            }else{ itensTools.myToast('info', 'É necessário preencher os campos necessários!'); }
+                        //}
+                    //}
+                //}                
 
                 function defineStatusReprovAssessor () { 
                     let colItens        = dataTablemi.TableFluig().getCol('Aprov.Assessoria');
                     let colValue        = dataTablemi.TableFluig().getCol('N° Solicitação');
-                    var itenBtn1        = dataTablemi.itensBuilt['btn1'];
+                    var itenBtn1 = dataTablemi.itensBuilt['btn1'];     
                   
                     let cntrts          = DatasetFactory.createConstraint("txt_NumProcess", inpValue, inpValue, ConstraintType.MUST); 
                     let itenPauta       = DatasetFactory.getDataset('Pauta DIREX', null, new Array(cntrts), null).values[0];
@@ -1305,7 +1322,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                             let inps = document.getElementsByClassName('inpDlbr')
                             arrNamesIt = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'slc_demandante', 'txt_obsDlbrDIRAF', 'txt_obsDlbrDITEC', 'txt_obsDlbrDISUP',]
                             document.getElementById('Delibr').style.display = 'block';
-                            itenBtn1.getElementsByTagName('button')[0].disabled = false;
+                            itenBtn1.getElementsByTagName('button')[0].disabled = true;
                             for(let i = 0; i < inps.length; i++){
                                 var nowInp = inps[arrNamesIt[i]];
                                 if(nowInp != undefined){
@@ -1356,22 +1373,36 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                 Justf = inpsPanel['txt_Justificativa'].value; 
                 resultAnalis = 2; 
                 demandRsp = inpsPanel['slc_demandante'].value; 
-                arrNamesInp = ['txt_Justificativa'];
+                //arrNamesInp = ['txt_Justificativa'];
                 Delibr  = inpsPanel['txt_Deliberacao'].value;
                 
-                for(i = 0; i < inpsPanel.length; i++){
-                    inpNow = inpsPanel[arrNamesInp[i]]
-                    if(inpNow != undefined){
-                        if(inpNow.value != '' && inpNow.value != 0){
-                            if(statusNext != statusAssr){           
+                arrNamesInp = ['txt_Deliberacao', 'txt_Justificativa', 'slc_demandante'];
+                ckY = 0
+                for(y = 0; y < inpsPanel.length; y++){
+                    inpNow = inpsPanel[y];
+                    console.log(inpNow)
+                    for(z = 0; z < arrNamesInp.length; z++){
+                        if(inpNow.id == arrNamesInp[z]){
+                            if(inpNow.value == '' || inpNow.value == 0 || inpNow.value == '<html>\n<head>\n\t<title></title>\n</head>\n<body></body>\n</html>\n'){
+                                ckY++
+                                console.log(ckY)
+                            }
+                        }
+                    }
+                }
+                //for(i = 0; i < inpsPanel.length; i++){
+                    //inpNow = inpsPanel[arrNamesInp[i]]
+                    //if(inpNow != undefined){
+                        //if(inpNow.value != '' && inpNow.value != 0){
+                            if(ckY == 0 &&statusNext != statusAssr){           
                                 await dataTablemi.APImethods.movePOST(inpValue, statusNext, Delibr, Justf, '', '', resultAnalis, demandRsp); 
                                 var intervmoveItemAprov = setInterval(defineStatusDelibrAprov, 100); 
                                 console.log(intervmoveItemAprov)
-                            }
-                        }else{ itensTools.myToast('info', 'É necessário preencher o campo Justificativa do Demandante!'); break; }
-                    }
-                }                
-
+                            }else{ itensTools.myToast('info', 'É necessário preencher os campos necessários!'); }
+                        //}
+                    //}
+                //}         
+                
                 function defineStatusDelibrAprov () { 
                     let colItens        = dataTablemi.TableFluig().getCol('Aprov.Assessoria');
                     let colValue        = dataTablemi.TableFluig().getCol('N° Solicitação');

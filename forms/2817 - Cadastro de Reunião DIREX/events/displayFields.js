@@ -8,13 +8,13 @@ function displayFields(form,customHTML){
 
         //Solicitação
         case 0:
-                form.setValue("cmb_NomeSolicita",usuario);
-                form.setValue("dt_DataSolicita",data.format(new Date()));
+            form.setValue("cmb_NomeSolicita",usuario);
+            form.setValue("dt_DataSolicita",data.format(new Date()));
         break;
 
         case 14:
-            form.setValue("txt_NumProcess",NumProcesso);
-            form.setValue("cmb_NomeSolicita",usuario);
+            form.setValue("txt_NumProcess", NumProcesso);
+            form.setValue("cmb_NomeSolicita", usuario);
         break;
 
         case 8:

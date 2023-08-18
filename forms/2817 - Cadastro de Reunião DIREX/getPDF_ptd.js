@@ -148,10 +148,10 @@ function updatePDF_ptd(){
             }
             formatDte = dt_slc.split('-')[2]+'/'+dt_slc.split('-')[1]+'/'+dt_slc.split('-')[0]
             console.log(formatDte)
-            c1 = DatasetFactory.createConstraint("hdn_dir_vinc", '%Pool:Role:DIRAF%', '%Pool:Role:DIRAF%',  ConstraintType.MUST, true); 
+            c1 = DatasetFactory.createConstraint("hdn_dir_vinc", matDir, matDir,  ConstraintType.MUST, true); 
             c2 = DatasetFactory.createConstraint("dataSelected", formatDte , formatDte,  ConstraintType.MUST, true); 
             //c3 = DatasetFactory.createConstraint("hdn_aprvAssr", stateParamIs , stateParamIs,  ConstraintType.MUST, true); 
-            c3 = DatasetFactory.createConstraint("txt_resultAnalis", 0 , 0,  ConstraintType.MUST_NOT); 
+            c3 = DatasetFactory.createConstraint("txt_resultAnalis", 2, 2,  ConstraintType.MUST);
             c4 = DatasetFactory.createConstraint("txt_resultAnalis", null, null,  ConstraintType.MUST_NOT);
             
             

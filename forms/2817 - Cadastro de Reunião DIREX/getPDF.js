@@ -265,25 +265,35 @@ function updatePDF(){
                     }
                     if(vt1 > vt2){ 
                         var arrDefDirN = [];
+                        reprovDefDir = arrDefnDirAprv[0]
                         for(t = 0; t < arrDefnDirAprv.length; t++){
 
-                                if(arrDefnDirAprv[t] == 0) {        arrDefDirN.push('DIRAF') }
-                                else if(arrDefnDirAprv[t] == 1) {   arrDefDirN.push('DISUP') }
-                                if(arrDefnDirAprv[t] == 2 ){        arrDefDirN.push('DITEC') }
+                            if(arrDefnDirReprov[t] == 0){ reprovDefDir = 'DIRAF' };
+                            if(arrDefnDirReprov[t] == 1){ reprovDefDir = 'DISUP' };
+                            if(arrDefnDirReprov[t] == 2){ reprovDefDir = 'DITEC' };
+
+                            if(arrDefnDirAprv[t] == 0) {        arrDefDirN.push('DIRAF') }
+                            else if(arrDefnDirAprv[t] == 1) {   arrDefDirN.push('DISUP') }
+                            if(arrDefnDirAprv[t] == 2 ){        arrDefDirN.push('DITEC') }
                                  
                         }
-                        resultadoDelbr = 'Aprovado por '+arrDefDirN[0]+' e '+arrDefDirN[1]
+                        resultadoDelbr = 'Aprovado por '+arrDefDirN[0]+' e '+arrDefDirN[1]+' e reprovado por '+reprovDefDir;
                     }
                     else if (vt1 < vt2) { 
                         var arrDefDirN = [];
+                        aprvDefDir = ''
                         for(t = 0; t < arrDefnDirReprov.length; t++){
 
-                                if(arrDefnDirReprov[t] == 0) {        arrDefDirN.push('DIRAF') }
-                                else if(arrDefnDirReprov[t] == 1) {   arrDefDirN.push('DISUP') }
-                                if(arrDefnDirReprov[t] == 2 ){        arrDefDirN.push('DITEC') }
+                            if(arrDefnDirAprv[t] == 0){ aprvDefDir = 'DIRAF' };
+                            if(arrDefnDirAprv[t] == 1){ aprvDefDir = 'DISUP' };
+                            if(arrDefnDirAprv[t] == 2){ aprvDefDir = 'DITEC' };
+
+                            if(arrDefnDirReprov[t] == 0) {        arrDefDirN.push('DIRAF') }
+                            else if(arrDefnDirReprov[t] == 1) {   arrDefDirN.push('DISUP') }
+                            if(arrDefnDirReprov[t] == 2 ){        arrDefDirN.push('DITEC') }
                                  
                         }
-                        resultadoDelbr = 'Reprovado por '+arrDefDirN[0]+' e '+arrDefDirN[1]
+                        resultadoDelbr = 'Reprovado por '+arrDefDirN[0]+' e '+arrDefDirN[1]+' e aprovado por '+aprvDefDir;
                     }
                 }
 

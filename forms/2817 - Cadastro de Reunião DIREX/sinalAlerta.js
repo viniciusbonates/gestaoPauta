@@ -17,7 +17,14 @@ alertAll.prototype.fixedAlert = function () {
 // Altera o style dos botões de movimetação e desabilita o botão de enviar
 alertAll.prototype.fixedMoviment = function (statusIn) {
     obj_OptsFor = {}
-    btnSend_s = window.parent.document.getElementsByClassName('btn-primary')[2]
+    btnSend_s = ''
+    arrbtnsEnv = window.parent.document.getElementsByClassName('btn-primary')
+    for(z = 0; z < arrbtnsEnv.length; z++){
+        btnCkNow = arrbtnsEnv[z]
+        if(btnCkNow.getAttribute('data-send') == ''){
+            btnSend_s = btnCkNow;
+        }
+    }
     for(i = 0; i < this.optnListDefaut.length; i++){
         for(j = 0; j < this.optnListDefaut[i].attributes.length; j++){
             for(k = 0; k < this.arrListDefaut.length; k++){
@@ -65,7 +72,7 @@ alertAll.prototype.validate = function (){
         for( i = 0; i < dsForCheck.length; i++){
             inpHdnCk = dsForCheck[i].hdn_aprvAssr
             console.log(inpHdnCk)
-            if(inpHdnCk != 26){
+            if(inpHdnCk != 26 && inpHdnCk != 16){
                 sinalCkin++
             }
         }
