@@ -72,7 +72,7 @@ alertAll.prototype.validate = function (){
         for( i = 0; i < dsForCheck.length; i++){
             inpHdnCk = dsForCheck[i].hdn_aprvAssr
             console.log(inpHdnCk)
-            if(inpHdnCk != 26 && inpHdnCk != 16){
+            if(inpHdnCk != 26 && inpHdnCk != 16 && inpHdnCk != '' && inpHdnCk != undefined && inpHdnCk != null){
                 sinalCkin++
             }
         }
