@@ -10,17 +10,18 @@ function DemandResp() {
     cnst    = new Array(c5);
     dsCllFinal = DatasetFactory.getDataset("colleague",null,cnst,null);
     elemSelc = document.getElementById('slc_demandante')
+
     for(z = 0; z < dsCllFinal.values.length; z++){
         nameCll     = dsCllFinal.values[z]['colleagueName']
         idCll       = dsCllFinal.values[z]['colleaguePK.colleagueId']
         console.log(nameCll)
         console.log(idCll)
-        var node = document.createElement("option");
-        var att = document.createAttribute("value");
-        att.value = idCll
-        node.setAttributeNode(att)
-        node.innerText = nameCll
-        elemSelc.appendChild(node);
+        var nodeOP = document.createElement("option");
+        var attOP = document.createAttribute("value");
+        attOP.value = idCll
+        nodeOP.setAttributeNode(attOP)
+        nodeOP.innerText = nameCll
+        elemSelc.appendChild(nodeOP);
     }
     console.log(dsCllFinal)
 
