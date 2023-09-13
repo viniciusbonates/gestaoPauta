@@ -19,6 +19,7 @@ function displayFields(form,customHTML){
 
         case 8:
             form.setValue("cmb_NomeSolicita",usuario);
+            form.setValue("slc_demandante",'');
         break;
 
         case 10:
