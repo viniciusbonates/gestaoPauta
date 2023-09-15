@@ -103,12 +103,15 @@ var myToast_ptd =  function (tp, title) {
         });
 }
 
-function updatePDF_ptd(){
+function updatePDF_ptd(dirIndx){
     //document.scrollingElement.scrollTop = 0
     var state = window.parentOBJ.ECM.workflowView.sequence
     var iniTxt = document.getElementById('txt_IniDelibr').value;
     var finTxt = document.getElementById('txt_FinDelibr').value;
     //var dt_slc 	= document.getElementById('dt_dataInicio').value;
+
+    console.log(dirIndx)
+    if(dirIndx == undefined){ dirIndx = 0 }
 
     var WKNumProces = window.WKNumProces
     ct1DT           = DatasetFactory.createConstraint("txt_NumProcess", WKNumProces , WKNumProces,  ConstraintType.MUST);
@@ -120,15 +123,22 @@ function updatePDF_ptd(){
 
     var ds_mat_ger_pdf  = colleague;
     var ds_und_ger_pdf  = dsc_Unidades;
-    var matDir          = 0;
+    var matDir          = dirIndx;
     var dirImed         = 0;
     var mat             = window.parent.WCMAPI.userCode;
     var arrItns_Dir 	= [];
     var stateParamIs    = 15;
-    var und             = '';
+    var und             = dirIndx;
     if(state == 8 || state == 10){
         console.log(state)
-        if(state == 8){
+        
+        formatDte = dt_slc.split('-')[2]+'/'+dt_slc.split('-')[1]+'/'+dt_slc.split('-')[0]
+        console.log(formatDte)
+        c2 = DatasetFactory.createConstraint("dataSelected", formatDte , formatDte,  ConstraintType.MUST, true); 
+        c3 = DatasetFactory.createConstraint("txt_resultAnalis", 2, 2,  ConstraintType.MUST);
+        c4 = DatasetFactory.createConstraint("txt_resultAnalis", null, null,  ConstraintType.MUST_NOT);
+
+        if(state == 8 && matDir == 0){
             for(var i = 0;i<ds_mat_ger_pdf.values.length;i++){
                 if(mat == ds_mat_ger_pdf.values[i]['colleaguePK.colleagueId']){
                     und = ds_mat_ger_pdf.values[i]['groupId'];
@@ -146,20 +156,21 @@ function updatePDF_ptd(){
                     }
                 }
             }
-            formatDte = dt_slc.split('-')[2]+'/'+dt_slc.split('-')[1]+'/'+dt_slc.split('-')[0]
-            console.log(formatDte)
+            
+           
             c1 = DatasetFactory.createConstraint("hdn_dir_vinc", matDir, matDir,  ConstraintType.MUST, true); 
-            c2 = DatasetFactory.createConstraint("dataSelected", formatDte , formatDte,  ConstraintType.MUST, true); 
             //c3 = DatasetFactory.createConstraint("hdn_aprvAssr", stateParamIs , stateParamIs,  ConstraintType.MUST, true); 
-            c3 = DatasetFactory.createConstraint("txt_resultAnalis", 2, 2,  ConstraintType.MUST);
-            c4 = DatasetFactory.createConstraint("txt_resultAnalis", null, null,  ConstraintType.MUST_NOT);
-            
-            
             cnst = new Array(c1, c2, c3, c4);
             itns = DatasetFactory.getDataset('Pauta DIREX', null, cnst, null).values;
             arrItns_Dir.push(itns)
         }
-
+        else if(state == 8 && matDir != 0){
+            matDir = "%Pool:Role:"+matDir+"%";
+            c1 = DatasetFactory.createConstraint("hdn_dir_vinc", matDir, matDir,  ConstraintType.MUST, true); 
+            cnst = new Array(c1, c2, c3, c4);
+            itns = DatasetFactory.getDataset('Pauta DIREX', null, cnst, null).values;
+            arrItns_Dir.push(itns)
+        }
         console.log(arrItns_Dir)
         
         var dtPDF   = new Date();   
@@ -278,5 +289,9 @@ function updatePDF_ptd(){
         myToast_ptd('warning', 'Não a itens de Pauta para Gerar o Arquivo');
     } 
 }
-function getPDF_ptd () { document.getElementById('getData_ptd').addEventListener('click', function () { updatePDF_ptd() } ) }
+function getPDF_ptd () { 
+    document.getElementById('getData_ptd').addEventListener('click', function () { updatePDF_ptd("DISUP") } ) 
+    document.getElementById('getData_ptd_1').addEventListener('click', function () { updatePDF_ptd("DIRAF") } ) 
+    document.getElementById('getData_ptd_2').addEventListener('click', function () { updatePDF_ptd("DITEC") } ) 
+}
 window.addEventListener('load', getPDF_ptd)
