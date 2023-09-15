@@ -290,8 +290,36 @@ function updatePDF_ptd(dirIndx){
     } 
 }
 function getPDF_ptd () { 
-    document.getElementById('getData_ptd').addEventListener('click', function () { updatePDF_ptd("DISUP") } ) 
+    var ds_mat_ger_pdf  = colleague;
+    var ds_und_ger_pdf  = dsc_Unidades;
+    und = ''
+    matDir = ''
+    for(var i = 0;i<ds_mat_ger_pdf.values.length;i++){
+        if(mat == ds_mat_ger_pdf.values[i]['colleaguePK.colleagueId']){
+            und = ds_mat_ger_pdf.values[i]['groupId'];
+            for(var j=0;j<ds_und_ger_pdf.values.length;j++){
+                if(und == ds_und_ger_pdf.values[j]['AntigaSigla']){
+                    dirImed = ds_und_ger_pdf.values[j]['Sigla'];
+                    if(ds_und_ger_pdf.values[j]['Sigla'] == 'NTIC'){
+                        matDir = "DIRAF";
+                    }else{
+                        matDir = ds_und_ger_pdf.values[j]['Sigla'];
+                    }
+                }
+            }
+        }
+    }
+    arrins = ['getData_ptd', 'getData_ptd_1', 'getData_ptd_2']
+    arrdir = ['DISUP', 'DIRAF', 'DITEC']
+    for(i = 0; i < arrins.length; i++){
+        dirIn = arrdir[i]
+        if(arrdir[i] != matDir){ document.getElementById(arrins[i]+'_all').style.display = 'none'; }
+        document.getElementById(arrins[i]).addEventListener('click', function () { updatePDF_ptd(dirIn) } ) 
+    }
+
+    /*document.getElementById('getData_ptd').addEventListener('click', function () { updatePDF_ptd("DISUP") } ) 
     document.getElementById('getData_ptd_1').addEventListener('click', function () { updatePDF_ptd("DIRAF") } ) 
     document.getElementById('getData_ptd_2').addEventListener('click', function () { updatePDF_ptd("DITEC") } ) 
+    */
 }
 window.addEventListener('load', getPDF_ptd)
