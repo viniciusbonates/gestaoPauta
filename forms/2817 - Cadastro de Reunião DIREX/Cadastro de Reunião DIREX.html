@@ -229,7 +229,7 @@
 		<div class="panel panel-primary" id="infoAnaliseDelbr">
 			<div class="panel-heading">
 				<h3 class="panel-title">
-					<b>informações de Análise e Deliberação</b>
+					<b>Informações de Análise e Deliberação</b>
 				</h3>
 			</div>
 			<div class="panel-body">
@@ -255,66 +255,102 @@
 				</div>
 				</div>
 				<div class="col-md-2" id="getData_ptd_all">
-				<div class="form-group">
-					<div class="card slcIn" style="color: black">
-					<div class="card-body">
-						<h3 class="card-title"><i class="flaticon flaticon-tests-central icon-thumbnail-md" aria-hidden="true"></i> Gerar itens de Pauta DISUP</h3>
-						<p class="card-text">O documento será gerado Automáticamente</p>
-						<div class="col-md-6" >
-						<div class="input-group">
-							<!--<input type="text" class="form-control" name="txt_CodContratacao" id="txt_CodContratacao" placeholder="Exemplo: AM0820220063">
-							-->
-								<button type="button" class="btn btn-primary" id="getData_ptd">Obter PDF</button>
+					<div class="col-md-12">
+					<div class="form-group">
+						<div class="card" style="color: black"> <!----------------------------------------------------slcIn -->
+						<div class="card-body">
+							<h3 class="card-title"><i class="flaticon flaticon-tests-central icon-thumbnail-md" aria-hidden="true"></i> Gerar itens de Pauta DISUP</h3>
+							<p class="card-text">O documento será gerado Automáticamente</p>
+							<div class="col-md-6" >
+							<div class="input-group">
+								<!--<input type="text" class="form-control" name="txt_CodContratacao" id="txt_CodContratacao" placeholder="Exemplo: AM0820220063">
+								-->
+									<button type="button" class="btn btn-primary" id="getData_ptd">Obter PDF</button>
+							</div>
+							</div>
+							<sup data-toggle="tooltip" data-placement="right" title="O documento será gerado em PDF, somente com os itens aprovados para Deliberação.">
+							<i class="fluigicon fluigicon-info-sign icon-sm" aria-hidden="true"></i></sup>
 						</div>
 						</div>
-						<sup data-toggle="tooltip" data-placement="right" title="O documento será gerado em PDF, somente com os itens aprovados para Deliberação.">
-						<i class="fluigicon fluigicon-info-sign icon-sm" aria-hidden="true"></i></sup>
-						
+					</div>
+					</div>
+					<div class="col-md-12">
+					<div class="form-group">
+						<div class="card" style="color: black">
+						<div class="card-body">
+							<h3 class="card-title">DISUP</h3>
+							<p class="card-text">Itens Inseridos na Reunião </p>
+							<div id="itnsList_ptd_DISUP"></div>
+						</div>
+						</div>
 					</div>
 					</div>
 				</div>
 				</div>
 				<div class="col-md-2" id="getData_ptd_1_all">
-				<div class="form-group">
-					<div class="card" style="color: black">
-					<div class="card-body">
-						<h3 class="card-title"><i class="flaticon flaticon-tests-central icon-thumbnail-md" aria-hidden="true" style="color: #cc5058;"></i> Gerar itens de Pauta DIRAF</h3>
-						<p class="card-text">O documento será gerado Automáticamente</p>
-						<div class="col-md-6" >
-						<div class="input-group">
-							<!--<input type="text" class="form-control" name="txt_CodContratacao" id="txt_CodContratacao" placeholder="Exemplo: AM0820220063">
-							-->
-								<button type="button" class="btn btn-primary" id="getData_ptd_1">Obter PDF</button>
+					<div class="col-md-12">
+					<div class="form-group">
+						<div class="card" style="color: black">
+						<div class="card-body">
+							<h3 class="card-title"><i class="flaticon flaticon-tests-central icon-thumbnail-md" aria-hidden="true" style="color: #cc5058;"></i> Gerar itens de Pauta DIRAF</h3>
+							<p class="card-text">O documento será gerado Automáticamente</p>
+							<div class="col-md-6" >
+							<div class="input-group">
+								<!--<input type="text" class="form-control" name="txt_CodContratacao" id="txt_CodContratacao" placeholder="Exemplo: AM0820220063">
+								-->
+									<button type="button" class="btn btn-primary" id="getData_ptd_1">Obter PDF</button>
+							</div>
+							</div>
+							<sup data-toggle="tooltip" data-placement="right" title="O documento será gerado em PDF, somente com os itens aprovados para Deliberação.">
+							<i class="fluigicon fluigicon-info-sign icon-sm" aria-hidden="true"></i></sup>
 						</div>
 						</div>
-						<sup data-toggle="tooltip" data-placement="right" title="O documento será gerado em PDF, somente com os itens aprovados para Deliberação.">
-						<i class="fluigicon fluigicon-info-sign icon-sm" aria-hidden="true"></i></sup>
-						
 					</div>
 					</div>
-				</div>
+					<div class="col-md-12">
+					<div class="form-group">
+						<div class="card" style="color: black">
+						<div class="card-body">
+							<h3 class="card-title"><i class="flaticon flaticon-tests-central icon-thumbnail-md" aria-hidden="true" style="color: #5b94d1;"></i> Gerar itens de Pauta DITEC</h3>
+							<p class="card-text">O documento será gerado Automáticamente</p>
+							
+						</div>
+						</div>
+					</div>
+					</div>
 				</div>
 				<div class="col-md-2" id="getData_ptd_2_all">
-				<div class="form-group">
-					<div class="card" style="color: black">
-					<div class="card-body">
-						<h3 class="card-title"><i class="flaticon flaticon-tests-central icon-thumbnail-md" aria-hidden="true" style="color: #5b94d1;"></i> Gerar itens de Pauta DITEC</h3>
-						<p class="card-text">O documento será gerado Automáticamente</p>
-						<div class="col-md-6" >
-						<div class="input-group">
-							<!--<input type="text" class="form-control" name="txt_CodContratacao" id="txt_CodContratacao" placeholder="Exemplo: AM0820220063">
-							-->
-								<button type="button" class="btn btn-primary" id="getData_ptd_2">Obter PDF</button>
+					<div class="col-md-12">
+					<div class="form-group">
+						<div class="card" style="color: black">
+						<div class="card-body">
+							<h3 class="card-title"><i class="flaticon flaticon-tests-central icon-thumbnail-md" aria-hidden="true" style="color: #5b94d1;"></i> Gerar itens de Pauta DITEC</h3>
+							<p class="card-text">O documento será gerado Automáticamente</p>
+							<div class="col-md-6" >
+							<div class="input-group">
+								<!--<input type="text" class="form-control" name="txt_CodContratacao" id="txt_CodContratacao" placeholder="Exemplo: AM0820220063">
+								-->
+									<button type="button" class="btn btn-primary" id="getData_ptd_2">Obter PDF</button>
+							</div>
+							</div>
+							<sup data-toggle="tooltip" data-placement="right" title="O documento será gerado em PDF, somente com os itens aprovados para Deliberação.">
+							<i class="fluigicon fluigicon-info-sign icon-sm" aria-hidden="true"></i></sup>
 						</div>
 						</div>
-						<sup data-toggle="tooltip" data-placement="right" title="O documento será gerado em PDF, somente com os itens aprovados para Deliberação.">
-						<i class="fluigicon fluigicon-info-sign icon-sm" aria-hidden="true"></i></sup>
-						
+					</div>
+					</div>
+					<div class="col-md-12">
+					<div class="form-group">
+						<div class="card" style="color: black">
+						<div class="card-body">
+							<h3 class="card-title"><i class="flaticon flaticon-tests-central icon-thumbnail-md" aria-hidden="true" style="color: #5b94d1;"></i> Gerar itens de Pauta DITEC</h3>
+							<p class="card-text">O documento será gerado Automáticamente</p>
+							
+						</div>
+						</div>
 					</div>
 					</div>
 				</div>
-				</div>
-			</div>
 			</div>
 		</div>
 

@@ -103,6 +103,45 @@ var myToast_ptd =  function (tp, title) {
         });
 }
 
+function info_setItns(){
+    var WKNumProces = window.WKNumProces
+    ct1DT           = DatasetFactory.createConstraint("txt_NumProcess", WKNumProces , WKNumProces,  ConstraintType.MUST);
+    cnstDt          = new Array(ct1DT)
+    dataDtIn        = DatasetFactory.getDataset('Cadastro de Reunião DIREX', null, cnstDt, null);
+    var dt_slc      = dataDtIn.values[0]['dt_dataInicio']
+    formatDte = dt_slc.split('-')[2]+'/'+dt_slc.split('-')[1]+'/'+dt_slc.split('-')[0]
+    console.log(formatDte)
+    c2 = DatasetFactory.createConstraint("dataSelected", formatDte , formatDte,  ConstraintType.MUST, true); 
+    c3 = DatasetFactory.createConstraint("txt_resultAnalis", 2, 2,  ConstraintType.MUST);
+    c4 = DatasetFactory.createConstraint("txt_resultAnalis", null, null,  ConstraintType.MUST_NOT);
+
+    arrdir = ['DISUP', 'DIRAF', 'DITEC']
+    for(i = 0; i < arrdir.length; i++){
+        dirNow = arrdir[i]
+        matDir = "%Pool:Role:"+dirNow+"%";
+        c1 = DatasetFactory.createConstraint("hdn_dir_vinc", matDir, matDir,  ConstraintType.MUST, true); 
+        cnst = new Array(c1, c2, c3, c4);
+        itns = DatasetFactory.getDataset('Pauta DIREX', null, cnst, null).values;
+        console.log(itns)
+        //<a href="https://mywebhm.am.sebrae.com.br/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID=26559" class="cad-link" target="_blank" style="color:blue" ml="true"><i class="flaticon flaticon-link icon-md"></i>26559</a>
+
+        for(j = 0; j < itns.length; j++){
+            NumSolict = itns[j]['txt_NumProcess']
+            itnLink = 'https://mywebhm.am.sebrae.com.br/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID='+NumSolict
+            console.log(itnLink)
+            va = document.createElement('a')
+            va.setAttribute('href', itnLink);
+            va.setAttribute('class', 'cad-link');
+            va.setAttribute('target', '_blank');
+            va.setAttribute('style', 'color: blue');
+            va.setAttribute('ml', 'true');
+            va.textContent = NumSolict
+
+            document.getElementById('itnsList_ptd_'+dirNow).appendChild(va)
+        }    
+    }
+}
+window.addEventListener('load', info_setItns)
 function updatePDF_ptd(dirIndx){
     //document.scrollingElement.scrollTop = 0
     var state = window.parentOBJ.ECM.workflowView.sequence
