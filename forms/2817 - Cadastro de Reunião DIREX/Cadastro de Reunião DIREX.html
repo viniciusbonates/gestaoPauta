@@ -235,24 +235,56 @@
 			<div class="panel-body">
 			<div class="row">
 				<div class="col-md-2">
-				<div class="form-group" id="CodContratacao">
-					<div class="card" style="color: black">
-					<div class="card-body">
-						<h3 class="card-title"><i class="flaticon flaticon-add-branch icon-thumbnail-md" aria-hidden="true" style="color: #43ab69;"></i> Gerar ATA</h3>
-						<p class="card-text">O documento será gerado Automáticamente</p>
-						<div class="col-md-6" >
-						<div class="input-group">
-							<!--<input type="text" class="form-control" name="txt_CodContratacao" id="txt_CodContratacao" placeholder="Exemplo: AM0820220063">
-							-->
-								<button type="button" class="btn btn-primary" id="getData">Obter PDF</button>
+					<div class="col-md-12">
+					<div class="form-group" id="CodContratacao">
+						<div class="card" style="color: black">
+						<div class="card-body">
+							<h3 class="card-title"><i class="flaticon flaticon-add-branch icon-thumbnail-md" aria-hidden="true" style="color: #43ab69;"></i> Gerar ATA</h3>
+							<p class="card-text">O documento será gerado Automáticamente</p>
+							<div class="col-md-6" >
+							<div class="input-group">
+								<!--<input type="text" class="form-control" name="txt_CodContratacao" id="txt_CodContratacao" placeholder="Exemplo: AM0820220063">
+								-->
+									<button type="button" class="btn btn-primary" id="getData">Obter PDF</button>
+							</div>
+							</div>
+							<sup data-toggle="tooltip" data-placement="right" title="O documento será gerado em PDF, somente com os itens Deliberados.">
+							<i class="fluigicon fluigicon-info-sign icon-sm" aria-hidden="true"></i></sup>
+							
 						</div>
 						</div>
-						<sup data-toggle="tooltip" data-placement="right" title="O documento será gerado em PDF, somente com os itens Deliberados.">
-						<i class="fluigicon fluigicon-info-sign icon-sm" aria-hidden="true"></i></sup>
-						
 					</div>
 					</div>
-				</div>
+					<div class="col-md-12">
+						<div>
+							<b>Liberar acesso de Pauta para outros gabinetes</b>
+						</div>
+						<br>
+						<div class="switch switch-success">
+							<input class="switch-input" type="checkbox" name="switch_DISUP" id="switch_DISUP">
+							<label class="switch-button" for="switch_DISUP">Toggle</label>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div>
+							<b>Liberar acesso de Pauta para outros gabinetes</b>
+						</div>
+						<br>
+						<div class="switch switch-success">
+							<input class="switch-input" type="checkbox" name="switch_DIRAF" id="switch_DIRAF">
+							<label class="switch-button" for="switch_DIRAF">Toggle</label>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div>
+							<b>Liberar acesso de Pauta para outros gabinetes</b>
+						</div>
+						<br>
+						<div class="switch switch-success">
+							<input class="switch-input" type="checkbox" name="switch_DITEC" id="switch_DITEC">
+							<label class="switch-button" for="switch_DITEC">Toggle</label>
+						</div>
+					</div>
 				</div>
 				<div class="col-md-2" id="getData_ptd_all">
 					<div class="col-md-12">

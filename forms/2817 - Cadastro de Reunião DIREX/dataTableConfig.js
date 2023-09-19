@@ -68,8 +68,9 @@ function dataTableConfig(){
         id: 'btn2',
         innerText: '',
         setIcon: 'flaticon flaticon-refresh icon-sm', 
-        col: 'col-md-2'
+        col: 'col-md-1'
     }
+
      /**
      *  targetState:    11  = Analise Assr
      *                  9   = Ajuste
@@ -338,7 +339,7 @@ dataTableConfig.prototype.orderLineSuper = function (objConfig, itensConfigs, or
         
         let rowSuper                    = divIn[0];
         let tempr                       = divIn[0].children[0];                 // Obtem o elem 'barra de pesquisa'. Obs: Esse elemnto é criado juntamente com a dataTable.
-        tempr.className                 = 'col-md-5';
+        tempr.className                 = 'col-md-3';
         tempr.children[0].className     = '';
         rowSuper.removeChild(rowSuper.children[0]);                             // Limpa toda a linha para reordenar.
 
