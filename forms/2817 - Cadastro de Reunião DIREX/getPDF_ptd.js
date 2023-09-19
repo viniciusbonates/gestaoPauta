@@ -333,7 +333,7 @@ function getPDF_ptd () {
     var ds_und_ger_pdf  = dsc_Unidades;
     und = ''
     matDir = ''
-    for(var i = 0;i<ds_mat_ger_pdf.values.length;i++){
+    for(var i = 0; i <ds_mat_ger_pdf.values.length; i++){
         if(mat == ds_mat_ger_pdf.values[i]['colleaguePK.colleagueId']){
             und = ds_mat_ger_pdf.values[i]['groupId'];
             for(var j=0;j<ds_und_ger_pdf.values.length;j++){
@@ -349,13 +349,26 @@ function getPDF_ptd () {
         }
     }
     arrins = ['getData_ptd', 'getData_ptd_1', 'getData_ptd_2']
+    arrInpsAcess = ['switch_DISUP', 'switch_DIRAF', 'switch_DITEC']
     arrdir = ['DISUP', 'DIRAF', 'DITEC']
     for(i = 0; i < arrins.length; i++){
         dirIn = arrdir[i];
         btnDirItnsNow =  document.getElementById(arrins[i])
         btnDirItnsNow.value = dirIn
-        if(arrdir[i] != matDir){ document.getElementById(arrins[i]+'_all').style.display = 'none'; }
+        if(arrdir[i] != matDir){ 
+            console.log(arrins[i]+'_all')
+            document.getElementById(arrins[i]+'_all').style.display = 'none';
+            document.getElementById(arrInpsAcess[i]+'_all').style.display = 'none'; 
+        }
         btnDirItnsNow.addEventListener('click', function () { updatePDF_ptd(this.value) } ) 
+    }
+
+    
+    for(j = 0; j < arrInpsAcess.length; j++){
+        inpAcessNow = document.getElementById(arrInpsAcess[j])
+        if(inpAcessNow.checked == true){
+            document.getElementById(arrins[j]+'_all').style.display = 'block'; 
+        }
     }
 }
 window.addEventListener('load', getPDF_ptd)
