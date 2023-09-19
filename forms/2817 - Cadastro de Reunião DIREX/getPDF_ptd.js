@@ -351,14 +351,11 @@ function getPDF_ptd () {
     arrins = ['getData_ptd', 'getData_ptd_1', 'getData_ptd_2']
     arrdir = ['DISUP', 'DIRAF', 'DITEC']
     for(i = 0; i < arrins.length; i++){
-        dirIn = arrdir[i]
+        dirIn = arrdir[i];
+        btnDirItnsNow =  document.getElementById(arrins[i])
+        btnDirItnsNow.value = dirIn
         if(arrdir[i] != matDir){ document.getElementById(arrins[i]+'_all').style.display = 'none'; }
-        document.getElementById(arrins[i]).addEventListener('click', function () { updatePDF_ptd(dirIn) } ) 
+        btnDirItnsNow.addEventListener('click', function () { updatePDF_ptd(this.value) } ) 
     }
-
-    /*document.getElementById('getData_ptd').addEventListener('click', function () { updatePDF_ptd("DISUP") } ) 
-    document.getElementById('getData_ptd_1').addEventListener('click', function () { updatePDF_ptd("DIRAF") } ) 
-    document.getElementById('getData_ptd_2').addEventListener('click', function () { updatePDF_ptd("DITEC") } ) 
-    */
 }
 window.addEventListener('load', getPDF_ptd)
