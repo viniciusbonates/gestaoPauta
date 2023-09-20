@@ -1500,7 +1500,7 @@ dataTableConfig.prototype.itensBuiltFunctions = function () {
                     DIRAF: obsDIRAF,
                     DITEC: obsDITEC
                 }
-                arrNamesInp = ['slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao', 'txt_Justificativa'];
+                arrNamesInp = ['slc_demandante', 'slc_DISUP_vt', 'slc_DIRAF_vt', 'slc_DITEC_vt', 'txt_Deliberacao', 'txt_Justificativa'];
                 ckY = 0
                 for(y = 0; y < inpsPanel.length; y++){
                     inpNow = inpsPanel[y];
