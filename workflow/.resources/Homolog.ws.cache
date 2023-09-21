@@ -28,7 +28,7 @@
   </void>
   <void method="put">
    <string>camposFormulario, documentoId = 2817</string>
-   <array class="java.lang.String" length="25">
+   <array class="java.lang.String" length="29">
     <void index="0">
      <string>checkbox1</string>
     </void>
@@ -51,57 +51,69 @@
      <string>dt_DataSolicita</string>
     </void>
     <void index="7">
-     <string>hd_numSuperior</string>
+     <string>hd_numState</string>
     </void>
     <void index="8">
-     <string>slc_demandante</string>
+     <string>hd_numSuperior</string>
     </void>
     <void index="9">
-     <string>slc_DISUP_vt</string>
+     <string>slc_demandante</string>
     </void>
     <void index="10">
-     <string>slc_DITEC_vt</string>
+     <string>slc_DISUP_vt</string>
     </void>
     <void index="11">
-     <string>slc_UCOF_vt</string>
+     <string>slc_DITEC_vt</string>
     </void>
     <void index="12">
-     <string>txt_Deliberacao</string>
+     <string>slc_UCOF_vt</string>
     </void>
     <void index="13">
-     <string>txt_FinDelibr</string>
+     <string>switch_DIRAF</string>
     </void>
     <void index="14">
-     <string>txt_InfoDIRAF</string>
+     <string>switch_DISUP</string>
     </void>
     <void index="15">
-     <string>txt_InfoDISUP</string>
+     <string>switch_DITEC</string>
     </void>
     <void index="16">
-     <string>txt_InfoDITEC</string>
+     <string>txt_Deliberacao</string>
     </void>
     <void index="17">
-     <string>txt_IniDelibr</string>
+     <string>txt_FinDelibr</string>
     </void>
     <void index="18">
-     <string>txt_Justificativa</string>
+     <string>txt_InfoDIRAF</string>
     </void>
     <void index="19">
-     <string>txt_NumProcess</string>
+     <string>txt_InfoDISUP</string>
     </void>
     <void index="20">
-     <string>txt_obsDlbrDIRAF</string>
+     <string>txt_InfoDITEC</string>
     </void>
     <void index="21">
-     <string>txt_obsDlbrDISUP</string>
+     <string>txt_IniDelibr</string>
     </void>
     <void index="22">
-     <string>txt_obsDlbrDITEC</string>
+     <string>txt_Justificativa</string>
     </void>
     <void index="23">
-     <string>txt_tituloReuniao</string>
+     <string>txt_NumProcess</string>
     </void>
     <void index="24">
+     <string>txt_obsDlbrDIRAF</string>
+    </void>
+    <void index="25">
+     <string>txt_obsDlbrDISUP</string>
+    </void>
+    <void index="26">
+     <string>txt_obsDlbrDITEC</string>
+    </void>
+    <void index="27">
+     <string>txt_tituloReuniao</string>
+    </void>
+    <void index="28">
      <string>zm_UnidadeSolicitante</string>
     </void>
    </array>

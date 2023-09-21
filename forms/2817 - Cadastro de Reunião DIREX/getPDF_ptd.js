@@ -129,6 +129,7 @@ function info_setItns(){
             NumSolict = itns[j]['txt_NumProcess']
             itnLink = 'https://mywebhm.am.sebrae.com.br/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID='+NumSolict
             console.log(itnLink)
+            vli = document.createElement('li')
             va = document.createElement('a')
             va.setAttribute('href', itnLink);
             va.setAttribute('class', 'cad-link');
@@ -137,7 +138,8 @@ function info_setItns(){
             va.setAttribute('ml', 'true');
             va.textContent = NumSolict
 
-            document.getElementById('itnsList_ptd_'+dirNow).appendChild(va)
+            vli.appendChild(va)
+            document.getElementById('itnsList_ptd_'+dirNow).children[0].appendChild(vli)
         }    
     }
 }
