@@ -124,6 +124,7 @@ function updatePDF(){
     var dirImed         = 0;
     var mat             = window.parent.WCMAPI.userCode;
     var arrItns_Dir 	= []
+    var siglaNova       = ''
     if(state == 8 || state == 10){
         console.log(state)
         if(state == 8){
@@ -139,6 +140,7 @@ function updatePDF(){
                                 matDir = "%Pool:Role:DIRAF%";
                             }else{
                                 matDir = "%Pool:Role:"+ds_und_ger_pdf.values[j]['Sigla']+"%";
+                                siglaNova = ds_und_ger_pdf.values[j]['Sigla']
                             }
                         }
                     }
@@ -221,6 +223,28 @@ function updatePDF(){
                             '<b><u><span style="font-size:12.0pt">PROPOSI&Ccedil;&Otilde;ES:</span></u></b>'+
                         '</span></span></p>' 
                         
+        if(arrItns_Dir[0].length == 0 && state == 8){
+            objPdf = objPdf + '<p style="margin-top:0.6cm; margin-bottom:0.6cm; text-align:justify">'+
+                    '<span style="line-height:normal">'+
+                        '<span >'+//style="text-autospace:none"
+                            '<b><u><span style="font-size:100%">PAUTA '+siglaNova+': </span></u></b>'+
+                        '</span>'+
+                    '</span>'+
+                    '</p>'
+
+                    dlbr_now = '<div style="margin-left:0.6cm;"><b>'+ '1' + '.  </b>'+'Não há itens de pauta.'+ '<br></br><br></br></div>';
+                    objPdf = objPdf + dlbr_now;
+
+                    objPdf = objPdf + '<p style="margin-left:0.6cm; margin-bottom:0.6cm; text-align:justify; font-size:11.0pt">'+
+                    '<span style="line-height:normal">'+
+                        '<span >'+
+                            '<b><u><span>INFORMES '+siglaNova+': </span></u></b>'+
+                        '</span>'+
+                    '</span>'+
+                    '</p>' 
+
+                    objPdf = objPdf + '<div style="margin-left:0.6cm;"><ul><li>Não há</li></ul></div>';
+        }
         for(i = 0; i < arrItns_Dir.length; i++){
             itnDirNow = arrItns_Dir[i];
             dirImed = 0;
@@ -351,8 +375,15 @@ function updatePDF(){
                         '</span>'+
                     '</span>'+
                     '</p>' 
-
-                    objPdf = objPdf + '<div style="margin-left:0.6cm;">'+ document.getElementById('txt_Info'+dirImed).value +'</div>';
+                    
+                    infoNow = document.getElementById('txt_Info'+dirImed).value
+                    infoNow = new String(infoNow)
+                    console.log(infoNow)
+                    if(infoNow == '<html>\n<head>\n\t<title></title>\n</head>\n<body> </body>\n</html>\n'){
+                        infoNow = '<ul>\n\t<li>N&atilde;o h&aacute;</li>\n</ul>'
+                    }
+                    console.log(infoNow)
+                    objPdf = objPdf + '<div style="margin-left:0.6cm;">'+ infoNow +'</div>';
                 }
             }
         }
