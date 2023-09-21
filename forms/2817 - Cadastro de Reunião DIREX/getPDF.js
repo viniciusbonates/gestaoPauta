@@ -243,7 +243,15 @@ function updatePDF(){
                     '</span>'+
                     '</p>' 
 
-                    objPdf = objPdf + '<div style="margin-left:0.6cm;"><ul><li>Não há</li></ul></div>';
+                    infoValueNow = document.getElementById('txt_Info'+siglaNova).value
+                    console.log(infoValueNow)
+                    if(infoValueNow == '<html>\n<head>\n\t<title></title>\n</head>\n<body></body>\n</html>\n'){
+                        infoValueNow = '<ul>\n\t<li>N&atilde;o h&aacute;</li>\n</ul>'
+                    }
+                    console.log(infoValueNow)
+                    objPdf = objPdf + '<div style="margin-left:0.6cm;">'+ infoValueNow +'</div>';
+
+                    //objPdf = objPdf + '<div style="margin-left:0.6cm;"><ul><li>Não há</li></ul></div>';
         }
         for(i = 0; i < arrItns_Dir.length; i++){
             itnDirNow = arrItns_Dir[i];
@@ -376,14 +384,13 @@ function updatePDF(){
                     '</span>'+
                     '</p>' 
                     
-                    infoNow = document.getElementById('txt_Info'+dirImed).value
-                    infoNow = new String(infoNow)
-                    console.log(infoNow)
-                    if(infoNow == '<html>\n<head>\n\t<title></title>\n</head>\n<body> </body>\n</html>\n'){
-                        infoNow = '<ul>\n\t<li>N&atilde;o h&aacute;</li>\n</ul>'
+                    infoValueNow = document.getElementById('txt_Info'+dirImed).value
+                    console.log(infoValueNow)
+                    if(infoValueNow == '<html>\n<head>\n\t<title></title>\n</head>\n<body></body>\n</html>\n'){
+                        infoValueNow = '<ul>\n\t<li>N&atilde;o h&aacute;</li>\n</ul>'
                     }
-                    console.log(infoNow)
-                    objPdf = objPdf + '<div style="margin-left:0.6cm;">'+ infoNow +'</div>';
+                    console.log(infoValueNow)
+                    objPdf = objPdf + '<div style="margin-left:0.6cm;">'+ infoValueNow +'</div>';
                 }
             }
         }
