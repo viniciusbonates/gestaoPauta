@@ -559,6 +559,16 @@ objMain = {
 		let anoNow		= dataNow.getFullYear();
 		dataItm = dataItm.split(' ')[0];
 		dataItm = dataItm.split('/');
+		
+		cnst1 = DatasetFactory.createConstraint("workflowProcessPK.processInstanceId", numItm, numItm,  ConstraintType.MUST); 
+		cnstVld1 = new Array(cnst1)
+		resultVldProcess = DatasetFactory.getDataset('workflowProcess ', null, cnstVld1,null).values
+		console.log(resultVldProcess)
+		if(resultVldProcess.length != 0){
+			if(resultVldProcess[0]['status'] == 1){
+				arrResult.push(true);
+			}
+		}
 		if(dataItm[2] != anoNow){
 			arrResult.push(true);
 		}
